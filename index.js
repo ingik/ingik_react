@@ -2,7 +2,7 @@ const express = require('express');
 //express 모듈 가져옴
 const app = express()
 //express를 이용 app생성
-const port = 4000
+const port = 5000
 console.log("port connect");
 
 const config = require("./config/key");

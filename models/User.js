@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const saltRounds = 10
 
 const userSchema = mongoose.Schema({
     name: {
@@ -12,11 +14,11 @@ const userSchema = mongoose.Schema({
     },
     password: {
         type: String,
-        maxlength: 5
+        minlength: 5
     },
     lastname: {
         type: String,
-        maxlength: 5
+        maxlength: 50
     },
     role: {
         type: Number,
@@ -31,6 +33,31 @@ const userSchema = mongoose.Schema({
     }
 })
 
+userSchema.pre('save',function( next ){
+    var user = this;
+
+    if(user.isModified('password')){
+        //비밀번호를 암호화 시킴
+        bcrypt.getSalt(saltRounds, function(err,salt){
+
+            if(err) return next(err)
+
+            bcrypt.hash(user.password ,salt,function(err, hash){
+                if(err) return next(err)
+                user.password = hash
+                next()
+
+            })
+        })
+
+    } else {
+        next()
+    }
+
+})
+
 const User = mongoose.model('User',userSchema)
 
 module.exports = { User } 
+
+
