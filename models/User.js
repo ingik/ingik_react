@@ -63,7 +63,7 @@ userSchema.methods.comparePassword = function(plainPassword, cb){
     //plainPassword 1234567     암호화된 비밀번호 
     bcrypt.compare(plainPassword, this.password, function(err, isMatch){
         if(err) return cb(err);
-            cb(null, isMatch);
+            cb(null, isMatch)
     })
 }
 
