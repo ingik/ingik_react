@@ -6,8 +6,8 @@ const port = 5000
 console.log("port connect");
 const cookieParser = require('cookie-parser');
 const config = require("./config/key");
-
 const {User} = require("./models/User");
+const {auth} = require("./middleware/auth");
 
 //application/x-www-form-urlencoded
 app.use(express.urlencoded({extended: true}));
@@ -88,10 +88,11 @@ app.post('/api/users/login',(req, res) => {
       })
     })
   }) 
-
-
 })
 
+app.get('/api/users/auth', auth , (req, res) => {
+
+})
 
 
 app.listen(port, () => {
