@@ -5,7 +5,7 @@ const app = express()
 const port = 5000
 console.log("port connect");
 const cookieParser = require('cookie-parser');
-const config = require("./config/key");
+const config = require("./server/config/key");
 const { User } = require("./models/User");
 const { auth } = require("./middleware/auth");
 
@@ -105,7 +105,9 @@ app.get('/api/users/auth', auth , (req, res) => {
 app.get('/api/users/logout', auth , (req, res) => {
 
   //미들웨어(auth)에서 user를 가지고옴 
-  User.findOneAndUpdate({_id: req.user._id}, { token: "" }, (err , user) => {
+  User.findOneAndUpdate({_id: req.user._id}, 
+    { token: "" }
+    , (err , user) => {
       if(err) return res.json({success: false , err})
       return res.status(200).send({ success: true })
   })
