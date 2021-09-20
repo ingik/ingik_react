@@ -5,7 +5,7 @@ const app = express()
 const port = 5000
 console.log("port connect");
 const cookieParser = require('cookie-parser');
-const config = require("./server/config/key");
+const config = require("./config/key");
 const { User } = require("./models/User");
 const { auth } = require("./middleware/auth");
 
