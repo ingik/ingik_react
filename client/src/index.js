@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { provider } from 'react-redux';
+import { Provider } from 'react-redux';
 import { applyMiddleware, createStore } from 'redux';
 import promiseMiddleware from 'redux-promise';
 import ReduxThunk from 'redux-thunk';
@@ -12,12 +12,12 @@ import Reducer from './_reducers';
 const createStoreWithMiddleware = applyMiddleware(promiseMiddleware, ReduxThunk)(createStore)
 
 ReactDOM.render( 
-<provider store = {createStoreWithMiddleware(Reducer,
+<Provider store = {createStoreWithMiddleware(Reducer,
   window.__REDUX_DEVTOOLS_EXTENETION__ &&
   window.__REDUX_DEVTOOLS_EXTENETION__()
   )} >
     <App / >
-  </provider>,
+  </Provider>,
    document.getElementById('root'));
 
 
