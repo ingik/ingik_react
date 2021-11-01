@@ -113,7 +113,9 @@ app.get('/api/users/logout', auth , (req, res) => {
     { token: "" }
     , (err , user) => {
       if(err) return res.json({success: false , err})
-      return res.status(200).send({ success: true })
+      return res.status(200).send({ 
+        success: true 
+      })
   })
 })
 
