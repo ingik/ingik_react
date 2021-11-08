@@ -15,7 +15,7 @@ export default function (state = {}, action) {
             break;
                 //action.payload에 데이터가 담긴다.
         case REGISTER_USER:
-            return { ...state, register: action.payload }
+            return { ...state, registerData: action.payload }
             // eslint-disable-next-line no-unreachable
             break;
             

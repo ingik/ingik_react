@@ -19,6 +19,7 @@ app.use(cookieParser());
 
 const mongoose = require('mongoose');
 const { request } = require('express');
+const { Board } = require('./models/Board');
 mongoose.connect(config.mongoURI,{
     useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false
 }).then(() => console.log('MongoDB Connencted...'))
@@ -58,7 +59,6 @@ app.post('/api/users/login',(req, res) => {
 
   //요청된 이메일을 데이터베이스에서 있는지 찾는다.
   User.findOne({ email: req.body.email },(err, user) => {
-
     if(!user){
       return res.json({
         loginSuccess: false,
@@ -118,6 +118,21 @@ app.get('/api/users/logout', auth , (req, res) => {
       })
   })
 })
+
+app.post('/api/boards/create', (req, res) => {
+
+  const board = new Board(req.body)
+
+  board.save((err) =>{
+    if (err) return res.json({success: false, err})
+    return res.status(200).json({ 
+      success: true 
+    })
+  })
+})
+
+
+
 
 
 app.listen(port, () => {

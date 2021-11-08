@@ -11,6 +11,8 @@ import LandingPage from './components/views/LandingPage/LandingPage'
 import LoginPage from './components/views/LoginPage/LoginPage'
 import RegisterPage from './components/views/RegisterPage/RegisterPage'
 import Auth from './hoc/auth';
+import Board from './components/views/Board/Board'
+import CreateBoard from './components/views/Board/CreateBoard';
 
 function App() {
   return (
@@ -28,6 +30,8 @@ function App() {
           <Route exact path="/" component={Auth(LandingPage, null)}/>
           <Route exact path="/login" component={Auth(LoginPage, false)}/>
           <Route exact path="/register" component={Auth(RegisterPage, false)}/>
+          <Route exact path="/board" component={Auth(Board,true)}/>
+          <Route exact path="/createboard" component={Auth(CreateBoard,true)}/>
         </Switch>
       </div>
     </Router>
