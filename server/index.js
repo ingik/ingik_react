@@ -119,9 +119,19 @@ app.get('/api/users/logout', auth , (req, res) => {
   })
 })
 
-app.post('/api/boards/create', (req, res) => {
+
+
+app.post('/api/boards/create', auth ,(req, res) => {
 
   const board = new Board(req.body)
+  board.username = req.user.name
+  
+    // User.findOne({_name: req.user._name})
+
+  
+
+  console.log('board :'+ board)
+
 
   board.save((err) =>{
     if (err) return res.json({success: false, err})

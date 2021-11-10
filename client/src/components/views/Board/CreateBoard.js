@@ -10,6 +10,7 @@ function CreateBoard(props) {
     //const [Index, setIndex] = useState("")
     const [Title, setTitle] = useState("")
     const [Content, setContent] = useState("")
+    const [Username] = useState("")
     
 
     const onContentHander = (event)  =>{
@@ -30,6 +31,7 @@ function CreateBoard(props) {
 
 
         let body = {
+            username : Username,
             title : Title,
             content : Content
         }
