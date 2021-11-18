@@ -1,4 +1,7 @@
 import axios from "axios"
+import {
+     CREATE_BOARD 
+    } from "./types"
 
 
 export function createBoard(dataToSubmit){
@@ -7,7 +10,7 @@ export function createBoard(dataToSubmit){
     .then(response => response.data)
 
     return{
-        type: "create_board",
+        type: CREATE_BOARD,
         payload: request
     }
 }

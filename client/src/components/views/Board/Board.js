@@ -1,10 +1,15 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 
-function Board() {
+function Board(props) {
+
+
+    // const dispatch = useDispatch();
+
+
+
     return (
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height:'100vh'}}>
-            
-
             <div>   
                 <div><h2>게시판</h2></div>
             <table border="1">
@@ -20,7 +25,7 @@ function Board() {
     <tr>
         <td></td>
         <td></td>
-        <td><a></a></td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>

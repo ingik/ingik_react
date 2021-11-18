@@ -122,17 +122,10 @@ app.get('/api/users/logout', auth , (req, res) => {
 
 
 app.post('/api/boards/create', auth ,(req, res) => {
-
   const board = new Board(req.body)
   board.username = req.user.name
-  
-    // User.findOne({_name: req.user._name})
-
-  
-
-  console.log('board :'+ board)
-
-
+  // User.findOne({_name: req.user._name})
+  // console.log('board :'+ board)
   board.save((err) =>{
     if (err) return res.json({success: false, err})
     return res.status(200).json({ 
@@ -140,6 +133,30 @@ app.post('/api/boards/create', auth ,(req, res) => {
     })
   })
 })
+
+
+app.get('/api/boards',(req,res) => {
+
+  /* const list = new Board(req.body)
+  console.log(list)
+  list.find((err) => {
+    if(err) return res.json({success: false, err})
+    return res.status(200).json({
+      success: true
+    })
+  }) */
+
+  Board.find((err,board) => {
+    if(err) return res.status(500).send({error: 'database failure'})
+    res.json(board)
+
+  })
+
+  
+  
+
+})
+
 
 
 

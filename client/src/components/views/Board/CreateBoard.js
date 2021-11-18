@@ -36,15 +36,14 @@ function CreateBoard(props) {
             content : Content
         }
     
-        dispatch(createBoard(body))
-            .then(response => {
-                if(response.payload.createBoardData){
-                    
-                    props.history.push("/Board")
+        dispatch(createBoard(body)).then(response => {
+                console.log('response : '+JSON.stringify(response.payload.success))
+                if(response.payload.success){
+                    props.history.push("/board")
                 }else{
-                    alert("Failed to regist")
+                    alert("Failed to createboard")
                 }
-            })
+        })
     }
 
     const onClick = (event) => {
