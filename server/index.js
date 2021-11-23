@@ -148,7 +148,7 @@ app.get('/api/boards',(req,res) => {
 
   Board.find((err,board) => {
     if(err) return res.status(500).send({error: 'database failure'})
-    res.json(board)
+    return res.json(board)
 
   })
 

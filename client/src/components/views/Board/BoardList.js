@@ -1,32 +1,18 @@
-import axios from 'axios'
-import React from 'react'
+import React, {Component, useEffect, useState} from 'react'
+import { render } from 'react-dom'
 import { useDispatch } from 'react-redux'
-import { BOARD_LIST } from '../../../_actions/types'
+import { boardList } from '../../../_actions/board_action'
 
 
-
-export default function BoardList() {
+function BoardList(props) {
 
     const dispatch = useDispatch()
-
-    let data = {
-        
-    }
-
+    const [Data,setData] = useState([])
 
     
-    dispatch(boardList(data)).then( response => { 
-
-        console.log('boardlist.response.payload : '+JSON.stringify(response.payload))
-        console.log('board-reducer : '+response.payload.boardListData)
-        console.log('response : '+JSON.stringify(response.type))
-        data = board_reducer(response.payload,response.type)
-        console.log('result : '+ JSON.stringify(data))
-        
-    })
-
+    //redux lifecycle 연습
     //action
-    function boardList(dataToSubmit){
+    /* function boardList(dataToSubmit){
 
         const request = axios.get('/api/boards',dataToSubmit).then(response => response.data)
         console.log('boardlist : '+JSON.stringify(request))
@@ -35,11 +21,10 @@ export default function BoardList() {
             type: BOARD_LIST,
             payload: request
         }
-    }
+    } */
     
-
     //reducer
-    function board_reducer(state = {},action){
+    /* function board_reducer(state = {},action){
 
         switch(action.type){
 
@@ -48,18 +33,31 @@ export default function BoardList() {
             default:
                 return state
         }
-    }
+    } */
+
+    useEffect(() => {
+        dispatch(boardList()).then( response => { 
+            console.log('response.payload : '+ response.payload)
+            setData(response.payload)
+        })
+    },[])
+
+     console.log('result : '+ JSON.stringify(Data))
+
     
+    const List = Data.map((data) =>{
+        return <ul key={data._id}>
+                <li>{data.title}</li>
+                <li>{data.content}</li>
+            </ul>
+      })
+       
 
     return (
         <div>
-            <table>
-                <tr>
-                    <td></td>
-                </tr>
-
-            </table>
-            
+            { List }
         </div>
     )
 }
+
+export default BoardList;
