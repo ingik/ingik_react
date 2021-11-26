@@ -136,25 +136,14 @@ app.post('/api/boards/create', auth ,(req, res) => {
 
 
 app.get('/api/boards',(req,res) => {
-
-  /* const list = new Board(req.body)
-  console.log(list)
-  list.find((err) => {
-    if(err) return res.json({success: false, err})
-    return res.status(200).json({
-      success: true
-    })
-  }) */
-
   Board.find((err,board) => {
     if(err) return res.status(500).send({error: 'database failure'})
     return res.json(board)
-
   })
+})
 
-  
-  
-
+app.get('/api/board/detail',(req,res) => {
+  Board.findOne(() => {})
 })
 
 

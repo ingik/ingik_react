@@ -6,6 +6,11 @@ function Board(props) {
 
     // const dispatch = useDispatch();
 
+    console.log(props.match.params.key);
+
+
+    // dispatch(boardDetail()).then()
+
 
 
     return (
@@ -14,7 +19,6 @@ function Board(props) {
                 <div><h2>게시판</h2></div>
             <table border="1">
     <tr>
-        <td>번호</td>
         <td>작성자</td>
         <td>제목</td>
         <td>조회수</td>
@@ -23,7 +27,6 @@ function Board(props) {
     </tr>
    
     <tr>
-        <td></td>
         <td></td>
         <td></td>
         <td></td>

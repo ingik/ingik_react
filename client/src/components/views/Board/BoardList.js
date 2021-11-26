@@ -1,6 +1,6 @@
-import React, {Component, useEffect, useState} from 'react'
-import { render } from 'react-dom'
+import React, {useEffect, useState} from 'react'
 import { useDispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { boardList } from '../../../_actions/board_action'
 
 
@@ -44,15 +44,18 @@ function BoardList(props) {
 
      console.log('result : '+ JSON.stringify(Data))
 
+
     
     const List = Data.map((data) =>{
-        return <ul key={data._id}>
-                <li>{data.title}</li>
-                <li>{data.content}</li>
-            </ul>
+
+        const url = data._id
+
+        
+        return <div key={data._id}>
+                <div><Link to={'/board/'+url}>{data.title}</Link></div>
+            </div>
       })
        
-
     return (
         <div>
             { List }
