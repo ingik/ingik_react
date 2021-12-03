@@ -1,38 +1,62 @@
-import React from 'react'
+import React,{ useEffect,useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { boardDetail } from '../../../_actions/board_action';
 
 function Board(props) {
 
+    const dispatch = useDispatch();
+    const [Data,setData] = useState([]);
 
-    // const dispatch = useDispatch();
-
-    console.log(props.match.params.key);
-
-
-    // dispatch(boardDetail()).then()
+    console.log( 'props(json) : '+JSON.stringify(props));
+    console.dir( 'props : '+props);
+    
 
 
+    let body = {
+        id : props.match.params.key
+    }
+
+    
+    console.log('id : '+ JSON.stringify(body))
+
+
+
+    useEffect(() => {
+        dispatch(boardDetail(body)).then(response => {
+            console.log('response : '+JSON.stringify(response.payload))
+            if(response.payload){
+                setData(response.payload)
+            }else{
+                console.log('response.payload error')
+            }
+        })
+    }, [])
+    
+    console.log(Data)
 
     return (
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height:'100vh'}}>
             <div>   
-                <div><h2>게시판</h2></div>
+                <div><h2>prototype</h2></div>
             <table border="1">
+                <thead>
     <tr>
-        <td>작성자</td>
-        <td>제목</td>
-        <td>조회수</td>
-        <td>수정일</td>
-        <td>등록일</td>
+        <th>name</th>
+        <th>title</th>
+        <th>viewcount</th>
+        <th>updateAt</th>
+        <th>createAt</th>
     </tr>
-   
+        </thead>
+        <tbody>
     <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <th>{Data[0]?.username}</th>
+        <th>{Data[0]?.title}</th>
+        <th></th>
+        <th></th>
+        <th></th>
     </tr>
+    </tbody>
 </table>
 
 

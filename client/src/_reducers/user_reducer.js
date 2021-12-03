@@ -4,6 +4,8 @@ import {
     AUTH_USER
 } from '../_actions/types';
 
+
+// 리듀서는 항상 순수해야한다. 순수 함수로 이루어져 있다. state가 수정되어선 안됨
 // eslint-disable-next-line import/no-anonymous-default-export
 export default function (state = {}, action) {
 

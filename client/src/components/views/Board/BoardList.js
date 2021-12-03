@@ -37,7 +37,7 @@ function BoardList(props) {
 
     useEffect(() => {
         dispatch(boardList()).then( response => { 
-            console.log('response.payload : '+ response.payload)
+            console.log('response.payload : '+ JSON.stringify(response.payload))
             setData(response.payload)
         })
     },[])
@@ -49,15 +49,18 @@ function BoardList(props) {
     const List = Data.map((data) =>{
 
         const url = data._id
-
-        
         return <div key={data._id}>
-                <div><Link to={'/board/'+url}>{data.title}</Link></div>
+                <div><Link to={'/boards/detail/'+url}>{data.title}</Link></div>
             </div>
       })
+
+    const  onClickHandler = () => {
+        props.history.push('/createboard')
+    }
        
     return (
         <div>
+            <div><button onClick = { onClickHandler }>Create</button></div>
             { List }
         </div>
     )

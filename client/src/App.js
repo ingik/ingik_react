@@ -31,9 +31,9 @@ function App() {
           <Route exact path="/" component={Auth(LandingPage, null)}/>
           <Route exact path="/login" component={Auth(LoginPage, false)}/>
           <Route exact path="/register" component={Auth(RegisterPage, false)}/>
-          <Route exact path="/board/:key" component={Board}/>
+          <Route exact path="/boards/detail/:key" component={Board} />
           <Route exact path="/createboard" component={Auth(CreateBoard,true)}/>
-          <Route exact path="/boardlist" component={BoardList}/>
+          <Route exact path="/boards" component={BoardList}/>
         </Switch>
       </div>
     </Router>

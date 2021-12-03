@@ -11,25 +11,17 @@ function CreateBoard(props) {
     const [Title, setTitle] = useState("")
     const [Content, setContent] = useState("")
     const [Username] = useState("")
-    
 
-    const onContentHander = (event)  =>{
+    const onContentHander = (event) => {
         setContent(event.currentTarget.value)
     }
 
-    const onTitleHandler = function(event) {
+    const onTitleHandler = (event) => {
         setTitle(event.currentTarget.value)
     }
 
-    
-
-
     const onSubmitHandler = (event) => {
         event.preventDefault();
-
-        
-
-
         let body = {
             username : Username,
             title : Title,
@@ -50,10 +42,6 @@ function CreateBoard(props) {
         props.history.push("/")
         
     }
-
-
-    
-
 
     return (
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height:'100vh'}}>

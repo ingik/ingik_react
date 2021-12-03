@@ -5,6 +5,7 @@ const app = express()
 const port = 5000
 console.log("port connect");
 const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser')
 const config = require("./config/key");
 const { User } = require("./models/User");
 const { auth } = require("./middleware/auth");
@@ -15,6 +16,7 @@ app.use(express.urlencoded({extended: true}));
 //application/json
 app.use(express.json());
 app.use(cookieParser());
+app.use(bodyParser());
 
 
 const mongoose = require('mongoose');
@@ -56,6 +58,8 @@ app.post('/api/users/register', (req, res) => {
 })
 
 app.post('/api/users/login',(req, res) => {
+
+  console.log('email : '+req.body.email)
 
   //요청된 이메일을 데이터베이스에서 있는지 찾는다.
   User.findOne({ email: req.body.email },(err, user) => {
@@ -135,16 +139,29 @@ app.post('/api/boards/create', auth ,(req, res) => {
 })
 
 
-app.get('/api/boards',(req,res) => {
+
+//boardlist
+app.get('/api/boards/list',(req,res) => {
   Board.find((err,board) => {
     if(err) return res.status(500).send({error: 'database failure'})
-    return res.json(board)
+    return res.status(200).json(board)
   })
 })
 
-app.get('/api/board/detail',(req,res) => {
-  Board.findOne(() => {})
+
+//boardDetail
+
+app.get('/api/boards/detail/:key',(req,res) => {
+  
+  console.log('boardAPIid : ' + JSON.stringify(req.params.key));
+
+  Board.find({ '_id': req.params.key },(err,board) => {
+    if(err) return res.status(500).send({error: 'database failure'})
+    return res.status(200).json(board)
+  })
 })
+
+
 
 
 
@@ -154,4 +171,17 @@ app.get('/api/board/detail',(req,res) => {
 app.listen(port, () => {
   console.log(`Example app listening on port localhost:${port}!`)
 })
+
+/*
+  app.listen이 뜻하는 것 아래
+
+  app.listen = function() {
+    var server = http.createServer(this);
+    return server.listen.apply(server, arguments);
+  };
+
+
+
+
+*/
 
