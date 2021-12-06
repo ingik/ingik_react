@@ -22,6 +22,7 @@ function CreateBoard(props) {
 
     const onSubmitHandler = (event) => {
         event.preventDefault();
+        
         let body = {
             username : Username,
             title : Title,
@@ -31,7 +32,7 @@ function CreateBoard(props) {
         dispatch(createBoard(body)).then(response => {
                 console.log('response : '+JSON.stringify(response.payload.success))
                 if(response.payload.success){
-                    props.history.push("/board")
+                    props.history.push("/boards")
                 }else{
                     alert("Failed to createboard")
                 }
@@ -39,8 +40,7 @@ function CreateBoard(props) {
     }
 
     const onClick = (event) => {
-        props.history.push("/")
-        
+        props.history.goBack()
     }
 
     return (

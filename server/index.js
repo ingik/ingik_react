@@ -28,22 +28,6 @@ mongoose.connect(config.mongoURI,{
 .catch(err => console.log(err))
 
 
-
-/* app.get('/', function(req, res) {
-   res.send('Hello World!  헬로월드 !@#!@#!@#') 
-}) */
-
-// ES6 문법사용 => function의 생략
-app.get('/', (req, res) => {
-  res.send('Hello World!  헬로월드 !@#!@#!@#')
-})
-
-app.get('/api/hello',(req,res)=>{
-  res.send("안녕하세요 ~ ")
-})
-
-
-
 app.post('/api/users/register', (req, res) => {
 
   //회원 가입 할때 필요한 정보들을 client에서 가져오면 그것들을 데이터 베이스에 넣어둔다.
@@ -97,7 +81,7 @@ app.post('/api/users/login',(req, res) => {
 app.get('/api/users/auth', auth , (req, res) => {
 
   //여기까지 미들웨어를 통과해 왔다는 얘기는 Authentication이 true라는 말.
-  res.status(200).json({
+  return res.status(200).json({
     _id: req.user._id,
     isAdmin: req.user.roll === 0 ? false : true,
     isAuth: true,
@@ -107,6 +91,7 @@ app.get('/api/users/auth', auth , (req, res) => {
     role : req.user.role,
     image: req.user.image
   })
+
 
 })
 
@@ -123,13 +108,11 @@ app.get('/api/users/logout', auth , (req, res) => {
   })
 })
 
-
+//boardCreate
 
 app.post('/api/boards/create', auth ,(req, res) => {
   const board = new Board(req.body)
   board.username = req.user.name
-  // User.findOne({_name: req.user._name})
-  // console.log('board :'+ board)
   board.save((err) =>{
     if (err) return res.json({success: false, err})
     return res.status(200).json({ 
@@ -141,6 +124,7 @@ app.post('/api/boards/create', auth ,(req, res) => {
 
 
 //boardlist
+
 app.get('/api/boards/list',(req,res) => {
   Board.find((err,board) => {
     if(err) return res.status(500).send({error: 'database failure'})
@@ -151,9 +135,11 @@ app.get('/api/boards/list',(req,res) => {
 
 //boardDetail
 
-app.get('/api/boards/detail/:key',(req,res) => {
+app.get('/api/boards/detail/:key', auth ,(req,res) => {
   
-  console.log('boardAPIid : ' + JSON.stringify(req.params.key));
+  console.log('board ID : ' + JSON.stringify(req.params.key));
+  console.log('username : ' + req.user.name)
+
 
   Board.find({ '_id': req.params.key },(err,board) => {
     if(err) return res.status(500).send({error: 'database failure'})
@@ -162,8 +148,43 @@ app.get('/api/boards/detail/:key',(req,res) => {
 })
 
 
+//boardUpdata
 
+app.post('/api/boards/detail/:key/update', auth ,(req,res) => {
 
+  console.log('board ID : ' + JSON.stringify(req.params.key))
+  console.log('username : ' + req.user.name)
+
+  const board = new Board(req.body)
+  board.username = req.user.name
+
+  console.log('board Title : '+ board.title)
+
+  Board.findOneAndUpdate({_id : req.params.key , username : req.user.name },{$set: { 'title':board.title , 'content':board.content }},
+    (err,board) => { 
+
+      if(err) return res.status(500).send({ error: 'database failure'})
+      return res.status(200).send(board)
+  })
+})
+
+//boardDelete
+
+app.delete('/api/boards/detail/:key', auth ,(req,res) => {
+
+  console.log('board ID : ' + JSON.stringify(req.params.key))
+  console.log('username : ' + req.user.name)
+
+  Board.remove({_id : req.params.key , username : req.user.name },
+    (err,board) => { 
+
+      console.log(Board.username)
+      console.log(req.user.name)
+      if(err) return res.status(500).send({ error: 'database failure'})
+      return res.status(200).send(board)
+  })
+
+}) 
 
 
 
@@ -173,15 +194,11 @@ app.listen(port, () => {
 })
 
 /*
-  app.listen이 뜻하는 것 아래
+  app.listen
 
   app.listen = function() {
     var server = http.createServer(this);
     return server.listen.apply(server, arguments);
   };
-
-
-
-
 */
 

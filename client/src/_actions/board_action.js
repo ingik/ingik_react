@@ -2,14 +2,16 @@ import axios from "axios"
 import {
      CREATE_BOARD,
      BOARD_LIST,
-     BOARD_DETAIL
+     BOARD_DETAIL,
+     UPDATE_BOARD,
+     DELETE_BOARD
     } from "./types"
 
 
 export function createBoard(dataToSubmit){
 
     const request = axios.post('/api/boards/create', dataToSubmit)
-    .then(response => response.data)
+    .then(response => response.data).catch(err => console.log('action create error'+err))
 
     return{
         type: CREATE_BOARD,
@@ -38,4 +40,26 @@ export function boardDetail(dataToSubmit){
         payload: request
     }
 }
+
+export function updateBoard(dataToSubmit){
+
+    const request = axios.post('/api/boards/detail/'+dataToSubmit.id+'/update',dataToSubmit).then(response => response.data)
+    console.log('dataToSubmit : '+JSON.stringify(dataToSubmit))
+
+    return {
+        type: UPDATE_BOARD,
+        payload: request
+    }
+}
+
+export function deleteBoard(dataToSubmit){
+    const request = axios.delete('/api/boards/detail/'+dataToSubmit.id,dataToSubmit).then(response => response.data)
+    console.log('dataToSubmit : '+JSON.stringify(dataToSubmit))
+
+    return {
+        type: DELETE_BOARD,
+        payload: request
+    }
+}
+
 

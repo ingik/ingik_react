@@ -14,6 +14,7 @@ import Auth from './hoc/auth';
 import Board from './components/views/Board/Board'
 import CreateBoard from './components/views/Board/CreateBoard'
 import BoardList from './components/views/Board/BoardList';
+import UpdateBoard from './components/views/Board/UpdateBoard';
 
 function App() {
   return (
@@ -31,9 +32,10 @@ function App() {
           <Route exact path="/" component={Auth(LandingPage, null)}/>
           <Route exact path="/login" component={Auth(LoginPage, false)}/>
           <Route exact path="/register" component={Auth(RegisterPage, false)}/>
-          <Route exact path="/boards/detail/:key" component={Board} />
+          <Route exact path="/boards/detail/:key" component={Auth(Board,true)} />
           <Route exact path="/createboard" component={Auth(CreateBoard,true)}/>
-          <Route exact path="/boards" component={BoardList}/>
+          <Route exact path="/boards" component={Auth(BoardList , null)}/>
+          <Route exact path="/boards/detail/:key/update" component={Auth(UpdateBoard,true)}/>
         </Switch>
       </div>
     </Router>
