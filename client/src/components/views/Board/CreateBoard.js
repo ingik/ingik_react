@@ -59,9 +59,10 @@ function CreateBoard(props) {
 
             <br/>
             <button type="submit">작성</button>
-            <button onClick = { onClick }>취소</button> 
+            
 
             </form>
+            <button onClick = { onClick }>취소</button> 
         </div>
     )
 }

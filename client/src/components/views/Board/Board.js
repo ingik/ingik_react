@@ -22,14 +22,14 @@ function Board(props) {
     useEffect(() => {
         dispatch(boardDetail(body)).then(response => {
             console.log('(Board)response.payload : '+JSON.stringify(response.payload))
-            if(response.payload){
-                setData(response.payload)
-            }else{
+            if(!response.payload){
                 console.log('response.payload error')
+            }else{
+                setData(response.payload)
             }
         })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [dispatch])
 
     const onUpdateHandler = () => {
         console.log('update ID : '+JSON.stringify(Data[0].username))

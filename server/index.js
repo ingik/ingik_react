@@ -1,7 +1,5 @@
 const express = require('express');
-//express 모듈 가져옴
 const app = express()
-//express를 이용 app생성
 const port = 5000
 console.log("port connect");
 const cookieParser = require('cookie-parser');
@@ -9,6 +7,11 @@ const bodyParser = require('body-parser')
 const config = require("./config/key");
 const { User } = require("./models/User");
 const { auth } = require("./middleware/auth");
+
+
+
+
+
 
 //application/x-www-form-urlencoded
 app.use(express.urlencoded({extended: true}));
@@ -28,9 +31,13 @@ mongoose.connect(config.mongoURI,{
 .catch(err => console.log(err))
 
 
+
+
+
+
+
 app.post('/api/users/register', (req, res) => {
 
-  //회원 가입 할때 필요한 정보들을 client에서 가져오면 그것들을 데이터 베이스에 넣어둔다.
     const user = new User(req.body)
 
     user.save((err, userInfo) => {
@@ -45,7 +52,6 @@ app.post('/api/users/login',(req, res) => {
 
   console.log('email : '+req.body.email)
 
-  //요청된 이메일을 데이터베이스에서 있는지 찾는다.
   User.findOne({ email: req.body.email },(err, user) => {
     if(!user){
       return res.json({
@@ -161,7 +167,7 @@ app.post('/api/boards/detail/:key/update', auth ,(req,res) => {
   console.log('board Title : '+ board.title)
 
   Board.findOneAndUpdate({_id : req.params.key , username : req.user.name },{$set: { 'title':board.title , 'content':board.content }},
-    (err,board) => { 
+    (err,board) => {
 
       if(err) return res.status(500).send({ error: 'database failure'})
       return res.status(200).send(board)
@@ -183,15 +189,65 @@ app.delete('/api/boards/detail/:key', auth ,(req,res) => {
       if(err) return res.status(500).send({ error: 'database failure'})
       return res.status(200).send(board)
   })
-
 }) 
 
 
+//Chat
+
+const Server = require('socket.io')
+
+const server = require('http').Server(app);
+const io = Server(server,{
+  cors: {
+    origin: ["http://localhost:3000"],
+    methods:["GET","POST"],
+}
+});
+const serverPort = 5555
 
 
+
+//Chat Server
+
+io.on('connection', (socket) => {
+
+  console.log("연결된 socketID : ", socket.id);
+    io.to(socket.id).emit('my socket id',{socketId: socket.id});
+
+    socket.on('enter chatroom', () => {
+        console.log("누군가가 입장함");
+        socket.broadcast.emit('client login', {type: "alert", chat: "누군가가 입장하였습니다.", regDate: Date.now()});
+    })
+
+    socket.on('send message',() => {
+        console.log("back send")
+        socket.board.emit('send message', {socketId: socket.id, chat: "메세지입니다."})
+
+    })
+
+    
+
+    
+
+  socket.on('disconnect', () => {
+    console.log('disconnected');
+    socket.broadcast.emit('disconnected', {type: "alert", chat: "누군가가 퇴장하였습니다.", regDate: Date.now()});
+  });
+
+});
+
+
+
+//port connect
 app.listen(port, () => {
-  console.log(`Example app listening on port localhost:${port}!`)
+  console.log(`app listening on port localhost:${port}!`)
 })
+
+server.listen(serverPort, () => {
+  console.log(`chat_server listening on port lacalhost:${serverPort}!`)
+})
+
+
 
 /*
   app.listen
@@ -201,4 +257,6 @@ app.listen(port, () => {
     return server.listen.apply(server, arguments);
   };
 */
+
+
 

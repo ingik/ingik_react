@@ -9,3 +9,13 @@ module.exports = function(app) {
     })
   );
 };
+
+// module.exports = function(app){
+//   app.use(
+//     '/socket',
+//     createProxyMiddleware({
+//       target: 'http://localhost:5555',
+//       changeOrigin: true,
+//     })
+//   );
+// };
