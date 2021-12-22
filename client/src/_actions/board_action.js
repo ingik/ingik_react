@@ -27,7 +27,6 @@ export function boardList(dataToSubmit){
             type: BOARD_LIST,
             payload: request
         }
-
 }
 
 export function boardDetail(dataToSubmit){

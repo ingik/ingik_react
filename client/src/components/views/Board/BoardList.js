@@ -44,7 +44,7 @@ function BoardList(props) {
     },[])
 
     //  console.log('boardlist.Data : '+ JSON.stringify(Data))
-
+    
 
     
     const List = Data.map((data) =>{

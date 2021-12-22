@@ -3,20 +3,24 @@ const mongoose = require('mongoose');
 
 const chatSchema = mongoose.Schema({
 
+    index:{
+        type: String
+    },
     socketId:{
         type:String
     },
     roomId:{
-        type:String,
+        type:String
+    },
+    username:{
+        type:String
     },
     sendAt:{
-        type:Date,
+        type:Date
     },
     regDate:{
-        type:Date,
+        type:Date
     },
-    
-    
 })
 
 const Chat = mongoose.model('Chat', chatSchema)

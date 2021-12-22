@@ -13,9 +13,10 @@ import RegisterPage from './components/views/RegisterPage/RegisterPage'
 import Auth from './hoc/auth';
 import Board from './components/views/Board/Board'
 import CreateBoard from './components/views/Board/CreateBoard'
-import BoardList from './components/views/Board/BoardList';
+import BoardList from './components/views/Board/BoardList'
 import UpdateBoard from './components/views/Board/UpdateBoard'
-import Chat from './Chat/Chat';
+import Chat from './components/views/Chat/ChatDetail'
+import CreateChat from './components/views/Chat/CreateChat'
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           <Route exact path="/boards" component={Auth(BoardList , null)}/>
           <Route exact path="/boards/detail/:key/update" component={Auth(UpdateBoard,true)}/>
           <Route exact path="/chat" component={Chat}/>
+          <Route exact path="/chat/create" component={ CreateChat }/>
         </Switch>
       </div>
     </Router>

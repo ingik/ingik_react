@@ -10,9 +10,6 @@ const { auth } = require("./middleware/auth");
 
 
 
-
-
-
 //application/x-www-form-urlencoded
 app.use(express.urlencoded({extended: true}));
 
@@ -25,13 +22,22 @@ app.use(bodyParser());
 const mongoose = require('mongoose');
 const { request } = require('express');
 const { Board } = require('./models/Board');
+const { Chat } = require('./models/Chat')
+const { Room } = require('./models/Room') 
+
+
 mongoose.connect(config.mongoURI,{
     useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false
 }).then(() => console.log('MongoDB Connencted...'))
 .catch(err => console.log(err))
 
+const moment = require('moment');
+require('moment-timezone');
 
+moment.tz.setDefault("Asia/Seoul");
+console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
 
+let Time = moment().format('YYYY-MM-DD HH:mm:ss')
 
 
 
@@ -203,38 +209,56 @@ const io = Server(server,{
     methods:["GET","POST"],
 }
 });
-const serverPort = 5555
-
-
 
 //Chat Server
+const serverPort = 5555
 
 io.on('connection', (socket) => {
 
-  console.log("연결된 socketID : ", socket.id);
+    console.log("연결된 socketID : ", socket.id);
+    socket.join('some room');
     io.to(socket.id).emit('my socket id',{socketId: socket.id});
 
+    io.to('some room').emit('room Info')
+    
+
     socket.on('enter chatroom', () => {
-        console.log("누군가가 입장함");
-        socket.broadcast.emit('client login', {type: "alert", chat: "누군가가 입장하였습니다.", regDate: Date.now()});
+        console.log("누가 들어옴");
+        io.to('some room').emit('client login', {type: "alert", chat: "누군가 들어왔다구", regDate:Time});
     })
 
-    socket.on('send message',() => {
-        console.log("back send")
-        socket.board.emit('send message', {socketId: socket.id, chat: "메세지입니다."})
-
+    socket.on('send message',(data) => {
+        console.log("(back)send message : "+ data)
+        socket.broadcast.emit('all message', {socketId: socket.id,chat: data,regDate:Time})
     })
 
-    
-
-    
-
-  socket.on('disconnect', () => {
-    console.log('disconnected');
-    socket.broadcast.emit('disconnected', {type: "alert", chat: "누군가가 퇴장하였습니다.", regDate: Date.now()});
+    socket.on('disconnect', () => {
+        console.log('누가 나감');
+        io.to('some room').emit('disconnected', {type: "alert", chat: "누군가 나갔다구", regDate:Time});
   });
 
 });
+
+
+
+app.post('/api/chat/create',(req,res) =>{
+
+  
+  const room = new Room(req.body)
+  console.log('req.body'+JSON.stringify(req.body.roomName))
+  room.roomName = req.body.roomName
+  console.log('room'+JSON.stringify(room))
+  room.save((err) =>{
+    if (err) return res.json({success: false, err})
+    return res.status(200).json({ 
+      success: true 
+    })
+  })
+
+})
+
+
+
 
 
 

@@ -10,3 +10,5 @@ export const DELETE_BOARD = "delete_board"
 //chat
 export const SEND_CHAT = "send_chat"
 export const RECEIVE_CHAT = "receive_chat"
+export const CHAT_LIST = "chat_list"
+export const CREATE_CHAT = "create_chat"
