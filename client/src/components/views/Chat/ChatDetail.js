@@ -1,40 +1,65 @@
 import React,{useState,useEffect} from 'react'
 import { useDispatch } from 'react-redux'
+import { useLocation, withRouter } from 'react-router-dom';
 import io from 'socket.io-client'
+import { chatDetail, sendMessage } from '../../../_actions/chat_action';
 import './Chat.css';
 
 const localhost = 'http://localhost:5555';
 
 let socket
-function ChatDetail() {
+function ChatDetail(props) {
 
+    const location = useLocation()
     const dispatch = useDispatch()
     const [Message,setMessage] = useState("")
     const [MessageObject,setMessageObject] = useState([]);
     const [otherMessage,setOtherMessage] = useState([]);
+
+
+    let RoomName = new URLSearchParams(props.location.search).get('roomName')
+
+    console.log('(Chat)props : '+JSON.stringify(props.location.user))
+
+    let chatUser = props.location.user;
   
     const onSubmitHandler = (event) => {
 
         console.log("onSubmitHandler")
         event.preventDefault();
 
-        console.log('Message : '+Message)
-        setMessageObject([...MessageObject, Message])
-        console.log('setMessageObject : '+MessageObject)
+        let body = {
+          message : Message,
+          roomName : RoomName,
+          userName : chatUser
+        }
+
+
+        // dispatch(sendMessage(body)).then()
+        // setMessageObject([...MessageObject, Message])
 
         socket.emit('send message',Message)
         setMessage("")
-
         
     }
 
+    // 쿼리스트링
+    // console.log('match : '+)
     
     useEffect(() => {
+      
         socket = io.connect(localhost)
+
+        socket.emit('joinUser', {  RoomName }, (error) => {
+          if (error) {
+            alert(error)
+          }
+        })
+
         socket.emit('enter chatroom');
         socket.on('my socket id', (data) => {
             console.log('mySocketID : ' , data);
-            socket.emit('return socket id',data.socketId)
+            // socket.emit('return socket id',data.socketId)
             // dispatch(action.mySocketId(data.socketId));
         });
     
@@ -46,16 +71,29 @@ function ChatDetail() {
             console.log('leave chatroom ', data);
         })
 
-    }, [localhost])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [localhost,props.location.search])
 
+
+
+    //채팅 처음 설정
     useEffect(() => {
+
+      let body = {
+        roomName :RoomName
+      }
+
+      dispatch(chatDetail(body)).then(response => {
+
+      })
+      console.log('(Chat)props : '+JSON.stringify(props.location.user))
         socket.on('all message',(data) => {
             console.log('frond Data : '+JSON.stringify({chat:data.chat,socketId:data.socketId}),
             // dispatch(sendMessage()).then()
             setOtherMessage([...otherMessage, data])
             )})
 
-        console.log('otherMessage : '+JSON.stringify(otherMessage))
+        // console.log('otherMessage : '+JSON.stringify(otherMessage))
 
     }, [])
 
@@ -73,8 +111,6 @@ function ChatDetail() {
     //     onSubmitHandler()
     //   }
     // }
-
-    
 
     const List = MessageObject.map((data) => {
       // console.log('data : '+data)
@@ -134,4 +170,4 @@ function ChatDetail() {
     );
 }
 
-export default ChatDetail
+export default withRouter(ChatDetail)

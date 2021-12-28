@@ -25,8 +25,11 @@ export default function (SpecificComponent, option, adminRoute = null){
                 dispatch(auth()).then(response => {
                     // console.log('(auth)login props : '+ JSON.stringify(response.payload))
                     console.log('(auth)login status : '+ JSON.stringify(response.payload.isAuth))
-                    // console.log('(auth)login client name : '+ JSON.stringify(response.payload.name))
+
+
                     //로그인 하지 않은 상태
+                    // props.history.push({user : response.payload.name})
+
                     if(!response.payload.isAuth){
                         if(option){
                             props.history.push('/login')
@@ -34,13 +37,15 @@ export default function (SpecificComponent, option, adminRoute = null){
 
                     }else{
                         //로그한 상태
-                        if(adminRoute && !response.payload.isAdmin){
-                            props.history.push( {pathname:'/',state: {user: response.payload.name }})
+                        // if(adminRoute && !response.payload.isAdmin){
+                        if(response.payload.isAuth){
+                            console.log('login state')
+                            // props.history.push({auth:{pathname:'/',state: {user: response.payload.name }}})
+                            // props.history.push({user: response.payload.name})
                             
                         }else{
                             if(option === false)
                                 props.history.push('/')
-                            
                         }
                     }
                 })

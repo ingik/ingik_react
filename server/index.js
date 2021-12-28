@@ -31,6 +31,9 @@ mongoose.connect(config.mongoURI,{
 }).then(() => console.log('MongoDB Connencted...'))
 .catch(err => console.log(err))
 
+
+//Time setting
+
 const moment = require('moment');
 require('moment-timezone');
 
@@ -41,6 +44,7 @@ let Time = moment().format('YYYY-MM-DD HH:mm:ss')
 
 
 
+//User Register
 
 app.post('/api/users/register', (req, res) => {
 
@@ -54,6 +58,8 @@ app.post('/api/users/register', (req, res) => {
     })
 })
 
+//User Login
+
 app.post('/api/users/login',(req, res) => {
 
   console.log('email : '+req.body.email)
@@ -65,7 +71,6 @@ app.post('/api/users/login',(req, res) => {
         message: "제공된 이메일에 해당하는 유저가 없습니다."
       })
     }
-    
 
     //요청된 이메일이 데이터베이스에 있다면 비밀번호가 맞는 비밀번호인지 확인.
     
@@ -84,11 +89,14 @@ app.post('/api/users/login',(req, res) => {
         res.cookie("x_auth", user.token)
           .status(200)
           .json({loginSuccess: true, userId: user._id})
-      
+
       })
     })
   }) 
 })
+
+
+//User auth
 
 app.get('/api/users/auth', auth , (req, res) => {
 
@@ -104,8 +112,9 @@ app.get('/api/users/auth', auth , (req, res) => {
     image: req.user.image
   })
 
-
 })
+
+//User Logout
 
 app.get('/api/users/logout', auth , (req, res) => {
 
@@ -200,6 +209,7 @@ app.delete('/api/boards/detail/:key', auth ,(req,res) => {
 
 //Chat
 
+
 const Server = require('socket.io')
 
 const server = require('http').Server(app);
@@ -216,44 +226,79 @@ const serverPort = 5555
 io.on('connection', (socket) => {
 
     console.log("연결된 socketID : ", socket.id);
-    socket.join('some room');
+    socket.on('joinUser',({chatUser,roomName}) => {
+
     io.to(socket.id).emit('my socket id',{socketId: socket.id});
 
-    io.to('some room').emit('room Info')
+    io.to(roomName).emit('room Info')
     
 
     socket.on('enter chatroom', () => {
         console.log("누가 들어옴");
-        io.to('some room').emit('client login', {type: "alert", chat: "누군가 들어왔다구", regDate:Time});
+        io.to(roomName).emit('client login', {type: "alert", chat: "누군가 들어왔다구", regDate:Time});
     })
 
     socket.on('send message',(data) => {
         console.log("(back)send message : "+ data)
-        socket.broadcast.emit('all message', {socketId: socket.id,chat: data,regDate:Time})
+
+        // app.post('',()=>{})
+        
+        io.to(roomName).emit('all message', {socketId: socket.id,chat: data,regDate:Time})
+         
     })
 
     socket.on('disconnect', () => {
         console.log('누가 나감');
-        io.to('some room').emit('disconnected', {type: "alert", chat: "누군가 나갔다구", regDate:Time});
-  });
+        io.to(roomName).emit('disconnected', {type: "alert", chat: "누군가 나갔다구", regDate:Time});
+    });
 
+    })
 });
 
 
+//CreateChat
 
 app.post('/api/chat/create',(req,res) =>{
 
-  
   const room = new Room(req.body)
-  console.log('req.body'+JSON.stringify(req.body.roomName))
   room.roomName = req.body.roomName
-  console.log('room'+JSON.stringify(room))
   room.save((err) =>{
     if (err) return res.json({success: false, err})
     return res.status(200).json({ 
       success: true 
     })
   })
+})
+
+//ChatList
+
+app.get('/api/chat/list',(req,res)=>{
+  Room.find((err,room) => {
+    if(err) return res.status(500).send({error: 'database failure'})
+    return res.status(200).json(room)
+  })
+})
+
+
+//ChatDatile(Room init setting)
+
+let chatUser
+let roomName
+console.log('(server)RoomName : '+roomName)
+console.log('(server) : '+chatUser)
+
+app.post('/api/chat/detail',auth,(req,res) => {
+  roomName = req.body.roomName
+  console.log('(server)RoomName : '+roomName)
+  chatUser = req.user.name
+  console.log('(server) : '+chatUser)
+})
+
+//SendMessage
+
+app.post('/api/chat/detail/sendMessage',(req,res) => {
+
+  const chat = new Chat()
 
 })
 

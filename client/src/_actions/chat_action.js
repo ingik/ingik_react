@@ -1,6 +1,7 @@
 import {    CHAT_LIST, 
             CREATE_CHAT, 
-            SEND_CHAT 
+            SEND_CHAT,
+            CHAT_DETAIL
 } from "./types"
 import  axios  from "axios"
 
@@ -20,7 +21,8 @@ export function sendMessage(dataToSubmit){
 
 export function chatList(dataToSubmit){
     
-    const request = ""
+    const request = axios.get('/api/chat/list',dataToSubmit)
+    .then(response => response.data).catch(error => console.log('chatList error'+error))
 
     return {
         type: CHAT_LIST,
@@ -31,7 +33,7 @@ export function chatList(dataToSubmit){
 export function createChat(dataToSubmit){
 
     const request = axios.post('/api/chat/create',dataToSubmit)
-    .then( response => response.data ).catch(err => console.log('createChatAction error'+err))
+    .then( response => response.data ).catch(error => console.log('createChatAction error'+error))
 
 
     return {
@@ -40,3 +42,18 @@ export function createChat(dataToSubmit){
     }
 
 }
+
+export function chatDetail(dataToSubmit){
+
+    const request = axios.post('/api/chat/detail',dataToSubmit)
+    .then(response => response.data).catch(error => console.log('chatDetail error'+error))
+    // console.log('(chat_action)chatDetail : '+ JSON.stringify(dataToSubmit))
+
+    return {
+        type : CHAT_DETAIL,
+        payload: request
+    }
+
+
+}
+

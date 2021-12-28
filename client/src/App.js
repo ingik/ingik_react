@@ -17,6 +17,8 @@ import BoardList from './components/views/Board/BoardList'
 import UpdateBoard from './components/views/Board/UpdateBoard'
 import Chat from './components/views/Chat/ChatDetail'
 import CreateChat from './components/views/Chat/CreateChat'
+import ChatList from './components/views/Chat/ChatList';
+
 
 function App() {
   return (
@@ -38,8 +40,9 @@ function App() {
           <Route exact path="/createboard" component={Auth(CreateBoard,true)}/>
           <Route exact path="/boards" component={Auth(BoardList , null)}/>
           <Route exact path="/boards/detail/:key/update" component={Auth(UpdateBoard,true)}/>
-          <Route exact path="/chat" component={Chat}/>
+          <Route exact path="/chat/" component={Auth(Chat,true)}/>
           <Route exact path="/chat/create" component={ CreateChat }/>
+          <Route exact path="/chat/list" component={Auth(ChatList,true)}/>
         </Switch>
       </div>
     </Router>

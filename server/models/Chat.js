@@ -9,7 +9,7 @@ const chatSchema = mongoose.Schema({
     socketId:{
         type:String
     },
-    roomId:{
+    roomName:{
         type:String
     },
     username:{

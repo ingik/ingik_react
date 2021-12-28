@@ -30,7 +30,7 @@ function CreateChat(props) {
         })
     }
     
-    const onClick = (event) => {
+    const onClick = () => {
         props.history.goBack()
     }
     
@@ -38,7 +38,7 @@ function CreateChat(props) {
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height:'100vh'}}>
 
             <form style={{display: 'flex', flexDirection: 'column'}}
-                onSubmit={onSubmitHandler}
+                onSubmit={ onSubmitHandler }
             >
 
             <label>chat Title</label>
