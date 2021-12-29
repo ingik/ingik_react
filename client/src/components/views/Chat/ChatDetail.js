@@ -1,8 +1,8 @@
 import React,{useState,useEffect} from 'react'
 import { useDispatch } from 'react-redux'
-import { useLocation, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import io from 'socket.io-client'
-import { chatDetail, sendMessage } from '../../../_actions/chat_action';
+import { chatDetail, chatRefresh, sendMessage } from '../../../_actions/chat_action';
 import './Chat.css';
 
 const localhost = 'http://localhost:5555';
@@ -10,7 +10,6 @@ const localhost = 'http://localhost:5555';
 let socket
 function ChatDetail(props) {
 
-    const location = useLocation()
     const dispatch = useDispatch()
     const [Message,setMessage] = useState("")
     const [MessageObject,setMessageObject] = useState([]);
@@ -19,7 +18,7 @@ function ChatDetail(props) {
 
     let RoomName = new URLSearchParams(props.location.search).get('roomName')
 
-    console.log('(Chat)props : '+JSON.stringify(props.location.user))
+    // console.log('(Chat)props : '+JSON.stringify(props.location.user))
 
     let chatUser = props.location.user;
   
@@ -31,14 +30,14 @@ function ChatDetail(props) {
         let body = {
           message : Message,
           roomName : RoomName,
-          userName : chatUser
+          userName : 'testerUser'
         }
 
 
         // dispatch(sendMessage(body)).then()
         // setMessageObject([...MessageObject, Message])
 
-        socket.emit('send message',Message)
+        socket.emit('send message',body)
         setMessage("")
         
     }
@@ -49,18 +48,12 @@ function ChatDetail(props) {
     useEffect(() => {
       
         socket = io.connect(localhost)
-
-        socket.emit('joinUser', {  RoomName }, (error) => {
-          if (error) {
-            alert(error)
-          }
-        })
+        socket.emit('joinRoom', RoomName)
+        socket.on('room Info',(data)=>{ console.log('Room info : '+ data)})
 
         socket.emit('enter chatroom');
         socket.on('my socket id', (data) => {
             console.log('mySocketID : ' , data);
-            // socket.emit('return socket id',data.socketId)
-            // dispatch(action.mySocketId(data.socketId));
         });
     
         socket.on('client login', (data) => {
@@ -79,25 +72,16 @@ function ChatDetail(props) {
     //채팅 처음 설정
     useEffect(() => {
 
-      let body = {
-        roomName :RoomName
-      }
-
-      dispatch(chatDetail(body)).then(response => {
-
-      })
+      
       console.log('(Chat)props : '+JSON.stringify(props.location.user))
         socket.on('all message',(data) => {
-            console.log('frond Data : '+JSON.stringify({chat:data.chat,socketId:data.socketId}),
-            // dispatch(sendMessage()).then()
-            setOtherMessage([...otherMessage, data])
-            )})
+            console.log('frond Data : '+JSON.stringify(data))
 
+            dispatch(chatRefresh()).then()
+            
+        })
         // console.log('otherMessage : '+JSON.stringify(otherMessage))
-
     }, [])
-
-    
 
     
     const onMessageHandler = (event) => {

@@ -210,7 +210,8 @@ app.delete('/api/boards/detail/:key', auth ,(req,res) => {
 //Chat
 
 
-const Server = require('socket.io')
+const Server = require('socket.io');
+const { time } = require('console');
 
 const server = require('http').Server(app);
 const io = Server(server,{
@@ -220,40 +221,69 @@ const io = Server(server,{
 }
 });
 
+//ChatDatile(Room init setting)
+
+let chatUser
+let roomName
+console.log('(server)RoomName : '+roomName)
+console.log('(server) : '+chatUser)
+
+app.post('/api/chat/detail',auth,(req,res) => {
+  roomName = req.body.roomName
+  console.log('(server)RoomName : '+roomName)
+  chatUser = req.user.name
+  console.log('(server) : '+chatUser)
+})
+
 //Chat Server
 const serverPort = 5555
 
-io.on('connection', (socket) => {
+io.on('connection', (socket,roomName,chatUser) => {
 
-    console.log("연결된 socketID : ", socket.id);
-    socket.on('joinUser',({chatUser,roomName}) => {
 
-    io.to(socket.id).emit('my socket id',{socketId: socket.id});
+  io.to(socket.id).emit('my socket id',{socketId: socket.id});
+  console.log("연결된 socketID : ", socket.id);
 
-    io.to(roomName).emit('room Info')
-    
+  socket.on('joinRoom',(roomName) => {
+
+    socket.join(roomName)
+
+    io.to(roomName).emit('room Info',roomName)
 
     socket.on('enter chatroom', () => {
         console.log("누가 들어옴");
-        io.to(roomName).emit('client login', {type: "alert", chat: "누군가 들어왔다구", regDate:Time});
+        io.to(roomName).emit('client login', {type: "alert", chat: "누군가 들어왔다구", regDate:Time,socketId:socket.id});
     })
 
     socket.on('send message',(data) => {
-        console.log("(back)send message : "+ data)
+        console.log("(back)send message : "+ JSON.stringify(data))
 
-        // app.post('',()=>{})
+        const chat = new Chat()
+        chat.message = data.message
+        chat.roomName = data.roomName
+        chat.username = data.userName
+        chat.socketId = socket.id
+        chat.regData = Time
+        console.log('(server.socket)chat : '+chat)
+        io.to(roomName).emit('all message', chat)
         
-        io.to(roomName).emit('all message', {socketId: socket.id,chat: data,regDate:Time})
-         
     })
 
     socket.on('disconnect', () => {
-        console.log('누가 나감');
-        io.to(roomName).emit('disconnected', {type: "alert", chat: "누군가 나갔다구", regDate:Time});
-    });
-
+      console.log('누가 나감');
+      io.to(roomName).emit('disconnected', {type: "alert", chat: "누군가 나갔다구", regDate:Time});
     })
-});
+
+  })
+})
+
+//disconnet 소켓아웃 leave는 룸아웃 연결은 계속 유지 시켜놓고 방 나가기를 leave로만 구현 해주면 실시간 채팅이 되지 않을까
+//chatDetail redux는 지금 당장 사용하지 않고있다.
+    
+
+  
+
+  
 
 
 //CreateChat
@@ -279,20 +309,14 @@ app.get('/api/chat/list',(req,res)=>{
   })
 })
 
+//ChatRefresh
 
-//ChatDatile(Room init setting)
-
-let chatUser
-let roomName
-console.log('(server)RoomName : '+roomName)
-console.log('(server) : '+chatUser)
-
-app.post('/api/chat/detail',auth,(req,res) => {
-  roomName = req.body.roomName
-  console.log('(server)RoomName : '+roomName)
-  chatUser = req.user.name
-  console.log('(server) : '+chatUser)
+app.get('/api/chat/refresh',(req,res)=> {
+  
 })
+
+
+
 
 //SendMessage
 

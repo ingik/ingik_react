@@ -15,6 +15,9 @@ const chatSchema = mongoose.Schema({
     username:{
         type:String
     },
+    message:{
+        type:String
+    },
     sendAt:{
         type:Date
     },

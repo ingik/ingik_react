@@ -2,7 +2,8 @@ import {
     SEND_CHAT,
     CHAT_LIST,
     CREATE_CHAT, 
-    CHAT_DETAIL
+    CHAT_DETAIL,
+    CHAT_REFRESH
 } from "../_actions/types";
 
 
@@ -22,6 +23,9 @@ export default function(state={}, action){
         
         case CHAT_DETAIL :
             return {...state, chatDetailData: action.payload}
+        
+        case CHAT_REFRESH :
+            return {...state, chatRefreshData: action.payload}
 
         default:
             return state;

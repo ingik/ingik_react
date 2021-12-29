@@ -10,10 +10,6 @@ function ChatList(props) {
     const dispatch = useDispatch()
     const [Data,setData] = useState([])
 
-    
-
-
-
     useEffect(() => {
         console.log('(Chat)props : '+JSON.stringify(props.location))
         console.log('(ChatList)props : '+JSON.stringify(props.location))

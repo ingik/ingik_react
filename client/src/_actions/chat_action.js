@@ -1,19 +1,20 @@
 import {    CHAT_LIST, 
             CREATE_CHAT, 
             SEND_CHAT,
-            CHAT_DETAIL
+            CHAT_DETAIL,
+            CHAT_REFRESH
 } from "./types"
 import  axios  from "axios"
 
 
 
-export function sendMessage(dataToSubmit){
+export function chatRefresh(dataToSubmit){
 
-    const request = ""
-
+    const request = axios.get('/api/chat/refresh',dataToSubmit)
+    .then(response => response.data).catch(error => console.log('chatRefresh error'+error))
 
     return {
-        type : SEND_CHAT,
+        type : CHAT_REFRESH,
         payload : request
     }
 
@@ -53,7 +54,6 @@ export function chatDetail(dataToSubmit){
         type : CHAT_DETAIL,
         payload: request
     }
-
 
 }
 
