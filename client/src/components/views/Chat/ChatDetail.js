@@ -33,10 +33,6 @@ function ChatDetail(props) {
           userName : 'testerUser'
         }
 
-
-        // dispatch(sendMessage(body)).then()
-        // setMessageObject([...MessageObject, Message])
-
         socket.emit('send message',body)
         setMessage("")
         
@@ -67,17 +63,39 @@ function ChatDetail(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [localhost,props.location.search])
 
+    function RefreshDispatch(){
+
+      let body = {
+        roomName : RoomName
+      }
+
+      dispatch(chatRefresh(body)).then(response =>{
+        setMessageObject(response.payload)
+        console.log('response : '+JSON.stringify(response))
+        console.log('MessageObject : '+JSON.stringify(MessageObject))
+      })
+    }
 
 
     //채팅 처음 설정
     useEffect(() => {
 
-      
+      let body = {
+        roomName : RoomName
+      }
+
+      dispatch(chatRefresh(body)).then(response =>{
+        setMessageObject(response.payload)
+        console.log('response : '+JSON.stringify(response))
+        console.log('MessageObject : '+JSON.stringify(MessageObject))
+      })
+
       console.log('(Chat)props : '+JSON.stringify(props.location.user))
         socket.on('all message',(data) => {
             console.log('frond Data : '+JSON.stringify(data))
-
-            dispatch(chatRefresh()).then()
+            
+            RefreshDispatch()
+            //Dispatch로 전체 데이터를 get 해오면 데이터낭비 
             
         })
         // console.log('otherMessage : '+JSON.stringify(otherMessage))
@@ -87,7 +105,6 @@ function ChatDetail(props) {
     const onMessageHandler = (event) => {
         console.log("onMessageHandler")
         setMessage(event.currentTarget.value)
-        
     }
 
     // const onKetEnter = (event) => {
@@ -97,8 +114,9 @@ function ChatDetail(props) {
     // }
 
     const List = MessageObject.map((data) => {
-      // console.log('data : '+data)
-      return  <div key={data}> { data } </div>
+      return  <div key={data._id}>
+         <div>{ data.message } </div>
+         </div>
     })
 
     const otherList = otherMessage.map((data) => {

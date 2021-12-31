@@ -223,17 +223,17 @@ const io = Server(server,{
 
 //ChatDatile(Room init setting)
 
-let chatUser
-let roomName
-console.log('(server)RoomName : '+roomName)
-console.log('(server) : '+chatUser)
+// let chatUser
+// let roomName
+// console.log('(server)RoomName : '+roomName)
+// console.log('(server) : '+chatUser)
 
-app.post('/api/chat/detail',auth,(req,res) => {
-  roomName = req.body.roomName
-  console.log('(server)RoomName : '+roomName)
-  chatUser = req.user.name
-  console.log('(server) : '+chatUser)
-})
+// app.post('/api/chat/detail',auth,(req,res) => {
+//   roomName = req.body.roomName
+//   console.log('(server)RoomName : '+roomName)
+//   chatUser = req.user.name
+//   console.log('(server) : '+chatUser)
+// })
 
 //Chat Server
 const serverPort = 5555
@@ -265,6 +265,7 @@ io.on('connection', (socket,roomName,chatUser) => {
         chat.socketId = socket.id
         chat.regData = Time
         console.log('(server.socket)chat : '+chat)
+        chat.save()
         io.to(roomName).emit('all message', chat)
         
     })
@@ -311,11 +312,15 @@ app.get('/api/chat/list',(req,res)=>{
 
 //ChatRefresh
 
-app.get('/api/chat/refresh',(req,res)=> {
+app.post('/api/chat/refresh',(req,res) => {
+
+  console.log('(server)roomName : '+req.body.roomName)
   
+  Chat.find({roomName : req.body.roomName},(err,chat) => {
+    if(err) return res.status(500).send({error: 'refresh failure' })
+    return res.status(200).json(chat)
+  })
 })
-
-
 
 
 //SendMessage

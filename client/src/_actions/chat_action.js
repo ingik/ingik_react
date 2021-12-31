@@ -10,7 +10,7 @@ import  axios  from "axios"
 
 export function chatRefresh(dataToSubmit){
 
-    const request = axios.get('/api/chat/refresh',dataToSubmit)
+    const request = axios.post('/api/chat/refresh',dataToSubmit)
     .then(response => response.data).catch(error => console.log('chatRefresh error'+error))
 
     return {
