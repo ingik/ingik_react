@@ -35,7 +35,7 @@ function LandingPage(props) {
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          Lizard
+          Board
         </Typography>
         
       </CardContent>
