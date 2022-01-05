@@ -9,10 +9,11 @@ function ChatList(props) {
 
     const dispatch = useDispatch()
     const [Data,setData] = useState([])
+    
+    console.log('(ChatList)props : '+JSON.stringify(props.location.user))
+
 
     useEffect(() => {
-        console.log('(Chat)props : '+JSON.stringify(props.location))
-        console.log('(ChatList)props : '+JSON.stringify(props.location))
         dispatch(chatList()).then( response => {
             if(response.payload){
                 setData(response.payload)
@@ -20,23 +21,28 @@ function ChatList(props) {
                 alert("Failed to chatList")
             }
         })
-    }, [])
+    }, [dispatch])
 
     const List = Data.map((data) =>{
 
         const url = data.roomName
 
+        
+        console.log(props.location.user)
         const onRoad = () => props.history.push({
             pathname : '/chat/',
-            search : '?roomName='+url
+            search : '?roomName='+url,
+            user : props.location.user,
         })
 
         return <div key={data._id}>
-                <div><Link 
+                {/* <div>
+                    <Link 
                 to={{pathname : '/chat/',
                 search : '?roomName='+url}}
-                >{data.roomName}</Link></div>
-                {/* <div><button onClick={ onRoad }>{data.roomName}</button></div> */}
+                >{data.roomName}</Link>
+                </div> */}
+                <div><button onClick={ onRoad }>{data.roomName}</button></div>
             </div>
     })
 

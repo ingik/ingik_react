@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import Axios from "axios";
 import { useDispatch } from "react-redux";
 import { auth } from '../_actions/user_action'
@@ -40,8 +40,8 @@ export default function (SpecificComponent, option, adminRoute = null){
                         // if(adminRoute && !response.payload.isAdmin){
                         if(response.payload.isAuth){
                             console.log('login state')
-                            // props.history.push({auth:{pathname:'/',state: {user: response.payload.name }}})
-                            // props.history.push({user: response.payload.name})
+                            // props.history.push({auth:{pathname:'/',state: {user: response.payload.name}}})
+                            props.history.push({pathname:'',user : response.payload.name})
                             
                         }else{
                             if(option === false)

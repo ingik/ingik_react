@@ -1,6 +1,5 @@
 import {    CHAT_LIST, 
             CREATE_CHAT, 
-            SEND_CHAT,
             CHAT_DETAIL,
             CHAT_REFRESH
 } from "./types"

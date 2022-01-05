@@ -303,10 +303,11 @@ app.post('/api/chat/create',(req,res) =>{
 
 //ChatList
 
-app.get('/api/chat/list',(req,res)=>{
+app.get('/api/chat/list', auth ,(req,res) => {
   Room.find((err,room) => {
     if(err) return res.status(500).send({error: 'database failure'})
     return res.status(200).json(room)
+    
   })
 })
 

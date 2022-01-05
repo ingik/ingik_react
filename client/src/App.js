@@ -40,7 +40,7 @@ function App() {
           <Route exact path="/createboard" component={Auth(CreateBoard,true)}/>
           <Route exact path="/boards" component={Auth(BoardList , null)}/>
           <Route exact path="/boards/detail/:key/update" component={Auth(UpdateBoard,true)}/>
-          <Route exact path="/chat/" component={Auth(Chat,true)}/>
+          <Route exact path="/chat/" component={Chat}/>
           <Route exact path="/chat/create" component={ CreateChat }/>
           <Route exact path="/chat/list" component={Auth(ChatList,true)}/>
         </Switch>

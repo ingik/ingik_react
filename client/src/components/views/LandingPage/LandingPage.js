@@ -1,6 +1,7 @@
 import React,{ useEffect } from 'react'
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
+import  { Card , CardMedia , CardContent , Typography , Button} from '@mui/material';
 
 function LandingPage(props) {
 
@@ -25,8 +26,20 @@ function LandingPage(props) {
 
     return (
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height:'100vh'}}>
-            <h2>LANDING</h2>
-
+<Card sx={{ maxWidth: '20%', maxHeight:'20%' }}>
+      <CardMedia
+        component="img"
+        height=""
+        image="/static/images/cards/contemplative-reptile.jpg"
+        alt="green iguana"
+      />
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+          Lizard
+        </Typography>
+        
+      </CardContent>
+    </Card>
             <div>
             <button onClick={onClickHandler}>
                 LOG OUT 

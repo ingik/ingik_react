@@ -2,7 +2,7 @@ import React,{useState,useEffect} from 'react'
 import { useDispatch } from 'react-redux'
 import { withRouter } from 'react-router-dom';
 import io from 'socket.io-client'
-import { chatDetail, chatRefresh, sendMessage } from '../../../_actions/chat_action';
+import {  chatRefresh  } from '../../../_actions/chat_action';
 import './Chat.css';
 
 const localhost = 'http://localhost:5555';
@@ -13,14 +13,9 @@ function ChatDetail(props) {
     const dispatch = useDispatch()
     const [Message,setMessage] = useState("")
     const [MessageObject,setMessageObject] = useState([]);
-    const [otherMessage,setOtherMessage] = useState([]);
 
 
     let RoomName = new URLSearchParams(props.location.search).get('roomName')
-
-    // console.log('(Chat)props : '+JSON.stringify(props.location.user))
-
-    let chatUser = props.location.user;
   
     const onSubmitHandler = (event) => {
 
@@ -30,7 +25,7 @@ function ChatDetail(props) {
         let body = {
           message : Message,
           roomName : RoomName,
-          userName : 'testerUser'
+          userName : props.location.user
         }
 
         socket.emit('send message',body)
@@ -47,11 +42,12 @@ function ChatDetail(props) {
         socket.emit('joinRoom', RoomName)
         socket.on('room Info',(data)=>{ console.log('Room info : '+ data)})
 
-        socket.emit('enter chatroom');
         socket.on('my socket id', (data) => {
-            console.log('mySocketID : ' , data);
+          console.log('mySocketID : ' , data);
         });
-    
+
+        socket.emit('enter chatroom');
+        
         socket.on('client login', (data) => {
             console.log('client login : ',data)
         });
@@ -90,15 +86,17 @@ function ChatDetail(props) {
         console.log('MessageObject : '+JSON.stringify(MessageObject))
       })
 
-      console.log('(Chat)props : '+JSON.stringify(props.location.user))
         socket.on('all message',(data) => {
             console.log('frond Data : '+JSON.stringify(data))
             
             RefreshDispatch()
-            //Dispatch로 전체 데이터를 get 해오면 데이터낭비 
+            // Dispatch로 전체 데이터를 get 해오면 데이터낭비 
+            // 채팅 리프레시를 채팅 전체를 get해서 받아와 리렌더링을 해주고있는데
+            // 불필요한 데이터를 가져와 렌더링에 손해를 보고있어서 수정이 필요할듯
             
         })
         // console.log('otherMessage : '+JSON.stringify(otherMessage))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     
@@ -119,11 +117,7 @@ function ChatDetail(props) {
          </div>
     })
 
-    const otherList = otherMessage.map((data) => {
-      // console.log('data : '+data)
-      return  <div key={data.regDate}> { data.chat } </div>
-    })
-
+  
 
     return (
       <div>
@@ -134,7 +128,6 @@ function ChatDetail(props) {
               {/* <!-- 동적 생성 --> */}
               { List }
             </ul>
-            <ul>{ otherList }</ul>
           </div>
 
           <div className="input-div">
