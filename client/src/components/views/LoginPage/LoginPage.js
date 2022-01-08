@@ -44,6 +44,10 @@ const onSubmitHandler = (event) => {
 
 }
 
+const OnCheck = () => {
+    
+}
+
 
     return (
         <div>
@@ -60,7 +64,7 @@ const onSubmitHandler = (event) => {
                 onChange={onEmailHandler} 
                 size='small'
                 style={{marginBottom:'10px' , width:'250x'}}
-                />
+            />
 
             <TextField 
                 label="password" 
@@ -73,10 +77,8 @@ const onSubmitHandler = (event) => {
             />
 
             <br/>
-            <Button variant='outlined' type="submit" style={{marginBottom:'10px'}}>Login</Button>
-
-            <Button variant='contained' onClick={ onRegister }>Register</Button>
-
+                <Button variant='outlined' type="submit" style={{marginBottom:'10px'}}>Login</Button>
+                <Button variant='contained' onClick={ onRegister }>Register</Button>
             </form>
             </div>
         </div>

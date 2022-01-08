@@ -129,6 +129,16 @@ app.get('/api/users/logout', auth , (req, res) => {
   })
 })
 
+//User Find
+
+app.post('/api/users/find',(req,res) => {
+  console.log('userCHeck'+JSON.stringify(req.body))
+  User.findOne({name : req.body.username },(err,user) => {
+    if(err) return res.json({ check:false, err })
+    return res.json(user)
+  })
+})
+
 //boardCreate
 
 app.post('/api/boards/create', auth ,(req, res) => {
