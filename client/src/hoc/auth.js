@@ -41,7 +41,7 @@ export default function (SpecificComponent, option, adminRoute = null){
                         if(response.payload.isAuth){
                             console.log('login status')
                             // props.history.push({auth:{pathname:'/',state: {user: response.payload.name}}})
-                            props.history.push({pathname:'',user : response.payload.name})
+                            // props.history.push({pathname:'/',user : response.payload.name})
                             
                         }else{
                             if(option === false)

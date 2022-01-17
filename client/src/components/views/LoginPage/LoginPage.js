@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../../../_actions/user_action';
 import { withRouter } from 'react-router-dom';
-import  { TextField , Button} from '@mui/material';
+import  { TextField , Button , Snackbar , Alert } from '@mui/material';
 
 function LoginPage(props) {
 
@@ -10,6 +10,7 @@ function LoginPage(props) {
 
 const [Email, setEmail] = useState("")
 const [Password, setPassword] = useState("")
+const [LoginError, setLoginError] = useState(false)
 
 const onEmailHandler = (event) => {
     setEmail(event.currentTarget.value)
@@ -34,19 +35,24 @@ const onSubmitHandler = (event) => {
     dispatch(loginUser(body))
 
         .then(response => {
+            setEmail("")
+            setPassword("")
 
             if(response.payload.loginSuccess){
                 props.history.push('/')
             } else {
-                alert('loginError')
+                setLoginError(true)
             }
         })
 
 }
 
-const OnCheck = () => {
+const handleClose = () => {
     
+    setLoginError(false)
 }
+
+
 
 
     return (
@@ -81,6 +87,20 @@ const OnCheck = () => {
                 <Button variant='contained' onClick={ onRegister }>Register</Button>
             </form>
             </div>
+            <Snackbar
+            open={LoginError}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            // anchorOrigin={{ horizontal, vertical }}
+          >
+            <Alert
+              onClose={handleClose}
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              Incorrect Login
+            </Alert>
+          </Snackbar>
         </div>
     )
 }

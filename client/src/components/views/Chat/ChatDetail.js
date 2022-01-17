@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 import { withRouter } from 'react-router-dom';
 import io from 'socket.io-client'
 import {  chatRefresh  } from '../../../_actions/chat_action';
+import { auth } from '../../../_actions/user_action';
 import './Chat.css';
 
 const localhost = 'http://localhost:5555';
@@ -13,6 +14,7 @@ function ChatDetail(props) {
     const dispatch = useDispatch()
     const [Message,setMessage] = useState("")
     const [MessageObject,setMessageObject] = useState([]);
+    const [UserName, setUserName] = useState("")
 
 
     let RoomName = new URLSearchParams(props.location.search).get('roomName')
@@ -25,7 +27,7 @@ function ChatDetail(props) {
         let body = {
           message : Message,
           roomName : RoomName,
-          userName : props.location.user
+          userName : UserName
         }
 
         socket.emit('send message',body)
@@ -97,6 +99,14 @@ function ChatDetail(props) {
         })
         // console.log('otherMessage : '+JSON.stringify(otherMessage))
     // eslint-disable-next-line react-hooks/exhaustive-deps
+
+      dispatch(auth()).then(response => {
+        if(response.payload.name){
+          setUserName(response.payload.name)
+        } else {
+          alert('Incorrect User')
+        }
+      })
     }, [])
 
     

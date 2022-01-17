@@ -36,13 +36,13 @@ function ChatList(props) {
         })
 
         return <div key={data._id}>
-                {/* <div>
+                <div>
                     <Link 
                 to={{pathname : '/chat/',
                 search : '?roomName='+url}}
                 >{data.roomName}</Link>
-                </div> */}
-                <div><button onClick={ onRoad }>{data.roomName}</button></div>
+                </div>
+                {/* <div><button onClick={ onRoad }>{data.roomName}</button></div> */}
             </div>
     })
 

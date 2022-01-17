@@ -50,12 +50,28 @@ app.post('/api/users/register', (req, res) => {
 
     const user = new User(req.body)
 
-    user.save((err, userInfo) => {
-      if (err) return res.json({success: false, err})
-      return res.status(200).json({
-        success: true
+
+    user.find
+    user.findOne({email : req.body.email },(err,user) => {
+      if(err) return res.json({ emailcheck :false })
+
+      user.findOne({name : req.body.name},(err,user) => {
+        if(err) return res.json({ namecheck :false })
+        
+        user.save((err, userInfo) => {
+          if (err) return res.json({success: false, err})
+          return res.status(200).json({
+            success: true
+          })
+        })
+
+
       })
+      
     })
+
+
+
 })
 
 //User Login

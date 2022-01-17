@@ -17,10 +17,6 @@ const userSchema = mongoose.Schema({
         type: String,
         minlength: 5
     },
-    lastname: {
-        type: String,
-        maxlength: 50
-    },
     role: {
         type: Number,
         default: 0
@@ -31,6 +27,12 @@ const userSchema = mongoose.Schema({
     },
     tokenExp: {
         type: Number
+    },
+    intro:{
+        type: String
+    },
+    phone:{
+        type:String
     }
 })
 

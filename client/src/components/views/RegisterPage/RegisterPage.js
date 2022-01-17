@@ -12,6 +12,7 @@ function RegisterPage(props) {
     const [Name, setName] = useState("")
     const [Usable, setUsable] = useState(false)
     const [UnUsable, setUnUsable] = useState(false)
+    const [UnSubmit, setUnSubmit] = useState(false)
 
     const [Email, setEmail] = useState("")
     const [EmailAlert,setEamilAlert] = useState("")
@@ -51,13 +52,10 @@ function RegisterPage(props) {
             
         }
         
-        
     }
 
     const onNameHander = (event) => {
         setName(event.currentTarget.value)
-
-        
     }
 
     const onPasswordHander = (event) => {
@@ -90,6 +88,7 @@ function RegisterPage(props) {
     }
 
     const onConfirmPasswordHander = (event) => {
+      
         if(!event.currentTarget.value){
 
             setConfirmPassword(event.currentTarget.value)
@@ -112,30 +111,33 @@ function RegisterPage(props) {
     
     const onSubmitHandler = (event) => {
         event.preventDefault();
+        if(!Name && !Email && !Password && !ConfirmPassword){
+          
+          setUnSubmit(true)
+        } else {
+          if (Password !== ConfirmPassword) {
+            return alert("비밀번호가 맞지 않습니다.");
+          }
 
-        if(Password !== ConfirmPassword){
-            return alert('비밀번호가 맞지 않습니다.');
-        }
-
-    
-        let body = {
+          let body = {
             name: Name,
             email: Email,
-            password: Password
+            password: Password,
+          };
+
+          // axios.post('/api/users/findEmail')
+
+          dispatch(registUser(body)).then((response) => {
+            console.log(response);
+            if (response.payload.success === true) {
+              console.log("(Register)dispatch");
+              props.history.push("/login");
+            } else {
+              alert("Failed to regist");
+            }
+          });
 
         }
-    
-        dispatch(registUser(body))
-            .then(response => {
-                console.log(response)
-                if(response.payload.success === true){
-                    console.log("(Register)dispatch")
-                    props.history.push("/login")
-                }else{
-                    alert("Failed to regist")
-                }
-                
-            })
     
     }
 
@@ -164,6 +166,7 @@ function RegisterPage(props) {
       
       setUsable(false)
       setUnUsable(false)
+      setUnSubmit(false)
     };
 
     return (
@@ -254,7 +257,8 @@ function RegisterPage(props) {
             open={UnUsable} 
             autoHideDuration={6000} 
             onClose={handleClose}>
-            {/* anchorOrigin={ vertical, horizontal } */}
+            {/* anchorOrigin={{ vertical:'bottom', horizontal:'center'}} */}
+            
 
             <Alert
               onClose={handleClose}
@@ -277,6 +281,21 @@ function RegisterPage(props) {
               sx={{ width: "100%" }}
             >
               UnUsable ID
+            </Alert>
+          </Snackbar>
+
+          <Snackbar
+            open={UnSubmit}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            // anchorOrigin={{ horizontal, vertical }}
+          >
+            <Alert
+              onClose={handleClose}
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              전부 입력 해주세요.
             </Alert>
           </Snackbar>
         </form>

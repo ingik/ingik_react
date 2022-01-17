@@ -23,7 +23,7 @@ function CreateChat(props) {
         dispatch(createChat(body)).then( response => {
             console.log('response : '+JSON.stringify(response.payload.success))
             if(response.payload.success){
-                props.history.push("/boards")
+                props.history.push("/chat/list")
             } else {
                 alert("Failed to CreateChat")
             }
