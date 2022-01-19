@@ -13,6 +13,8 @@ function RegisterPage(props) {
     const [Usable, setUsable] = useState(false)
     const [UnUsable, setUnUsable] = useState(false)
     const [UnSubmit, setUnSubmit] = useState(false)
+    const [UnEmail, setUnEmail] = useState(false)
+    const [UnName, setUnName] = useState(false)
 
     const [Email, setEmail] = useState("")
     const [EmailAlert,setEamilAlert] = useState("")
@@ -132,11 +134,12 @@ function RegisterPage(props) {
             if (response.payload.success === true) {
               console.log("(Register)dispatch");
               props.history.push("/login");
-            } else {
-              alert("Failed to regist");
+            } else if(response.payload.emailcheck === false) {
+              setUnEmail(true)
+            } else if(response.payload.namecheck === false){
+              setUnName(true)
             }
           });
-
         }
     
     }
@@ -167,6 +170,8 @@ function RegisterPage(props) {
       setUsable(false)
       setUnUsable(false)
       setUnSubmit(false)
+      setUnEmail(false)
+      setUnName(false)
     };
 
     return (
@@ -296,6 +301,36 @@ function RegisterPage(props) {
               sx={{ width: "100%" }}
             >
               전부 입력 해주세요.
+            </Alert>
+          </Snackbar>
+
+          <Snackbar
+            open={UnEmail}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            // anchorOrigin={{ horizontal, vertical }}
+          >
+            <Alert
+              onClose={handleClose}
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              중복 된 이메일입니다.
+            </Alert>
+          </Snackbar>
+
+          <Snackbar
+            open={UnName}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            // anchorOrigin={{ horizontal, vertical }}
+          >
+            <Alert
+              onClose={handleClose}
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              중복 된 이름입니다.
             </Alert>
           </Snackbar>
         </form>

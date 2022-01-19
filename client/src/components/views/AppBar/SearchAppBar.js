@@ -20,6 +20,7 @@ import { withRouter } from 'react-router-dom';
 import { useState } from 'react';
 import { Avatar, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText, Tooltip } from '@mui/material';
 import Profile from '../Profile/Profile';
+import SideAppBar from './SideAppBar';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -122,70 +123,12 @@ function SearchAppBar(props) {
     
   );
 
-  const [OnSideBar, setOnSideBar] = useState(false)
-
-  const toggleDrawer = (open) => (event) => {
-
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return;
-    }
-    
-    setOnSideBar(open)
-    
-  };
-
-  const onOpenChat = () => {
-      props.history.push('/chat/list')
-  }
-
-  const list = () => (
-    <Box
-      sx={{ width: 250 }}
-      role="presentation"
-      onClick={toggleDrawer(false)}
-      onKeyDown={toggleDrawer(false)}
-    >
-      <List>
-          <ListItem button>
-            <ListItemIcon>
-              <InboxIcon/>
-            </ListItemIcon>
-            <ListItemText primary="Board" />
-          </ListItem>
-      </List>
-      <Divider />
-      <List>
-          <ListItem button onClick={ onOpenChat }>
-            <ListItemIcon>
-                <MailIcon/>
-            </ListItemIcon>
-            <ListItemText primary="Open Chat" />
-          </ListItem>
-      </List>
-    </Box>
-  );
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-            onClick={toggleDrawer(true)}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Drawer
-            anchor="left"
-            open={OnSideBar} //true false
-            onClose={toggleDrawer(false)}
-          >
-            {list()}
-          </Drawer>
+          {/* SidsAppBar Component */}
+          <SideAppBar propsData={props}/>
           <Typography
             variant="h6"
             noWrap

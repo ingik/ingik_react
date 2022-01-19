@@ -51,22 +51,25 @@ app.post('/api/users/register', (req, res) => {
     const user = new User(req.body)
 
 
-    user.find
-    user.findOne({email : req.body.email },(err,user) => {
-      if(err) return res.json({ emailcheck :false })
-
-      user.findOne({name : req.body.name},(err,user) => {
-        if(err) return res.json({ namecheck :false })
-        
-        user.save((err, userInfo) => {
-          if (err) return res.json({success: false, err})
-          return res.status(200).json({
-            success: true
-          })
+    User.findOne({email : req.body.email },(err,userEmail) => {
+      if(!userEmail) {
+        User.findOne({name : req.body.name},(err,userName) => {
+          if(!userName){
+            user.save((err, userInfo) => {
+              if (err) return res.json({success: false, err})
+              return res.status(200).json({
+                success: true
+              })
+            })
+          } else if(err) {
+            return res.status(500).send({error:'namecheck failed'})
+          } else if(user) return res.json({namecheck:false})
         })
+      } else if(err){
+        return res.status(500).send({error:'emailcheck failed'})
+      }else if(user) return res.json({emailcheck:false})
 
 
-      })
       
     })
 

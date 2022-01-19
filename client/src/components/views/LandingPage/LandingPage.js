@@ -8,18 +8,18 @@ import { auth } from '../../../_actions/user_action';
 function LandingPage(props) {
     
     
-    const dispatch = useDispatch()
+    // const dispatch = useDispatch()
     
-    const [IsAuth,setIsAuth] = useState(Boolean)
+    // const [IsAuth,setIsAuth] = useState(Boolean)
     console.log('(landingPage)props : '+JSON.stringify(props))
     
-    useEffect(() => {
-        dispatch(auth()).then(response => {
-            console.log(response)
+    // useEffect(() => {
+    //     dispatch(auth()).then(response => {
+    //         console.log(response)
             
-            setIsAuth(response.payload.isAuth)
-        })
-    }, [])
+    //         setIsAuth(response.payload.isAuth)
+    //     })
+    // }, [])
     
     
     

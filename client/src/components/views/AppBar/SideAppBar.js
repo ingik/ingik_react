@@ -10,10 +10,15 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import { useState } from 'react';
+import { IconButton } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 
-export default function SideAppBar() {
+
+export default function SideAppBar(props) {
 
   const [OnSideBar, setOnSideBar] = useState(false)
+
+  console.log('(SideAppBar)props : '+ JSON.stringify(props))
 
   const toggleDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -21,7 +26,14 @@ export default function SideAppBar() {
     }
     setOnSideBar(open)
     
-  };
+   };
+   const onOpenChat = () => {
+     props.propsData.history.push("/chat/list");
+   };
+
+   const onBoard = () => {
+     props.propsData.history.push("/boards")
+   };
 
   const list = () => (
     <Box
@@ -31,7 +43,7 @@ export default function SideAppBar() {
       onKeyDown={toggleDrawer(false)}
     >
       <List>
-          <ListItem button>
+          <ListItem button onClick={ onBoard }>
             <ListItemIcon>
               <InboxIcon/>
             </ListItemIcon>
@@ -40,7 +52,7 @@ export default function SideAppBar() {
       </List>
       <Divider />
       <List>
-          <ListItem button>
+          <ListItem button onClick={ onOpenChat }>
             <ListItemIcon>
                 <MailIcon/>
             </ListItemIcon>
@@ -53,7 +65,16 @@ export default function SideAppBar() {
   return (
     <div>
         <React.Fragment>
-          <Button onClick={toggleDrawer(true)}>SideBar</Button>
+        <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="open drawer"
+            sx={{ mr: 2 }}
+            onClick={toggleDrawer(true)}
+          >
+            <MenuIcon />
+          </IconButton>
           <Drawer
             anchor="left"
             open={OnSideBar} //true false
