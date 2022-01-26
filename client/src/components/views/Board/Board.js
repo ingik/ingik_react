@@ -50,10 +50,8 @@ function Board(props) {
                 console.log('response.payload error')
             }
 
-
         })        
     }
-    
     console.log(Data)
 
     return (

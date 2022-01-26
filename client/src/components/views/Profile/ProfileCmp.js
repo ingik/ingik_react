@@ -30,7 +30,7 @@ function ProfileCmp(props) {
         <div style={{ display: "flex", justifyContent: 'center', alignItems: 'center',marginTop:'20px'}}>
           <Avatar
             alt="Remy Sharp"
-            src="/static/images/avatar/1.jpg"
+            src="https://ingikbucket.s3.ap-northeast-2.amazonaws.com/profileImage/samgu.png"
             sx={{ width: 150, height: 150 }}
           />
           <div style={{ display: "flex", flexDirection: "column", marginLeft:'30px' }}>

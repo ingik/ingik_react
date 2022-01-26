@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 const config = require("./config/key");
 const { User } = require("./models/User");
 const { auth } = require("./middleware/auth");
+const  upload  = require('./middleware/upload');
 
 
 
@@ -25,12 +26,10 @@ const { Board } = require('./models/Board');
 const { Chat } = require('./models/Chat')
 const { Room } = require('./models/Room') 
 
-
 mongoose.connect(config.mongoURI,{
     useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false
 }).then(() => console.log('MongoDB Connencted...'))
 .catch(err => console.log(err))
-
 
 //Time setting
 
@@ -41,7 +40,6 @@ moment.tz.setDefault("Asia/Seoul");
 console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
 
 let Time = moment().format('YYYY-MM-DD HH:mm:ss')
-
 
 
 //User Register
@@ -157,6 +155,30 @@ app.post('/api/users/find',(req,res) => {
     return res.json(user)
   })
 })
+
+//User ImageUpdate
+app.post('/api/users/imageUpdate', upload.array('imageData'),(req,res) => {
+  
+  console.log(req.files[0])
+  console.log(req.body.stringData)
+
+  if(!req.files[0]) return res.json('ImageUpdate failure')
+  return res.json(req.files[0].location)
+
+})
+
+//User ProfileUpdate
+// app.post('/api/users/profileUpdate',(req,res) => {
+
+//   User.findOneAndUpdate({_id : req.params.key , username : req.user.name },
+//     {$set: { 'title':board.title , 'content':board.content }},
+//   (err,user) => {
+
+//     if(err) return res.status(500).send({ error: 'database failure'})
+//     return res.status(200).send(board)
+//   })
+
+// })
 
 //boardCreate
 
@@ -309,7 +331,7 @@ io.on('connection', (socket,roomName,chatUser) => {
 
 //disconnet 소켓아웃 leave는 룸아웃 연결은 계속 유지 시켜놓고 방 나가기를 leave로만 구현 해주면 실시간 채팅이 되지 않을까
 //chatDetail redux는 지금 당장 사용하지 않고있다.
-    
+//refactoring 필요
 
   
 
@@ -344,7 +366,7 @@ app.get('/api/chat/list', auth ,(req,res) => {
 
 app.post('/api/chat/refresh',(req,res) => {
 
-  console.log('(server)roomName : '+req.body.roomName)
+  console.log('(server)roomName : ' + req.body.roomName)
   
   Chat.find({roomName : req.body.roomName},(err,chat) => {
     if(err) return res.status(500).send({error: 'refresh failure' })
@@ -362,10 +384,6 @@ app.post('/api/chat/detail/sendMessage',(req,res) => {
 })
 
 
-
-
-
-
 //port connect
 app.listen(port, () => {
   console.log(`app listening on port localhost:${port}!`)
@@ -377,14 +395,4 @@ server.listen(serverPort, () => {
 
 
 
-/*
-  app.listen
-
-  app.listen = function() {
-    var server = http.createServer(this);
-    return server.listen.apply(server, arguments);
-  };
-*/
-
-
-
+//AWS s3

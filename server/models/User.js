@@ -21,7 +21,9 @@ const userSchema = mongoose.Schema({
         type: Number,
         default: 0
     },
-    Image: String,
+    Image: {
+        type: String
+    },
     token:{
         type: String
     },

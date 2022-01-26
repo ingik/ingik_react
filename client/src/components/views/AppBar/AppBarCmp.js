@@ -48,7 +48,7 @@ function AppBarCmp(props) {
               component="div"
               // sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
             >
-              LOGO
+              SnapStory
             </Typography>
   
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -110,7 +110,7 @@ function AppBarCmp(props) {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Avatar alt="Remy Sharp" src="https://ingikbucket.s3.ap-northeast-2.amazonaws.com/profileImage/samgu.png" />
                 </IconButton>
               </Tooltip>
               <Menu
