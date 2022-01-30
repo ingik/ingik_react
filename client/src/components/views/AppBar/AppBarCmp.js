@@ -1,23 +1,14 @@
 import {React,useState} from 'react';
-// import AppBar from '@mui/material/AppBar';
-// import Box from '@mui/material/Box';
-// import Toolbar from '@mui/material/Toolbar';
-// import IconButton from '@mui/material/IconButton';
-// import Typography from '@mui/material/Typography';
-// import Menu from '@mui/material/Menu';
-// import MenuIcon from '@mui/icons-material';
-// import Container from '@mui/material/Container';
-// import Avatar from '@mui/material/Avatar';
-// import Button from '@mui/material/Button';
-// import Tooltip from '@mui/material/Tooltip';
-// import MenuItem from '@mui/material/MenuItem';
 import  { AppBar,Box,Toolbar,IconButton,Typography,Menu,Container,Avatar,Button,Tooltip,MenuItem,Menuicon} from '@mui/material';
 import { withRouter } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 
 const pages = [ 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 function AppBarCmp(props) {
+
+  const userData = useSelector(state => state.user.userData)
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -110,7 +101,7 @@ function AppBarCmp(props) {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="https://ingikbucket.s3.ap-northeast-2.amazonaws.com/profileImage/samgu.png" />
+                  <Avatar  src={userData?.image}/>
                 </IconButton>
               </Tooltip>
               <Menu

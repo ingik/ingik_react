@@ -42,3 +42,13 @@ export function auth(dataToSubmit){
     }
 
 }
+
+export function authUpdate(dataToSubmit){
+    const request = axios.post("/api/users/profileUpdate", dataToSubmit)
+    .then((response) => response.data)
+
+    return {
+        type: AUTH_USER,
+        payload: request
+    }
+}

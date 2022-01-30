@@ -8,6 +8,7 @@ const config = require("./config/key");
 const { User } = require("./models/User");
 const { auth } = require("./middleware/auth");
 const  upload  = require('./middleware/upload');
+const imageDelete = require('./middleware/imageDelete')
 
 
 
@@ -126,7 +127,8 @@ app.get('/api/users/auth', auth , (req, res) => {
     name: req.user.name,
     lastname: req.user.lastname,
     role : req.user.role,
-    image: req.user.image
+    image: req.user.image,
+    intro: req.user.intro
   })
 
 })
@@ -157,28 +159,41 @@ app.post('/api/users/find',(req,res) => {
 })
 
 //User ImageUpdate
-app.post('/api/users/imageUpdate', upload.array('imageData'),(req,res) => {
+app.post('/api/users/imageUpdate', upload.array('imageData'),(req,res,err) => {
   
-  console.log(req.files[0])
-  console.log(req.body.stringData)
+  console.log('imagefiles[0] : '+ JSON.stringify(req.files[0]))
+  // console.log('stringImage : '+req.body.stringImage)
+  
+  console.log('req.files[0].location : '+req.files[0].location)
+  console.log('req.body.stringImage  : '+req.body.stringImage )
 
-  if(!req.files[0]) return res.json('ImageUpdate failure')
-  return res.json(req.files[0].location)
+  imageDelete(req.body.stringImage)
+
+  if(!req.files[0]) return res.json('')
+  return res.json(req.files[0])
 
 })
 
 //User ProfileUpdate
-// app.post('/api/users/profileUpdate',(req,res) => {
+app.post('/api/users/profileUpdate', auth , (req,res) => {
 
-//   User.findOneAndUpdate({_id : req.params.key , username : req.user.name },
-//     {$set: { 'title':board.title , 'content':board.content }},
-//   (err,user) => {
+  
+  const user = new User(req.body)
+  // console.log('req.body : '+JSON.stringify(req.body))
+  let imageUrl = req.body.updateImage
+  user.image = imageUrl
+  // console.log('req.user : ' + JSON.stringify(req.user))
+  // console.log('user : ' + user)
 
-//     if(err) return res.status(500).send({ error: 'database failure'})
-//     return res.status(200).send(board)
-//   })
+  User.findOneAndUpdate({_id : req.user._id ,name : req.user.name},
+    {$set: { 'name':user.name , 'email':user.email,'intro':user.intro, 'image':user.image }},
+  (err,user) => {
 
-// })
+    if(err) return res.status(500).send({ error: 'profileUpdate failure'})
+    return res.status(200).json(user)
+  })
+
+})
 
 //boardCreate
 

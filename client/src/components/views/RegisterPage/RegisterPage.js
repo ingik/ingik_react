@@ -191,7 +191,7 @@ function RegisterPage(props) {
           <TextField
             error={EmailAlertError ? false : true}
             label="email"
-            variant="outlined"
+            variant="standard"
             size="small"
             style={{ marginBottom: "10px", width: "250x" }}
             type="email"
@@ -202,7 +202,7 @@ function RegisterPage(props) {
           <div>
             <TextField
               label="Name"
-              variant="outlined"
+              variant="standard"
               size="small"
               style={{
                 marginBottom: "10px",
@@ -214,8 +214,8 @@ function RegisterPage(props) {
               onChange={onNameHander}
             />
             <Button
-              variant="outlined"
-              style={{ width: "40px", marginTop: "1.75px" }}
+              variant=""
+              style={{ width: "40px", marginTop: "10px" }}
               onClick={onNameCheck}
               type="button"
             >
@@ -225,7 +225,7 @@ function RegisterPage(props) {
           <TextField
             error={PasswordAlertError ? false : true}
             label="password"
-            variant="outlined"
+            variant="standard"
             size="small"
             style={{ marginBottom: "10px", width: "250x" }}
             type="password"
@@ -237,7 +237,7 @@ function RegisterPage(props) {
           <TextField
             error={ConfirmPasswordAlertError ? false : true}
             label="ConfirmPassword"
-            variant="outlined"
+            variant="standard"
             size="small"
             style={{ marginBottom: "10px", width: "250x" }}
             type="password"

@@ -18,7 +18,6 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 import { useState } from 'react';
-import { Avatar, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText, Tooltip } from '@mui/material';
 import Profile from '../Profile/Profile';
 import SideAppBar from './SideAppBar';
 

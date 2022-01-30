@@ -5,6 +5,7 @@ import Modal from '@mui/material/Modal';
 import { useState } from 'react';
 import { Avatar, IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 const style = {
   position: 'absolute',
@@ -20,12 +21,7 @@ const style = {
 
 export default function Profile(props){
 
-//modal
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-
+const userData = useSelector(state => state.user.userData)
 
 //avatar  
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -71,8 +67,7 @@ const onProfile = () => {
         <Tooltip title="Open settings">
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
             <Avatar
-              alt="Remy Sharp"
-              src="/static/images/avatar/2.jpg"
+              src={userData?.image}
               sx={{ marginLeft: "10px" }}
             />
           </IconButton>

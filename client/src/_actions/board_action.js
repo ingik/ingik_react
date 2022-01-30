@@ -11,7 +11,7 @@ import {
 export function createBoard(dataToSubmit){
 
     const request = axios.post('/api/boards/create', dataToSubmit)
-    .then(response => response.data).catch(err => console.log('action create error'+err))
+    .then(response => response.data).catch(err => console.log('action create error' + err))
 
     return{
         type: CREATE_BOARD,

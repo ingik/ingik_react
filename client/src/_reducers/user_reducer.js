@@ -1,7 +1,8 @@
 import { 
     LOGIN_USER,
     REGISTER_USER,
-    AUTH_USER
+    AUTH_USER,
+    // AUTH_USER_UPDATE
 } from '../_actions/types';
 
 
@@ -26,6 +27,11 @@ export default function (state = {}, action) {
             // eslint-disable-next-line no-unreachable
             break;
         
+        // case AUTH_USER_UPDATE:
+        //     return { ...state, userData: action.payload }
+        //     // eslint-disable-next-line no-unreachable
+        //     break;
+
         default:
             return state;
     }

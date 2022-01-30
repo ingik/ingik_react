@@ -1,25 +1,27 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import CloseIcon from '@mui/icons-material/Close';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Avatar, Fab, TextField } from '@mui/material';
 import { useEffect } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { authUpdate } from '../../../_actions/user_action'
 
 export default function ProfileUpdate(props) {
 
   const [OnSideBar, setOnSideBar] = useState(false)
-
+  const dispatch = useDispatch()
 
   const [Name, setName] = useState("")
   const [Email, setEmail] = useState("")
   const [Intro, setIntro] = useState("")
   const [Image, setImage] = useState("")
-  const [UpdateImage, setUpdateImage] = useState("")
   const [ProfileImage, setProfileImage] = useState({})
+
+  const [PreImage, setPreImage] = useState("")
 
   const toggleDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -29,10 +31,16 @@ export default function ProfileUpdate(props) {
   };
 
   useEffect(() => {
-    // setUser(props.user)
-    setName(props.user?.name)
-    setEmail(props.user?.email)
-    if(props.user?.intro) setIntro(props.user?.intro)
+    // console.log('(useEffect) : '+JSON.stringify(props.user))
+    if(props.user){
+      setName(props.user.name)
+      setEmail(props.user.email)
+      if(props.user.intro) setIntro(props.user?.intro)
+      if(props.user.image) {
+        setImage(props.user?.image)
+        setPreImage(props.user?.image)
+      }
+    }
   }, [props])
 
 
@@ -56,13 +64,11 @@ export default function ProfileUpdate(props) {
     const ImageData = event.target.files[0]
     console.log(ImageData);
     
-    setProfileImage(ImageData)
-    console.log('e.target.files : '+ProfileImage)
+    if (event.target.files[0]) {
+      setProfileImage(ImageData)
 
-    
+      console.log('e.target.files : ' + ProfileImage)
 
-
-    if (event.target.files.length) {
       const reader = new FileReader();
       reader.readAsDataURL(ImageData);
       reader.onload = function (event) {
@@ -70,46 +76,70 @@ export default function ProfileUpdate(props) {
         setImage(event.target.result);
 
       };
+
     }
   }
 
   const onProfileImageRemover = ()  => {
     setImage("")
+    setProfileImage("")
   }
 
   const onSubmitHandler = (event) => {
     event.preventDefault();
 
-    axios.post("/api/users/profileUpdate").then((response) => response.data);
 
     const Data = new FormData();
     Data.append("stringData", Name)
+    Data.append("stringImage",PreImage)
     Data.append("imageData", ProfileImage);
-    console.log("Data : " + Data.has("stringData"));
 
+    console.log("Data : " + Data.has("stringData"));
     console.log("(ProfileUpdate)Data : " + Data.get("stringData"));
 
-    axios
-      .post("/api/users/imageUpdate", Data, {
+    
+    
+    axios.post("/api/users/imageUpdate", Data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       })
       .then((response) => {
-        if (response.data === "update error") alert("update error");
+        
+          console.log('response.data : '+response.data.location)
 
-        setUpdateImage(response.data);
+          let body = {
+            name: Name,
+            email: Email,
+            intro: Intro,
+            updateImage: response.data.location,
+          };
+        
+          console.log("body : " + JSON.stringify(body));
+          
+          dispatch(authUpdate(body)).then( response => {
+            if(response.payload){
+              console.log("complete update")
+            }
+          })
+
+            setOnSideBar(false);
       });
 
-    let body = {
-      name: Name,
-      email: Email,
-      intro: Intro,
-      updateImage: UpdateImage,
-    };
-
-    // axios.post("/api/users/profileUpdate", body).then();
+      // let body = {
+      //   image: Image
+      // }
+      
+      // axios.post('/api/users/oldImageDelete',body).then(response => {
+      // })
   };
+
+
+  const onClose = () => {
+    toggleDrawer(false)
+    setOnSideBar(false)
+    setImage(props.user.image)
+  }
 
 
 
@@ -180,7 +210,7 @@ export default function ProfileUpdate(props) {
             
               <TextField
                 label="Name"
-                variant="outlined"
+                variant="standard"
                 size="small"
                 style={{
                   marginBottom: "10px",
@@ -195,7 +225,7 @@ export default function ProfileUpdate(props) {
               />
               <TextField
                 label="Email"
-                variant="outlined"
+                variant="standard"
                 size="small"
                 style={{
                   marginBottom: "10px",
@@ -210,7 +240,7 @@ export default function ProfileUpdate(props) {
               />
               <TextField
                 label="Intro"
-                variant="outlined"
+                variant="standard"
                 size="small"
                 style={{
                   marginBottom: "10px",
@@ -232,8 +262,8 @@ export default function ProfileUpdate(props) {
             alignItems: "center",
           }}
         >
-          <Button onClick={toggleDrawer(false)}>cancel</Button>
-          <Button onClick={toggleDrawer(false),onSubmitHandler}>update</Button>
+          <Button onClick={ onClose }>cancel</Button>
+          <Button onClick={onSubmitHandler}>update</Button>
         </div>
       </form>
     </Box>

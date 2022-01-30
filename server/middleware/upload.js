@@ -15,10 +15,13 @@ const upload = multer({
         key : function(req, file, cb){
 
             const type = file.mimetype.split('/')
-                cb(null, req.body.stringData.split('.').pop()+'.'+type[1]); // 이름 설정
+                cb(null,Date.now()+'_'+req.body.stringData.split('.').pop()+'.'+type[1]); // 이름 설정
                 console.log('upload : '+file)
                 // cb(null, file.originalname)
-        }
-    })
+        },
+    }),
+    
+   
 },'NONE');
-module.exports = upload;
+
+  module.exports = upload;
