@@ -7,8 +7,8 @@ const bodyParser = require('body-parser')
 const config = require("./config/key");
 const { User } = require("./models/User");
 const { auth } = require("./middleware/auth");
-const  upload  = require('./middleware/upload');
-const imageDelete = require('./middleware/imageDelete')
+const  upload  = require('./S3/upload');
+const imageDelete = require('./S3/imageDelete')
 
 
 

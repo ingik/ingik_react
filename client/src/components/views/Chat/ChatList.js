@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
 import { chatList } from '../../../_actions/chat_action'
+import { FixedSizeList as List } from "react-window";
 // import {FixedSizeList} from 'react-window'
 
 function ChatList(props) {
@@ -18,14 +19,17 @@ function ChatList(props) {
     useEffect(() => {
         dispatch(chatList()).then( response => {
             if(response.payload){
-                setData(response.payload)
+              const ListData = response.payload
+                setData(ListData)
+                console.log('(ChatList)ListData : '+JSON.stringify(ListData))
+                console.log('(ChatList)Data : '+JSON.stringify(Data))
             } else {
                 alert("Failed to chatList")
             }
         })
     }, [dispatch])
 
-    function List(){ 
+    const List = () => { 
         Data.map((data) =>{
 
         const url = data.roomName
@@ -39,7 +43,7 @@ function ChatList(props) {
         })
 
         return (
-          <ListItem key={data._id}>
+          <ListItem key={ data._id } component = "div" disablePadding>
             <ListItemButton onClick={ onRoad }>
               <ListItemText primary={ data.roomName }/>
             </ListItemButton>
@@ -52,8 +56,6 @@ function ChatList(props) {
         props.history.push('./create')
     }
 
-
-
     return (
       <div>
         <div>
@@ -62,11 +64,10 @@ function ChatList(props) {
             onClick={onClickHandler}
             sx={{ marginTop: "10px" }}
           >
-
             Room Create
           </Button>
         </div>
-        <div
+        <Box
           sx={{
             width: "100%",
             height: 400,
@@ -74,16 +75,16 @@ function ChatList(props) {
             bgcolor: "background.paper",
           }}
         >
-          {/* <FixedSizeList
+          {/* <List
             height={400}
             width={360}
             itemSize={46}
-            itemCount={200}
+            itemCount={10}
             overscanCount={5}
-          > */}
-            { List() }
-          {/* </FixedSizeList> */}
-        </div>
+          >
+            {Data}
+          </List> */}
+        </Box>
       </div>
     );
 }

@@ -21,9 +21,8 @@ import ChatList from './components/views/Chat/ChatList';
 import SearchAppBar from './components/views/AppBar/SearchAppBar'
 import Profile from './components/views/Profile/Profile'
 import ProfileCmp from './components/views/Profile/ProfileCmp';
-import SideAppBar from './components/views/AppBar/SideAppBar'
-import AppBarCmp from './components/views/AppBar/AppBarCmp';
-import { useState } from 'react';
+// import SideAppBar from './components/views/AppBar/SideAppBar'
+// import AppBarCmp from './components/views/AppBar/AppBarCmp';
 
 
 function App() {
@@ -50,10 +49,10 @@ function App() {
           <Route exact path="/chat/create" component={ CreateChat }/>
           <Route exact path="/chat/list" component={Auth(ChatList,true)}/>
           <Route exact path="/profile" component={Auth(ProfileCmp,true)}/>
-          {/* <Route exact path="/AppBar" component={AppBarCmp}/> */}
+          {/* <Route exact path="/AppBar" component={AppBarCmp}/> 필요없음*/}
           {/* <Route exact path="/SideBar" component={SideAppBar}/> 지울거*/}
 
-          <Route exact path="/modal" component={ Profile }/>s
+          <Route exact path="/modal" component={ Profile }/>
         </Switch>
         
       </div>

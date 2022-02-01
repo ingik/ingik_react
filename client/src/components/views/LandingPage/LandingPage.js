@@ -1,9 +1,5 @@
-import React,{ useEffect,useState } from 'react'
-import axios from 'axios';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 // import  { Card , CardMedia , CardContent , Typography , Button} from '@mui/material';
-import { useDispatch } from 'react-redux';
-import { auth } from '../../../_actions/user_action';
 
 function LandingPage(props) {
     
@@ -20,11 +16,6 @@ function LandingPage(props) {
     //         setIsAuth(response.payload.isAuth)
     //     })
     // }, [])
-    
-    
-    
-    
-    
 
 
     return (
@@ -37,7 +28,6 @@ function LandingPage(props) {
           height: "100vh",
         }}
       >
-       
       </div>
     );
 }

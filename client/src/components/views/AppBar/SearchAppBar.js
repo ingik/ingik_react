@@ -9,17 +9,13 @@ import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import axios from 'axios';
-import { withRouter } from 'react-router-dom';
-import { useState } from 'react';
 import Profile from '../Profile/Profile';
 import SideAppBar from './SideAppBar';
+import { withRouter } from 'react-router-dom';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -63,7 +59,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 function SearchAppBar(props) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
