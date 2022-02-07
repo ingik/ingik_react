@@ -21,6 +21,9 @@ import ChatList from './components/views/Chat/ChatList';
 import SearchAppBar from './components/views/AppBar/SearchAppBar'
 import Profile from './components/views/Profile/Profile'
 import ProfileCmp from './components/views/Profile/ProfileCmp';
+import ImageBoard from './components/views/ImageBoard/ImageBoard'
+import ImageBoardList from './components/views/ImageBoard/ImageBoardList'
+import ImageBoardUpdate from './components/views/ImageBoard/ImageBoardUpload'
 // import SideAppBar from './components/views/AppBar/SideAppBar'
 // import AppBarCmp from './components/views/AppBar/AppBarCmp';
 
@@ -49,6 +52,9 @@ function App() {
           <Route exact path="/chat/create" component={ CreateChat }/>
           <Route exact path="/chat/list" component={Auth(ChatList,true)}/>
           <Route exact path="/profile" component={Auth(ProfileCmp,true)}/>
+          <Route exact path="/imageBoard" component={ImageBoard} />
+          <Route exact path="/imageBoardList" component={Auth(ImageBoardList,true)} />
+          <Route exact path="/imageBoardUpdate" component={Auth(ImageBoardUpdate,true)} />
           {/* <Route exact path="/AppBar" component={AppBarCmp}/> 필요없음*/}
           {/* <Route exact path="/SideBar" component={SideAppBar}/> 지울거*/}
 

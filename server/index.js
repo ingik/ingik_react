@@ -8,6 +8,7 @@ const config = require("./config/key");
 const { User } = require("./models/User");
 const { auth } = require("./middleware/auth");
 const  upload  = require('./S3/upload');
+const S3BoardUpload = require('./S3/S3BoardUpload')
 const imageDelete = require('./S3/imageDelete')
 
 
@@ -26,6 +27,8 @@ const { request } = require('express');
 const { Board } = require('./models/Board');
 const { Chat } = require('./models/Chat')
 const { Room } = require('./models/Room') 
+const { ImageBoard } = require('./models/ImageBoard')
+
 
 mongoose.connect(config.mongoURI,{
     useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false
@@ -162,14 +165,11 @@ app.post('/api/users/find',(req,res) => {
 app.post('/api/users/imageUpdate', upload.array('imageData'),(req,res,err) => {
   
   console.log('imagefiles[0] : '+ JSON.stringify(req.files[0]))
-  // console.log('stringImage : '+req.body.stringImage)
-  
-  console.log('req.files[0].location : '+req.files[0].location)
   console.log('req.body.stringImage  : '+req.body.stringImage )
 
   imageDelete(req.body.stringImage)
 
-  if(!req.files[0]) return res.json('')
+  if(!req.files[0]) return res.json('no image')
   return res.json(req.files[0])
 
 })
@@ -193,6 +193,39 @@ app.post('/api/users/profileUpdate', auth , (req,res) => {
     return res.status(200).json(user)
   })
 
+})
+
+
+//ImageBoardUpload
+app.post('/api/boards/imageBoardUpload', S3BoardUpload.array('ImageArr'),(req,res,err) => {
+
+  console.log('ImageArr : '+ req.files)
+  console.log('string ' + req.body.userName)
+
+  if(!req.files[0]) return console.log('no files')
+  return res.json(req.files)
+})
+
+//ImageBoardCreate
+app.post('/api/boards/imageBoardCreate',(req,res) => {
+
+  const image = new ImageBoard(req.body)
+
+  image.createAt = Time
+
+  image.save((err) => {
+    if(err) return res.json({success: false, err})
+    return res.status(200).json({success: true})
+  })
+//수정 필요 비동기 처리 필요
+})
+
+app.get('/api/boards/imageBoardList', auth ,(req,res) => {
+
+  ImageBoard.find((err,imageBoard) => {
+    if(err) return res.status(500).send({error: 'database failure'})
+    return res.status(200).json(imageBoard)
+  })
 })
 
 //boardCreate

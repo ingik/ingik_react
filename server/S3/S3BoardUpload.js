@@ -6,22 +6,21 @@ aws.config.loadFromPath(__dirname +'/awsconfig.json');
 
 
 const s3 = new aws.S3();
-const BoardUpload = multer({
+const S3BoardUpload = multer({
     storage: multerS3({
         s3: s3,
-        bucket: 'ingikbucket/boardImage',
+        bucket: 'ingikbucket/boardImage/'+Date.now(),
         contentType: multerS3.AUTO_CONTENT_TYPE, 
         acl: 'public-read',
         key : function(req, file, cb){
-
+            // console.log('upload : '+ JSON.stringify(req.body))
             const type = file.mimetype.split('/')
-                cb(null,Date.now()+'_'+req.body.stringData.split('.').pop()+'.'+type[1]); // 이름 설정
-                console.log('upload : '+ file)
-                // cb(null, file.originalname)
+            cb(null,Date.now()+'_'+req.body.userName.split('.').pop()+'.'+type[1]); // 이름 설정
+            // cb(null, file.originalname)
         },
     }),
     
-   
+    
 },'NONE');
 
-  module.exports = BoardUpload;
+  module.exports = S3BoardUpload;

@@ -97,7 +97,6 @@ function AppBarCmp(props) {
                 </Button>
               ))}
             </Box>
-  
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -126,7 +125,9 @@ function AppBarCmp(props) {
                   </MenuItem>
                 ))}
               </Menu>
+
             </Box>
+
           </Toolbar>
         </Container>
       </AppBar>

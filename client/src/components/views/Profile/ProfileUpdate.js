@@ -126,12 +126,6 @@ export default function ProfileUpdate(props) {
             setOnSideBar(false);
       });
 
-      // let body = {
-      //   image: Image
-      // }
-      
-      // axios.post('/api/users/oldImageDelete',body).then(response => {
-      // })
   };
 
 
@@ -252,6 +246,7 @@ export default function ProfileUpdate(props) {
                 onChange={onIntroHandler}
                 // placeholder={User?.intro}
                 focused
+                multiline
               />
           </div>
         </div>
