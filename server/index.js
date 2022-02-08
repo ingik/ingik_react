@@ -210,7 +210,6 @@ app.post('/api/boards/imageBoardUpload', S3BoardUpload.array('ImageArr'),(req,re
 app.post('/api/boards/imageBoardCreate',(req,res) => {
 
   const image = new ImageBoard(req.body)
-
   image.createAt = Time
 
   image.save((err) => {

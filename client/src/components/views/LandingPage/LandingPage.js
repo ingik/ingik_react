@@ -3,19 +3,6 @@ import { withRouter } from 'react-router-dom';
 
 function LandingPage(props) {
     
-    
-    // const dispatch = useDispatch()
-    
-    // const [IsAuth,setIsAuth] = useState(Boolean)
-    console.log('(landingPage)props : '+JSON.stringify(props))
-    
-    // useEffect(() => {
-    //     dispatch(auth()).then(response => {
-    //         console.log(response)
-            
-    //         setIsAuth(response.payload.isAuth)
-    //     })
-    // }, [])
 
 
     return (
