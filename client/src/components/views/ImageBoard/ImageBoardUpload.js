@@ -31,9 +31,13 @@ function ImageBoardUpload(props) {
   };
 
   useEffect(() => {
+
     if(!mounted.current){
+
       mounted.current = true
+
     }else{
+      
       const value = [];
       console.log("ImageArr : " + ImageArr);
 

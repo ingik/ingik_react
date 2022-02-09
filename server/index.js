@@ -227,6 +227,15 @@ app.get('/api/boards/imageBoardList', auth ,(req,res) => {
   })
 })
 
+app.get('/api/boards/imageBoard/:key',(req,res) => {
+
+  ImageBoard.find({ '_id': req.params.key },(err,board) => {
+    if(err) return res.status(500).send({error: 'database failure'})
+    return res.status(200).json(board)
+  })
+
+})
+
 //boardCreate
 
 app.post('/api/boards/create', auth ,(req, res) => {

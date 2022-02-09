@@ -11,7 +11,7 @@ function ProfileCmp(props) {
 
     console.log('(ProfileCmp)userData : '+ JSON.stringify(userData))
     // const dispatch = useDispatch()
-    const [User, setUser] =useState({})
+    const [User, setUser] = useState({})
 
     
 

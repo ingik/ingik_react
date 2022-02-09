@@ -7,15 +7,20 @@ function ImageBoardList(props) {
 
   const [PreviewList,setPreviewList] = useState([])
 
+
   useEffect(() => {
     axios.get('/api/boards/imageBoardList').then(response => {
-      console.log('response.data : '+response.data)
+      console.log(response.data)
 
       const value = []
 
       response.data.map((list) => {
+        // console.log(list._id)
+  
+        list.image[0]._id = list._id
         value.push(list.image[0])
-        console.log(list.image[0])
+
+        console.log(value)
       })
 
       setPreviewList(value)
@@ -29,9 +34,25 @@ function ImageBoardList(props) {
     console.log("PreviewList : " + JSON.stringify(PreviewList));
   },[PreviewList])
 
+  const onHoverHandler = (event) => {
+    event.target.style =`opacity:0.5`
+  }
+
+  const onLeaveHandler = (event) => {
+    event.target.style =`opacity:1`
+  }
+
   return (
-    <div>
-      <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
+    <div 
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      width: "100%",
+      // height: "100vh",
+      marginTop:'5vh'
+    }}>
+      <ImageList sx={{ width: 500 }} cols={3} rowHeight={164}>
       {PreviewList.map((item) => (
         <ImageListItem key={item.img}>
           <img
@@ -39,6 +60,11 @@ function ImageBoardList(props) {
             srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
             alt={item.name}
             loading="lazy"
+            onClick={ function(){
+                props.history.push('/imageBoard/'+item._id)
+            }}
+            onMouseEnter={ onHoverHandler }
+            onMouseLeave={ onLeaveHandler }
           />
         </ImageListItem>
       ))}

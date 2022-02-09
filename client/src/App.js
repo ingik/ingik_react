@@ -41,7 +41,7 @@ function App() {
                         '/chat/list','/profile']} 
                 component={Auth(SearchAppBar, true)}/>
         <Switch>
-          <Route exact path="/" component={Auth(LandingPage, null)}></Route>
+          {/* <Route exact path="/" component={Auth(LandingPage, null)}/> */}
           <Route exact path="/login" component={Auth(LoginPage, false)}/>
           <Route exact path="/register" component={Auth(RegisterPage, false)}/>
           <Route exact path="/boards/detail/:key" component={Auth(Board,true)} />
@@ -52,8 +52,8 @@ function App() {
           <Route exact path="/chat/create" component={ CreateChat }/>
           <Route exact path="/chat/list" component={Auth(ChatList,true)}/>
           <Route exact path="/profile" component={Auth(ProfileCmp,true)}/>
-          <Route exact path="/imageBoard" component={ImageBoard} />
-          <Route exact path="/imageBoardList" component={Auth(ImageBoardList,true)} />
+          <Route exact path="/imageBoard/:key" component={ImageBoard} />
+          <Route exact path="/" component={Auth(ImageBoardList,true)} />
           <Route exact path="/imageBoardUpdate" component={Auth(ImageBoardUpdate,true)} />
           {/* <Route exact path="/AppBar" component={AppBarCmp}/> 필요없음*/}
           {/* <Route exact path="/SideBar" component={SideAppBar}/> 지울거*/}
