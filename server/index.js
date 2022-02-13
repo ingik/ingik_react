@@ -211,6 +211,8 @@ app.post('/api/boards/imageBoardCreate',(req,res) => {
 
   const image = new ImageBoard(req.body)
   image.createAt = Time
+  image.viewCount
+  image.recommand
 
   image.save((err) => {
     if(err) return res.json({success: false, err})
@@ -233,6 +235,22 @@ app.get('/api/boards/imageBoard/:key',(req,res) => {
     if(err) return res.status(500).send({error: 'database failure'})
     return res.status(200).json(board)
   })
+
+})
+
+
+//imageboardcomment
+
+app.post('/api/boards/imageBoardComment',(req,res) => {
+
+  console.log(req.body)
+
+  ImageBoard.updateMany({_id : req.body._id  }
+    ,{$push: {'comment':{ 'user':req.body.user , 'content':req.body.comment}}},
+    (err,imageBoard) => {
+      if(err) return res.status(500).send({ error: 'database failure'})
+      return res.status(200).send(imageBoard)
+  },)
 
 })
 

@@ -35,6 +35,10 @@ export default function SideAppBar(props) {
      props.propsData.history.push("/boards")
    };
 
+   const onHome = () => {
+    props.propsData.history.push("/")
+   };
+
   const list = () => (
     <Box
       sx={{ width: 250 }}
@@ -42,6 +46,14 @@ export default function SideAppBar(props) {
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
     >
+      <List>
+          <ListItem button onClick={ onHome }>
+            <ListItemIcon>
+              <InboxIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Home" />
+          </ListItem>
+      </List>
       <List>
           <ListItem button onClick={ onBoard }>
             <ListItemIcon>

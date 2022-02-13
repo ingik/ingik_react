@@ -38,7 +38,15 @@ const imageBoardSchema = mongoose.Schema({
     image:{
         type:Array,
         maxlength:10
-    }
+    },
+    comment:[{
+        user:{
+            type:Object
+        },
+        content:{
+            type:String
+        }
+    }]
 
 })
 
