@@ -197,7 +197,7 @@ app.post('/api/users/profileUpdate', auth , (req,res) => {
 
 
 //ImageBoardUpload
-app.post('/api/boards/imageBoardUpload', S3BoardUpload.array('ImageArr'),(req,res,err) => {
+app.post('/api/boards/imageBoardUpload', S3BoardUpload.array("ImageArr"),(req,res,next) => {
 
   console.log('ImageArr : '+ req.files)
   console.log('string ' + req.body.userName)
@@ -239,7 +239,7 @@ app.get('/api/boards/imageBoard/:key',(req,res) => {
 })
 
 
-//imageboardcomment
+//imageboardcommentCreate
 
 app.post('/api/boards/imageBoardComment',(req,res) => {
 
@@ -253,6 +253,21 @@ app.post('/api/boards/imageBoardComment',(req,res) => {
   },)
 
 })
+
+
+//imageBoardCommentList
+
+app.get('/api/baords/imageBoard/comment/:key',(req,res) => {
+
+  ImageBoard.find({ '_id': req.params.key },(err,board) => {
+    if(err) return res.status(500).send({error: 'database failure'})
+    return res.status(200).json(board)
+  })
+  
+})
+
+
+
 
 //boardCreate
 

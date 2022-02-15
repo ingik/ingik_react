@@ -1,5 +1,5 @@
 import  Box  from '@mui/material/Box';
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -16,123 +16,161 @@ import { FixedSizeList } from 'react-window';
 import { useSelector,shallowEqual } from 'react-redux'
 
 function ImageBoard(props) {
+  const ListRef = useRef({ x: 0, y: 0 });
 
-    const ListRef = useRef({x:0,y:0})
+  const UserSelectData = useSelector(
+    (state) => state.user.userData,
+    shallowEqual
+  );
 
-    const UserSelectData = useSelector(state => state.user.userData,shallowEqual)
 
-    // console.log(UserSelectData)
+  // console.log(UserSelectData)
 
-    const [UserData, setUserData] = useState({})
-    const [ImageDataList, setImageDataList] = useState([])
-    const [Comment, setComment] = useState("")
-    const [Recommand,setRecommand] =useState("")
-    const [ListComment, setListComment] = useState([])
+  const [UserData, setUserData] = useState({});
+  const [ImageDataList, setImageDataList] = useState([]);
+  const [Comment, setComment] = useState("");
+  const [Recommand, setRecommand] = useState("");
+  const [ListComment, setListComment] = useState([]);
 
-    let number = 0
+
+  const [Number,setNumber] = useState(0)
+
+
+
+  const onLeftMove = (event) => {
+
+    console.log(Number)
+    if (Number <= 0) {
+      return console.log("firstpage");
+    }
+
+    setNumber(Number - 1)
+    ListRef.current.style.transition = "300ms";
+    ListRef.current.style.transform = ListRef.current.style.transform + `translateX(500px)`;
+    console.log("Left");
+  };
+  
+  const onRightMove = () => {
     
-    const onLeftMove = (event) => {
-      if (number <= 0) {
-        return console.log('firstpage')
-      }
-        number--
-        ListRef.current.style.transition = "300ms"
-        ListRef.current.style.transform = ListRef.current.style.transform + `translateX(500px)`
-        console.log('Left')        
-      }
-
-      const onRightMove = (event) => {
-        console.log(ImageDataList.length)
-        if (number >= ImageDataList.length-1) {
-          return console.log('lastpage')
-        }
-        number++
-        console.log('number : '+number)
-        ListRef.current.style.transition = "300ms";
-        ListRef.current.style.transform =
-          ListRef.current.style.transform + `translateX(-500px)`;
-        console.log("right");
-      }
-      
-      useLayoutEffect(() => {
-        axios.get('/api/boards/imageBoard/'+props.paramKey).then(response => {
-          if(response.data){
-            console.log(response.data)
-            setUserData(response.data)
-            setImageDataList(response.data[0].image)
-            setRecommand(response.data.recommand)
-            setListComment(response.data[0].comment)
-          }else{
-            console.log('no imageBoardData')
-          }
-        })
-      },[])
-      
-      useLayoutEffect(() => {
-      // console.log(ImageDataList.length)
-      // console.log(ImageDataList)
-      ListRef.current.style.width = (ImageDataList.length * 500) +'px'
-      // console.log(ListRef.current.style.width)
-    },[ImageDataList])
-
-
-    const back = {
-              position: "absolute",
-              zIndex: 9999,
-              color: "red",
-              opacity: 0.6,
-              top: "calc(50% - 25px)",
-              left: "calc(50% - 25px)",
-              display :'none',
-              fontSize: "50px",
+    console.log(Number)
+    console.log(ImageDataList.length);
+    
+    if (Number >= ImageDataList.length - 1) {
+      return console.log("lastpage");
     }
+    setNumber(Number + 1)
 
-    const front = {
-      position: "absolute",
-      zIndex: 9999,
-      color: "red",
-      opacity: 0.6,
-      top: "calc(50% - 25px)",
-      left: "calc(50% - 25px)",
-      display :'inline',
-      fontSize: "50px",
-    }
+    ListRef.current.style.transition = "400ms";
+    ListRef.current.style.transform = ListRef.current.style.transform + `translateX(-500px)`;
+    console.log("right");
+  };
 
-    const onSubmitHandler = (event) => {
-      event.preventDefault()
-
-
-
-      // console.log('UserData : '+JSON.stringify(UserData[0]._id))
-      let body = {
-        user:UserSelectData,
-        comment:Comment,
-        _id:UserData[0]._id
+  useEffect(() => {
+    axios.get("/api/boards/imageBoard/" + props.paramKey).then((response) => {
+      if (response.data) {
+        setUserDataEffect(response.data);
+        setImageDataListEffect(response.data);
+        setRecommandEffect(response.data);
+      } else {
+        console.log("no imageBoardData");
       }
+    });
+  }, []);
 
 
-      axios.post('/api/boards/imageBoardComment',body).then(response => {
+  useEffect(() => {
+    axios.get("/api/baords/imageBoard/comment/" + props.paramKey).then((response) => {
+      if(response.data){
+        setListCommentEffect(response.data)
+        // console.log(response.data)
+      } else {
+        console.log("no imageBoard Comment Data")
+      }
+    })
 
-        if(response.data){
-          setComment("")
-          console.log(response.data)
-        } else {
-          console.log('Comment Data null')
-        }
-      })
-
-
-    }
-
-    const onCommentHandler = (event) => {
-      setComment(event.currentTarget.value)
-    }
+  },[ListComment])
 
 
-    useEffect(() => {
-      
-    },[])
 
+
+  
+  const setUserDataEffect = (data) => {
+    console.log('setUserDataEffect')
+    setUserData(data)
+  }
+  
+  const setImageDataListEffect = (data) => {
+    setImageDataList(data[0].image);
+  }
+  
+  const setRecommandEffect = (data) => {
+    setRecommand(data.recommand);
+  }
+  
+  const setListCommentEffect = (data) => {
+    setListComment(data[0].comment);
+  }
+
+  
+  
+  useEffect(() => {
+    console.log('ImageDataList')
+    ListRef.current.style.width = ImageDataList.length * 500 + "px";
+  }, [ImageDataList]);
+
+  const none = {
+    position: "absolute",
+    zIndex: 9999,
+    color: "gray",
+    opacity: 0.6,
+    top: "calc(50% - 25px)",
+    left: "calc(50% - 25px)",
+    display: "none",
+    fontSize: "50px",
+  };
+
+  const display = {
+    position: "absolute",
+    zIndex: 9999,
+    color: "gray",
+    opacity: 0.6,
+    top: "calc(50% - 25px)",
+    left: "calc(50% - 25px)",
+    display: "inline",
+    fontSize: "50px",
+  };
+
+  const onSubmitHandler = (event) => {
+    event.preventDefault();
+
+    // console.log('UserData : '+JSON.stringify(UserData[0]._id))
+    let body = {
+      user: UserSelectData,
+      comment: Comment,
+      _id: UserData[0]._id,
+    };
+
+    axios.post("/api/boards/imageBoardComment", body).then((response) => {
+      setComment("");
+
+      if (response.data) {
+        console.log(response.data);
+      } else {
+        console.log("Comment Data null");
+      }
+    });
+  };
+
+  const onCommentHandler = (event) => {
+    setComment(event.currentTarget.value);
+  };
+
+
+  const ScrollbarStyle = {
+    overflowY: "scroll",
+    height: "50vh",
+    // '::-webkit-scrollbar' : { display: "none" }, 
+  }
 
   return (
     <div>
@@ -161,7 +199,7 @@ function ImageBoard(props) {
           onClick={onLeftMove}
         >
           <ArrowBackIosNewIcon
-            style={number > 0 ? back : front}
+            style={Number <= 0 ? none : display}
             fontSize="large"
           />
         </div>
@@ -175,19 +213,12 @@ function ImageBoard(props) {
             width: "20%",
             height: "100%",
             zIndex: 9999,
+            
           }}
           onClick={onRightMove}
         >
           <ArrowForwardIosIcon
-            style={{
-              position: "absolute",
-              zIndex: 9999,
-              color: "red",
-              opacity: 0.6,
-              top: "calc(50% - 25px)",
-              left: "calc(50% - 25px)",
-              fontSize: "50px",
-            }}
+            style={Number >= ImageDataList.length - 1 ? none : display}
             fontSize="large"
           />
         </div>
@@ -237,60 +268,59 @@ function ImageBoard(props) {
         className="rigthBox"
         style={{ position: "absolute", display: "inline-block" }}
       >
-        
-
         <List>
-          <ListItem >
-          <Avatar
-            alt={UserData[0]?.user.name}
-            src={UserData[0]?.user.image}
-            style={{
-              display: "inline-block",
-              verticalAlign: "top",
-            }}
-            />
-          <Typography
-            variant="h6"
-            component="div"
-            style={{
-              display: "inline-block",
-              verticalAlign: "top",
-              margin: "5px 0 0 15px",
-            }}
-          >
-            {UserData[0]?.user.name}
-          </Typography>
-
-          </ListItem>
+        <ListItem>
+              <Avatar
+                alt={UserData[0]?.user.name}
+                src={UserData[0]?.user.image}
+                style={{
+                  display: "inline-block",
+                  verticalAlign: "top",
+                }}
+              />
+              <Typography
+                variant="h6"
+                component="div"
+                style={{
+                  display: "inline-block",
+                  verticalAlign: "top",
+                  margin: "5px 0 0 15px",
+                }}
+              >
+                {UserData[0]?.user.name}
+              </Typography>
+            </ListItem>
+        </List>
+        <div
+          style={ ScrollbarStyle }
+        >
+          <List>
+            
             <div>{UserData[0]?.content}</div>
-        </List>
-        <List>
-            {
-              ListComment.map((com,index) => {
-                
-                return (
-                  <ListItem key={index}>
-                    <Avatar
-                      alt={com.user.name}
-                      src={com.user.image}
-                      style={{
-                        display: "inline-block",
-                        verticalAlign: "top",
-                      }}
-                    />
-                  </ListItem>
-                );
-              })
-            }
-          
-        </List>
-        <div className='buttonMenu'>
-
+          </List>
+          <List>
+            {ListComment.map((com, index) => {
+              return (
+                <ListItem key={index}>
+                  <Avatar
+                    alt={com.user.name}
+                    src={com.user.image}
+                    style={{
+                      display: "inline-block",
+                      verticalAlign: "top",
+                    }}
+                  />
+                  <Typography>{com.content}</Typography>
+                </ListItem>
+              );
+            })}
+          </List>
         </div>
-        <div className='commentCreate' style={{width:'100%'}}>
-          <form onSubmit={ onSubmitHandler }>
-            <TextField onChange={ onCommentHandler }></TextField>
-            <Button onClick={ onSubmitHandler }>작성</Button>
+        <div className="buttonMenu"></div>
+        <div className="commentCreate" style={{ width: "100%" }}>
+          <form onSubmit={onSubmitHandler}>
+            <TextField value={Comment} onChange={onCommentHandler}></TextField>
+            <Button onClick={onSubmitHandler}>작성</Button>
           </form>
         </div>
       </div>

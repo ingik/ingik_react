@@ -3,13 +3,14 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { shallowEqual, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import  { TextField , Button } from '@mui/material'
 
 function ImageBoardUpload(props) {
   const userData = useSelector((state) => state.user.userData, shallowEqual);
 
   //preview image
   const [ImageListValue, setImageListValue] = useState([]);
-  const [ImageArr, setImageArr] = useState([]);
+  const [ImageArr, setImageArr] = useState("");
   const [PreviewArr, setPreviewArr] = useState([]);
   const [Content, setContent] = useState("");
 
@@ -22,9 +23,12 @@ function ImageBoardUpload(props) {
   const ImageUploads = (event) => {
     event.preventDefault();
 
+    console.log('imageUPload')
+
     if (event.target.files) {
       console.log("files : " + event.target.files);
       setImageArr(Array.from(event.target.files));
+      // setImageArr(event.target.files);
       setPreviewArr(Array.from(event.target.files));
     }
 
@@ -38,15 +42,16 @@ function ImageBoardUpload(props) {
 
     }else{
       
+      console.log('Preview')
       const value = [];
-      console.log("ImageArr : " + ImageArr);
+      console.log(ImageArr);
 
       PreviewArr.map((list) => {
         const reader = new FileReader();
         reader.readAsDataURL(list);
         reader.onload = function (event) {
           value.push(event.target.result);
-          console.log("value : " + value);
+          // console.log("value : " + value);
         };
       });
 
@@ -59,16 +64,24 @@ function ImageBoardUpload(props) {
 
     const Data = new FormData();
 
-    console.log("ImageArr : " + ImageArr);
+    console.log(ImageArr);
 
-    Data.append("userName", userData.name);
-
+    
     ImageArr.map((imageArr) => {
-      Data.append("ImageArr", imageArr);
-      console.log("Data+ : " + Data.get("ImageArr"));
-    });
+        Data.append("ImageArr", imageArr);
+        console.log(Data.get("ImageArr"));
+      });
 
-    console.log("Data : " + Data.get("ImageArr"));
+      console.log(Data.getAll('ImageArr'));
+      
+      // for (let i = 0; i < ImageArr.length; i++) {
+      //   console.log(ImageArr[i])
+      //   Data.append("ImageArr", ImageArr[i]);
+      // }
+
+      Data.append("userName", userData.name);
+
+    console.log(Data.get("ImageArr"));
     console.log("Data.name : " + Data.get("userName"));
 
     axios
@@ -79,43 +92,66 @@ function ImageBoardUpload(props) {
       })
       .then((response) => {
         // console.log('response.data : '+JSON.stringify(response.data));
-        let value = {};
         let data = [];
-
+        
+        console.log(response.data)
+        
         response.data.map((list) => {
-          value.name = list.key;
-          value.img = list.location;
+
+          // value.name = list.key;
+          // value.img = list.location;
+
+          let value = {
+            key : list.key,
+            img : list.location
+          }
+
           data.push(value);
         });
 
-        console.log("data : " + JSON.stringify(data));
+        console.log(data);
 
         setImageLocation(data);
+
+        console.log("imageUpload");
+
+        let body = {
+          user: userData,
+          content: Content,
+          image: data,
+        };
+
+        console.log(body);
+
+        axios.post("/api/boards/imageBoardCreate", body).then((response) => {
+          console.log(response.data);
+        });
       });
   };
 
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    if (!ImageMounted.current) {
+  //   if (!ImageMounted.current) {
 
-      ImageMounted.current = true;
+  //     ImageMounted.current = true;
 
-    } else {
+  //   } else {
 
-      let body = {
-        user: userData,
-        content: Content,
-        image: ImageLocation,
-      };
+  //     console.log('imageUpload')
+  //     let body = {
+  //       user: userData,
+  //       content: Content,
+  //       image: ImageLocation,
+  //     };
 
-      console.log("body : " + JSON.stringify(body));
+  //     console.log(body);
 
-      axios.post("/api/boards/imageBoardCreate", body).then((response) => {
-        console.log(response.data);
-      });
-    }
-  }, [ImageLocation]);
+  //     axios.post("/api/boards/imageBoardCreate", body).then((response) => {
+  //       console.log(response.data);
+  //     });
+  //   }
+  // }, [ImageArr]);
 
   const onContentHander = (event) => {
     setContent(event.target.value);
@@ -156,8 +192,8 @@ function ImageBoardUpload(props) {
           ))}
         </ImageList>
 
-        <input type="text" value={Content} onChange={onContentHander} />
-        <button>버튼</button>
+        <TextField  type="text" value={Content} onChange={onContentHander} multiline/>
+        <Button variant='outlined' onClick={ onSubmitHandler }>버튼</Button>
       </form>
     </div>
   );
