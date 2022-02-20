@@ -12,6 +12,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import { FixedSizeList } from 'react-window';
+import ImageBoardComment from './ImageBoardComment';
 
 import { useSelector,shallowEqual } from 'react-redux'
 
@@ -24,15 +25,14 @@ function ImageBoard(props) {
   );
 
 
-  // console.log(UserSelectData)
 
   const [UserData, setUserData] = useState({});
   const [ImageDataList, setImageDataList] = useState([]);
   const [Comment, setComment] = useState("");
   const [Recommand, setRecommand] = useState("");
   const [ListComment, setListComment] = useState([]);
-
-
+  const [Body, setBody] = useState({});
+  const [CommentStatus, setCommentStatus] = useState(0)
   const [Number,setNumber] = useState(0)
 
 
@@ -78,24 +78,25 @@ function ImageBoard(props) {
   }, []);
 
 
-  useEffect(() => {
-    axios.get("/api/baords/imageBoard/comment/" + props.paramKey).then((response) => {
-      if(response.data){
-        setListCommentEffect(response.data)
-        // console.log(response.data)
-      } else {
-        console.log("no imageBoard Comment Data")
-      }
-    })
+  // useEffect(() => {
 
-  },[ListComment])
+  //   axios.get("/api/baords/imageBoard/comment/" + props.paramKey).then((response) => {
+  //     if(response.data){
+  //       console.log(response.data)
+  //       // setListCommentEffect(response.data)
+  //       setListComment(response.data[0]?.commentList);
+  //     } else {
+  //       console.log("no imageBoard Comment Data")
+  //     }
+  //   })
+
+  // },[ListComment])
 
 
 
 
   
   const setUserDataEffect = (data) => {
-    console.log('setUserDataEffect')
     setUserData(data)
   }
   
@@ -107,9 +108,7 @@ function ImageBoard(props) {
     setRecommand(data.recommand);
   }
   
-  const setListCommentEffect = (data) => {
-    setListComment(data[0].comment);
-  }
+
 
   
   
@@ -143,12 +142,18 @@ function ImageBoard(props) {
   const onSubmitHandler = (event) => {
     event.preventDefault();
 
-    // console.log('UserData : '+JSON.stringify(UserData[0]._id))
     let body = {
-      user: UserSelectData,
-      comment: Comment,
-      _id: UserData[0]._id,
+
+      boardId : UserData[0]._id,
+      commentList : {
+        userId : UserSelectData._id,
+        content : Comment 
+      }
+
     };
+
+    setCommentStatus(CommentStatus + 1)
+    // CommentStatus = true
 
     axios.post("/api/boards/imageBoardComment", body).then((response) => {
       setComment("");
@@ -166,11 +171,19 @@ function ImageBoard(props) {
   };
 
 
+
+
+ 
+
+
+  
+
   const ScrollbarStyle = {
     overflowY: "scroll",
     height: "50vh",
     // '::-webkit-scrollbar' : { display: "none" }, 
   }
+
 
   return (
     <div>
@@ -213,7 +226,6 @@ function ImageBoard(props) {
             width: "20%",
             height: "100%",
             zIndex: 9999,
-            
           }}
           onClick={onRightMove}
         >
@@ -269,51 +281,34 @@ function ImageBoard(props) {
         style={{ position: "absolute", display: "inline-block" }}
       >
         <List>
-        <ListItem>
-              <Avatar
-                alt={UserData[0]?.user.name}
-                src={UserData[0]?.user.image}
-                style={{
-                  display: "inline-block",
-                  verticalAlign: "top",
-                }}
-              />
-              <Typography
-                variant="h6"
-                component="div"
-                style={{
-                  display: "inline-block",
-                  verticalAlign: "top",
-                  margin: "5px 0 0 15px",
-                }}
-              >
-                {UserData[0]?.user.name}
-              </Typography>
-            </ListItem>
+          <ListItem>
+            <Avatar
+              alt={UserData[0]?.user.name}
+              src={UserData[0]?.user.image}
+              style={{
+                display: "inline-block",
+                verticalAlign: "top",
+              }}
+            />
+            <Typography
+              variant="h6"
+              component="div"
+              style={{
+                display: "inline-block",
+                verticalAlign: "top",
+                margin: "5px 0 0 15px",
+              }}
+            >
+              {UserData[0]?.user.name}
+            </Typography>
+          </ListItem>
         </List>
-        <div
-          style={ ScrollbarStyle }
-        >
+        <div style={ScrollbarStyle}>
           <List>
-            
-            <div>{UserData[0]?.content}</div>
+            <div> {UserData[0]?.content}</div>
           </List>
           <List>
-            {ListComment.map((com, index) => {
-              return (
-                <ListItem key={index}>
-                  <Avatar
-                    alt={com.user.name}
-                    src={com.user.image}
-                    style={{
-                      display: "inline-block",
-                      verticalAlign: "top",
-                    }}
-                  />
-                  <Typography>{com.content}</Typography>
-                </ListItem>
-              );
-            })}
+              <ImageBoardComment paramKey={ props.paramKey } CommentStatus={ CommentStatus }/>
           </List>
         </div>
         <div className="buttonMenu"></div>

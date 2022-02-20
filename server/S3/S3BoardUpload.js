@@ -16,8 +16,8 @@ const S3BoardUpload = multer({
             console.log('upload : '+ JSON.stringify(req.body))
             console.log(req.files)
             const type = file.mimetype.split('/')
-            // cb(null,Date.now()+'_'+req.body.userName.split('.').pop()+'.'+type[1]); // 이름 설정
-            cb(null, file.originalname)
+            cb(null,Date.now()+'_'+req.body.userName.split('.').pop()+'.'+type[1]); // 이름 설정
+            // cb(null, file.originalname)
         },
     }),
     

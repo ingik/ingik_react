@@ -22,7 +22,8 @@ function ImageBoardList(props) {
 
       const value = []
 
-      response.data.map((list) => {
+
+      response.data?.map((list) => {
         // console.log(list._id)
   
         list.image[0]._id = list._id

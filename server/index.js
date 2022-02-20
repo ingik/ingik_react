@@ -13,6 +13,7 @@ const imageDelete = require('./S3/imageDelete')
 
 
 
+
 //application/x-www-form-urlencoded
 app.use(express.urlencoded({extended: true}));
 
@@ -28,6 +29,7 @@ const { Board } = require('./models/Board');
 const { Chat } = require('./models/Chat')
 const { Room } = require('./models/Room') 
 const { ImageBoard } = require('./models/ImageBoard')
+const { Comment } = require('./models/Comment')
 
 
 mongoose.connect(config.mongoURI,{
@@ -161,6 +163,14 @@ app.post('/api/users/find',(req,res) => {
   })
 })
 
+app.post('/api/users/find/commentUser',(req,res) => {
+  console.log('userCHeck'+JSON.stringify(req.body))
+  User.findOne({_id : req.body.username },(err,user) => {
+    if(err) return res.json({ check:false, err })
+    return res.json(user)
+  })
+})
+
 //User ImageUpdate
 app.post('/api/users/imageUpdate', upload.array('imageData'),(req,res,err) => {
   
@@ -214,10 +224,25 @@ app.post('/api/boards/imageBoardCreate',(req,res) => {
   image.viewCount
   image.recommand
 
-  image.save((err) => {
+  image.save(async(err,board) => {
     if(err) return res.json({success: false, err})
-    return res.status(200).json({success: true})
+    console.log('board._id : '+board._id)
+    await get(board._id)
   })
+  
+
+  function get(AsyncData){
+    console.log("Create Comment");
+
+    const comment = new Comment();
+
+    comment.boardId = AsyncData;
+    comment.save((err) => {
+      if (err) return res.json({ success: false, err });
+      return res.status(200).json({ success: true });
+    });
+  }
+
 //수정 필요 비동기 처리 필요
 })
 
@@ -243,26 +268,91 @@ app.get('/api/boards/imageBoard/:key',(req,res) => {
 
 app.post('/api/boards/imageBoardComment',(req,res) => {
 
-  console.log(req.body)
+  Comment.findOne({ 'boardId' : req.body.boardId  },(err,comment) => {
 
-  ImageBoard.updateMany({_id : req.body._id  }
-    ,{$push: {'comment':{ 'user':req.body.user , 'content':req.body.comment}}},
-    (err,imageBoard) => {
-      if(err) return res.status(500).send({ error: 'database failure'})
-      return res.status(200).send(imageBoard)
-  },)
+    if (!comment) {
+      createFunc();
+    } else {
+      updateFunc();
+    }
+  })
 
+  function createFunc(){
+
+      console.log('Create Comment')
+      
+      const comment = new Comment(req.body)
+      comment.save((err) => {
+      if (err) return res.json({success: false, err})
+      return res.status(200).json({ success: true })
+      })
+    }
+
+  function updateFunc(){
+    console.log('Update Comment')
+    console.log(req.body)
+      Comment.updateOne({boardId : req.body.boardId  }
+        ,{$push:{'commentList':{ 'userId':req.body.commentList.userId , 'content':req.body.commentList.content}}},(err,comment) => {
+          if(err) return res.status(500).send({ error: 'database failure'})
+          return res.status(200).send(comment)
+        })
+      }
 })
 
 
 //imageBoardCommentList
 
+const async = require('async');
 app.get('/api/baords/imageBoard/comment/:key',(req,res) => {
 
-  ImageBoard.find({ '_id': req.params.key },(err,board) => {
+  
+  console.log('imageBoardCommentList')
+  Comment.find({ 'boardId': req.params.key },(err,comment) => {
     if(err) return res.status(500).send({error: 'database failure'})
-    return res.status(200).json(board)
+    
+    console.log(comment[0].commentList)
+    // if(!comment){
+    List = comment[0].commentList
+    console.log(List)
+    
+    ListArray = []
+    List.map((item,index) => {
+      console.log('item : '+item)
+      ListArray.push(ArrayFunc(item))
+    })
+
+    function ArrayFunc(data){
+      console.log('ArrayFunc')
+      return function(callback){
+        User.findOne({_id : data.userId },(err,user) => {
+          if(err) return res.json({ check:false, err })
+          
+          let body = {
+            user:user,
+            content:data.content
+          }
+
+          callback(null,body)
+        })
+
+      }
+    }
+
+    async.series(ListArray, function(err, result){
+      if(err) return console.log('async error')
+      res.send(result)
+    })
+    // }
+
   })
+  
+  
+})
+
+//imageBoardCommentUser
+
+app.get('/api/boards/imageBoard/comment/user',(req,res) => {
+  
   
 })
 

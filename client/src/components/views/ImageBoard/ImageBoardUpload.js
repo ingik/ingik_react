@@ -65,13 +65,14 @@ function ImageBoardUpload(props) {
     const Data = new FormData();
 
     console.log(ImageArr);
-
     
+    
+    Data.append("userName", userData.name);
     ImageArr.map((imageArr) => {
-        Data.append("ImageArr", imageArr);
-        console.log(Data.get("ImageArr"));
-      });
-
+      Data.append("ImageArr", imageArr);
+      console.log(Data.get("ImageArr"));
+    });
+    
       console.log(Data.getAll('ImageArr'));
       
       // for (let i = 0; i < ImageArr.length; i++) {
@@ -79,7 +80,6 @@ function ImageBoardUpload(props) {
       //   Data.append("ImageArr", ImageArr[i]);
       // }
 
-      Data.append("userName", userData.name);
 
     console.log(Data.get("ImageArr"));
     console.log("Data.name : " + Data.get("userName"));
