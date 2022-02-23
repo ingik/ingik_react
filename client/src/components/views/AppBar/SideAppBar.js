@@ -10,13 +10,20 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import { useState } from 'react';
-import { IconButton } from '@mui/material';
+import { IconButton, Modal } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import ImageBoardUpload from '../ImageBoard/ImageBoardUpload';
 
 
 export default function SideAppBar(props) {
 
   const [OnSideBar, setOnSideBar] = useState(false)
+
+
+   //modal
+   const [open, setOpen] = React.useState(false);
+   const handleOpen = () => setOpen(true);
+   const handleClose = () => setOpen(false);
 
   console.log('(SideAppBar)props : '+ JSON.stringify(props))
 
@@ -39,6 +46,23 @@ export default function SideAppBar(props) {
     props.propsData.history.push("/")
    };
 
+   const onImageUpload = () => {
+     setOpen(true)
+   };
+
+   const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    bgcolor: 'background.paper',
+    width:'90%',
+    height:'500px',
+    boxShadow: 24,
+    p: 4,
+    padding:'0'
+  };
+
   const list = () => (
     <Box
       sx={{ width: 250 }}
@@ -53,17 +77,19 @@ export default function SideAppBar(props) {
             </ListItemIcon>
             <ListItemText primary="Home" />
           </ListItem>
-      </List>
-      <List>
           <ListItem button onClick={ onBoard }>
             <ListItemIcon>
               <InboxIcon/>
             </ListItemIcon>
             <ListItemText primary="Board" />
           </ListItem>
-      </List>
+          <ListItem button onClick={ onImageUpload }>
+            <ListItemIcon>
+              <InboxIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Upload" />
+          </ListItem>
       <Divider />
-      <List>
           <ListItem button onClick={ onOpenChat }>
             <ListItemIcon>
                 <MailIcon/>
@@ -76,25 +102,35 @@ export default function SideAppBar(props) {
 
   return (
     <div>
-        <React.Fragment>
+      <React.Fragment>
         <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-            onClick={toggleDrawer(true)}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Drawer
-            anchor="left"
-            open={OnSideBar} //true false
-            onClose={toggleDrawer(false)}
-          >
-            {list()}
-          </Drawer>
-        </React.Fragment>
+          size="large"
+          edge="start"
+          color="inherit"
+          aria-label="open drawer"
+          sx={{ mr: 2 }}
+          onClick={toggleDrawer(true)}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Drawer
+          anchor="left"
+          open={OnSideBar} //true false
+          onClose={toggleDrawer(false)}
+        >
+          {list()}
+        </Drawer>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <ImageBoardUpload />
+          </Box>
+        </Modal>
+      </React.Fragment>
     </div>
   );
 }

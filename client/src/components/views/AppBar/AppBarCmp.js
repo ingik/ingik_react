@@ -28,9 +28,11 @@ function AppBarCmp(props) {
     setAnchorElUser(null);
   };
 
+
+
     
     return (
-        <AppBar position="fixed">
+        <AppBar position="fixed" color='inherit'>
         <Container maxWidth="xl" sx={{backgroundColor:'white'}}>
           <Toolbar sx={{backgroundColor:'white'}}>
             <Typography

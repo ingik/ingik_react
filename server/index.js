@@ -163,10 +163,10 @@ app.post('/api/users/find',(req,res) => {
   })
 })
 
-app.post('/api/users/find/commentUser',(req,res) => {
-  console.log('userCHeck'+JSON.stringify(req.body))
-  User.findOne({_id : req.body.username },(err,user) => {
-    if(err) return res.json({ check:false, err })
+app.get('/api/users/findId/:key',(req,res) => {
+  console.log(req.params.key)
+  User.findOne({_id : req.params.key },(err,user) => {
+    if(err) return res.json({ findUser:false, err })
     return res.json(user)
   })
 })
@@ -203,6 +203,15 @@ app.post('/api/users/profileUpdate', auth , (req,res) => {
     return res.status(200).json(user)
   })
 
+})
+
+//User list
+app.post('/api/users/list',(req,res) => {
+  User.find({$or:[{name:{$regex : req.body.name}},{intro:{$regex: req.body.name}}]},(err,user) => {
+    console.log(user)
+    if(err) return res.status(500).send({error: 'database failure'})
+    return res.status(200).json(user)
+  })
 })
 
 
@@ -278,9 +287,7 @@ app.post('/api/boards/imageBoardComment',(req,res) => {
   })
 
   function createFunc(){
-
       console.log('Create Comment')
-      
       const comment = new Comment(req.body)
       comment.save((err) => {
       if (err) return res.json({success: false, err})
@@ -291,11 +298,21 @@ app.post('/api/boards/imageBoardComment',(req,res) => {
   function updateFunc(){
     console.log('Update Comment')
     console.log(req.body)
-      Comment.updateOne({boardId : req.body.boardId  }
-        ,{$push:{'commentList':{ 'userId':req.body.commentList.userId , 'content':req.body.commentList.content}}},(err,comment) => {
-          if(err) return res.status(500).send({ error: 'database failure'})
-          return res.status(200).send(comment)
-        })
+      Comment.updateOne(
+        { boardId: req.body.boardId },
+        {
+          $push: {
+            commentList: {
+              userId: req.body.commentList.userId,
+              content: req.body.commentList.content,
+            },
+          },
+        },
+        (err, comment) => {
+          if (err) return res.status(500).send({ error: "database failure" });
+          return res.status(200).send(comment);
+        }
+      );
       }
 })
 
@@ -411,12 +428,14 @@ app.post('/api/boards/detail/:key/update', auth ,(req,res) => {
 
   console.log('board Title : '+ board.title)
 
-  Board.findOneAndUpdate({_id : req.params.key , username : req.user.name },{$set: { 'title':board.title , 'content':board.content }},
-    (err,board) => {
-
-      if(err) return res.status(500).send({ error: 'database failure'})
-      return res.status(200).send(board)
-  })
+  Board.findOneAndUpdate(
+    { _id: req.params.key, username: req.user.name },
+    { $set: { title: board.title, content: board.content } },
+    (err, board) => {
+      if (err) return res.status(500).send({ error: "database failure" });
+      return res.status(200).send(board);
+    }
+  );
 })
 
 //boardDelete

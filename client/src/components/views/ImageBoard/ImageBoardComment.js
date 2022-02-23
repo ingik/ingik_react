@@ -1,6 +1,8 @@
 import { Avatar, ListItem, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useMemo, useState } from 'react'
+import { FixedSizeList } from 'react-window';
+
 
 
 function ImageBoardComment(props) {
@@ -19,13 +21,15 @@ function ImageBoardComment(props) {
       }
       
     get()
+
   },[props.CommentStatus])
 
       
       
   return (
-  <div>
-    {ListComment.map((item,index) => {
+    <div>
+    {
+    ListComment.map((item,index) => {
       return (
         <ListItem key={index}>
           <Avatar
@@ -36,11 +40,13 @@ function ImageBoardComment(props) {
               verticalAlign: "top",
             }}
           />
-          <Typography>{item.user.name}</Typography>---
-          <Typography>{item.content}</Typography>
+          <Typography variant='h6' style={{fontSize:'15px',margin:'0 10px 0 10px',fontWeight:'600'}}>{item.user.name}</Typography>
+          <Typography variant='body1'>{item.content}</Typography>
         </ListItem>
       );
-    })}
+    })
+    
+  }
   </div>
   );
 }

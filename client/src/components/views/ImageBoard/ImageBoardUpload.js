@@ -4,6 +4,8 @@ import axios from 'axios';
 import { shallowEqual, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import  { TextField , Button } from '@mui/material'
+import Modal from '@mui/material/Modal';
+
 
 function ImageBoardUpload(props) {
   const userData = useSelector((state) => state.user.userData, shallowEqual);
@@ -14,10 +16,7 @@ function ImageBoardUpload(props) {
   const [PreviewArr, setPreviewArr] = useState([]);
   const [Content, setContent] = useState("");
 
-  const [ImageLocation, setImageLocation] = useState({});
-
   const mounted = useRef(false)
-  const ImageMounted = useRef(false)
 
 
   const ImageUploads = (event) => {
@@ -28,36 +27,29 @@ function ImageBoardUpload(props) {
     if (event.target.files) {
       console.log("files : " + event.target.files);
       setImageArr(Array.from(event.target.files));
-      // setImageArr(event.target.files);
       setPreviewArr(Array.from(event.target.files));
     }
 
+    let ArrayArr = Array.from(event.target.files)
+
+
+    let value = []
+
+    ArrayArr.map((list) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(list);
+      reader.onload = function (event) {
+        value.push(event.target.result);
+      };
+    });
+
+    console.log(value)
+    setImageListValue(value)
+
   };
 
-  useEffect(() => {
 
-    if(!mounted.current){
-
-      mounted.current = true
-
-    }else{
-      
-      console.log('Preview')
-      const value = [];
-      console.log(ImageArr);
-
-      PreviewArr.map((list) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(list);
-        reader.onload = function (event) {
-          value.push(event.target.result);
-          // console.log("value : " + value);
-        };
-      });
-
-      setImageListValue(value);
-    }
-  }, [PreviewArr]);
+  
 
   const onSubmitHandler = (event) => {
     event.preventDefault();
@@ -91,32 +83,23 @@ function ImageBoardUpload(props) {
         },
       })
       .then((response) => {
-        // console.log('response.data : '+JSON.stringify(response.data));
+        
         let data = [];
-        
         console.log(response.data)
-        
+
         response.data.map((list) => {
-
-          // value.name = list.key;
-          // value.img = list.location;
-
           let value = {
             key : list.key,
             img : list.location
           }
-
           data.push(value);
         });
 
         console.log(data);
-
-        setImageLocation(data);
-
         console.log("imageUpload");
 
         let body = {
-          user: userData,
+          user: userData._id,
           content: Content,
           image: data,
         };
@@ -129,43 +112,19 @@ function ImageBoardUpload(props) {
       });
   };
 
-
-  // useEffect(() => {
-
-  //   if (!ImageMounted.current) {
-
-  //     ImageMounted.current = true;
-
-  //   } else {
-
-  //     console.log('imageUpload')
-  //     let body = {
-  //       user: userData,
-  //       content: Content,
-  //       image: ImageLocation,
-  //     };
-
-  //     console.log(body);
-
-  //     axios.post("/api/boards/imageBoardCreate", body).then((response) => {
-  //       console.log(response.data);
-  //     });
-  //   }
-  // }, [ImageArr]);
-
   const onContentHander = (event) => {
     setContent(event.target.value);
   };
 
   return (
     <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-        height: "100vh",
-      }}
+    // style={{
+    //   display: "flex",
+    //   justifyContent: "center",
+    //   alignItems: "center",
+    //   width: "100%",
+    //   height: "100vh",
+    // }}
     >
       <form onSubmit={onSubmitHandler}>
         <label htmlFor="input-file">
@@ -179,8 +138,8 @@ function ImageBoardUpload(props) {
           ></input>
           <div component="span">버튼</div>
         </label>
-        <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
-          {ImageListValue.map((item, index) => (
+        <ImageList sx={{}} cols={3} rowHeight={150} variant="masonry">
+          {/* {ImageListValue.map((item, index) => (
             <ImageListItem key={index}>
               <img
                 src={item}
@@ -189,11 +148,29 @@ function ImageBoardUpload(props) {
                 style={{ width: 150, height: 150 }}
               />
             </ImageListItem>
-          ))}
+          ))} */}
+          {ImageListValue &&
+            ImageListValue.map((item, index) => (
+              <ImageListItem key={index}>
+                <img
+                  src={item}
+                  alt="a"
+                  loading="lazy"
+                  style={{ width: 150, height: 150 }}
+                />
+              </ImageListItem>
+            ))}
         </ImageList>
 
-        <TextField  type="text" value={Content} onChange={onContentHander} multiline/>
-        <Button variant='outlined' onClick={ onSubmitHandler }>버튼</Button>
+        <TextField
+          type="text"
+          value={Content}
+          onChange={onContentHander}
+          multiline
+        />
+        <Button variant="outlined" onClick={onSubmitHandler}>
+          버튼
+        </Button>
       </form>
     </div>
   );

@@ -4,15 +4,16 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+
 import axios from 'axios';
-import { Avatar, Button, TextField, Typography } from '@mui/material';
+import { Avatar, Button, TextField, Typography,InputAdornment  } from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import { FixedSizeList } from 'react-window';
 import ImageBoardComment from './ImageBoardComment';
+import ImageBoardUser from './ImageBoardUser';
+import './ImageBoard.css'
+
+
 
 import { useSelector,shallowEqual } from 'react-redux'
 
@@ -68,48 +69,15 @@ function ImageBoard(props) {
   useEffect(() => {
     axios.get("/api/boards/imageBoard/" + props.paramKey).then((response) => {
       if (response.data) {
-        setUserDataEffect(response.data);
-        setImageDataListEffect(response.data);
-        setRecommandEffect(response.data);
+        console.log(response.data)
+        setUserData(response.data);
+        setImageDataList(response.data[0].image);
+        setRecommand(response.data.recommand);
       } else {
         console.log("no imageBoardData");
       }
     });
   }, []);
-
-
-  // useEffect(() => {
-
-  //   axios.get("/api/baords/imageBoard/comment/" + props.paramKey).then((response) => {
-  //     if(response.data){
-  //       console.log(response.data)
-  //       // setListCommentEffect(response.data)
-  //       setListComment(response.data[0]?.commentList);
-  //     } else {
-  //       console.log("no imageBoard Comment Data")
-  //     }
-  //   })
-
-  // },[ListComment])
-
-
-
-
-  
-  const setUserDataEffect = (data) => {
-    setUserData(data)
-  }
-  
-  const setImageDataListEffect = (data) => {
-    setImageDataList(data[0].image);
-  }
-  
-  const setRecommandEffect = (data) => {
-    setRecommand(data.recommand);
-  }
-  
-
-
   
   
   useEffect(() => {
@@ -178,11 +146,6 @@ function ImageBoard(props) {
 
   
 
-  const ScrollbarStyle = {
-    overflowY: "scroll",
-    height: "50vh",
-    // '::-webkit-scrollbar' : { display: "none" }, 
-  }
 
 
   return (
@@ -281,30 +244,10 @@ function ImageBoard(props) {
         style={{ position: "absolute", display: "inline-block" }}
       >
         <List>
-          <ListItem>
-            <Avatar
-              alt={UserData[0]?.user.name}
-              src={UserData[0]?.user.image}
-              style={{
-                display: "inline-block",
-                verticalAlign: "top",
-              }}
-            />
-            <Typography
-              variant="h6"
-              component="div"
-              style={{
-                display: "inline-block",
-                verticalAlign: "top",
-                margin: "5px 0 0 15px",
-              }}
-            >
-              {UserData[0]?.user.name}
-            </Typography>
-          </ListItem>
+          <ImageBoardUser userId={UserData[0]?.user}/>
         </List>
-        <div style={ScrollbarStyle}>
-          <List>
+        <div className="ScrollbarStyle">
+          <List style={{padding :'8px 16px'}}>
             <div> {UserData[0]?.content}</div>
           </List>
           <List>
@@ -314,8 +257,16 @@ function ImageBoard(props) {
         <div className="buttonMenu"></div>
         <div className="commentCreate" style={{ width: "100%" }}>
           <form onSubmit={onSubmitHandler}>
-            <TextField value={Comment} onChange={onCommentHandler}></TextField>
-            <Button onClick={onSubmitHandler}>작성</Button>
+            <TextField 
+            value={Comment} 
+            onChange={onCommentHandler} 
+            style={{width:'100%',padding:'0'}}
+            variant='standard'
+            InputProps={{
+              endAdornment: <Button onClick={onSubmitHandler} postion="end">작성</Button>
+            }}
+            >
+            </TextField>
           </form>
         </div>
       </div>

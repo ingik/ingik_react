@@ -27,7 +27,7 @@ function ChatList(props) {
                 alert("Failed to chatList")
             }
         })
-    }, [dispatch])
+    }, [])
 
     const List = () => { 
         Data.map((data) =>{

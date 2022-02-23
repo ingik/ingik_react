@@ -1,0 +1,8 @@
+.ScrollbarStyle {
+    overflow-y: scroll;
+    height: 50vh;
+}
+
+.ScrollbarStyle::-webkit-scrollbar {
+	display:none 
+}

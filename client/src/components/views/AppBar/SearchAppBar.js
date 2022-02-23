@@ -16,6 +16,11 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import Profile from '../Profile/Profile';
 import SideAppBar from './SideAppBar';
 import { withRouter } from 'react-router-dom';
+import { useState } from 'react';
+import axios from 'axios';
+import { useEffect } from 'react';
+import { Autocomplete, Avatar, List, ListItem, ListItemAvatar, ListItemText, TextField } from '@mui/material';
+import { useRef } from 'react';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -58,12 +63,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 
+
+
 function SearchAppBar(props) {
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const [SearchValue, setSearchValue] = useState("");
+  const [UserList, setUserList] = useState([]);
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-    console.log('(searchAppBar)props : ' + JSON.stringify(props))
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
@@ -113,37 +121,167 @@ function SearchAppBar(props) {
         <p>Notifications</p>
       </MenuItem>
     </Menu>
+  );
+
+
+  // search list 
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const searchInput = useRef()
+  const [OnOff, setOnOff] = useState(false)
+  const open = Boolean(anchorEl);
+  const handleClose = () => {
+    setAnchorEl(null);
+    setSearchValue("")
+  };
+
+
+  const onSearchHanler = (event) => {
+    event.preventDefault()
+
+    setSearchValue(event.currentTarget.value)
+    console.log(event.currentTarget.value)
+    let body = {
+      name : event.currentTarget.value 
+    }
 
     
-  );
+    
+    if(event.currentTarget.value !== ""){
+      axios.post('/api/users/list',body).then(response => {
+        console.log(response.data)
+        setUserList(response.data)
+      })
+      setAnchorEl(event.currentTarget)
+    } else {
+      handleClose()
+    } 
+
+    setAnchorEl("")
+  }
+
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="static" color="inherit"
+      style={{}}
+      >
         <Toolbar>
           {/* SidsAppBar Component */}
-          <SideAppBar propsData={props}/>
+          <SideAppBar propsData={props} />
           <Typography
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
+            sx={{ display: { xs: "none", sm: "block" } }}
           >
             LOGO
           </Typography>
-          <Search >
+          <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
               placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
+              inputProps={{ "aria-label": "search" }}
+              value={SearchValue}
+              onChange={onSearchHanler}
             />
+
+            {/* <Autocomplete
+              id="free-solo-demo"
+              freeSolo
+              options={UserList.map((option) => option.name)}
+              renderInput={(params) => <TextField {...params} />}
+              value={SearchValue}
+              onChange={onSearchHanler}
+            /> */}
+            <List
+              style={{
+                position: "absolute",
+                zIndex: "99",
+                backgroundColor: "white",
+                maxHeight: "25em",
+                overflowY: "auto",
+                width:'100%',
+                paddingBottom:0,
+                borderRadius:'5px'
+              }}
+              anchorEl={anchorEl}
+            open={OnOff}
+            onClose={handleClose}
+              
+            >
+              {UserList.map((item) => {
+                return (
+                  <ListItem
+                    key={item.name}
+                    style={{ width: "100%" }}
+                    onClick={() => {
+                      props.history.push("/profile/" + item._id);
+                      setOnOff(false)
+                      setUserList([])
+                      setSearchValue("")
+                    }}
+                  >
+                    <ListItemAvatar>
+                      <Avatar alt={item.name} src={item.image} />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={item.name}
+                      secondary={
+                        <React.Fragment>
+                          <Typography
+                            sx={{
+                              display: "inline",
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              width: "200px",
+                            }}
+                            component="span"
+                            variant="body2"
+                            color="text.primary"
+                          >
+                            {item.intro}
+                          </Typography>
+                        </React.Fragment>
+                      }
+                    />
+                  </ListItem>
+                );
+              })}
+            </List>
           </Search>
 
+          {/* <Menu
+            // id="demo-positioned-menu"
+            // aria-labelledby="demo-positioned-button"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "center",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            style={{ height: "500px", overflowY: "auto" }}
+          >
+            {UserList.map((item) => {
+              return <MenuItem>{item.name}</MenuItem>;
+            })}
+          </Menu> */}
+
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+            <IconButton
+              size="large"
+              aria-label="show 4 new mails"
+              color="inherit"
+            >
               <Badge badgeContent={4} color="error">
                 <MailIcon />
               </Badge>
@@ -157,12 +295,10 @@ function SearchAppBar(props) {
                 <NotificationsIcon />
               </Badge>
             </IconButton>
-            
           </Box>
-          
 
-          {/* 미디어쿼리 */}
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+          {/* media */}
+          <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-label="show more"
@@ -175,9 +311,7 @@ function SearchAppBar(props) {
             </IconButton>
           </Box>
 
-          
-        {/* 아바타 */}
-            <Profile Data={props}/>
+          <Profile Data={props} />
         </Toolbar>
       </AppBar>
       {renderMobileMenu}

@@ -17,25 +17,38 @@ function ImageBoardList(props) {
 
 
   useEffect(() => {
-    axios.get('/api/boards/imageBoardList').then(response => {
-      console.log(response.data)
 
-      const value = []
+    async function get(){
+      const result = await axios.get("/api/boards/imageBoardList")
+        const value = [];
 
+        result.data?.map((list) => {
+          list.image[0]._id = list._id;
+          value.push(list.image[0]);
+          console.log(value);
+        });
 
-      response.data?.map((list) => {
-        // console.log(list._id)
+        setPreviewList(value);
+        console.log("value : " + value);
+    }
+    get()
+    
+    // axios.get('/api/boards/imageBoardList').then(response => {
+    //   console.log(response.data)
+    //   const value = []
+    //   response.data?.map((list) => {
+    //     // console.log(list._id)
   
-        list.image[0]._id = list._id
-        value.push(list.image[0])
+    //     list.image[0]._id = list._id
+    //     value.push(list.image[0])
 
-        console.log(value)
-      })
+    //     console.log(value)
+    //   })
 
-      setPreviewList(value)
-      console.log('value : '+value)
+    //   setPreviewList(value)
+    //   console.log('value : '+value)
       
-    })
+    // })
     
   },[])
   
@@ -58,9 +71,10 @@ const style = {
   transform: 'translate(-50%, -50%)',
   bgcolor: 'background.paper',
   width:'90%',
+  height:'500px',
   boxShadow: 24,
   p: 4,
-  padding:'16px'
+  padding:'0'
 };
 
   

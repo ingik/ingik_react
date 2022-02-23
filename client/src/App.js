@@ -24,8 +24,9 @@ import ProfileCmp from './components/views/Profile/ProfileCmp';
 import ImageBoard from './components/views/ImageBoard/ImageBoard'
 import ImageBoardList from './components/views/ImageBoard/ImageBoardList'
 import ImageBoardUpdate from './components/views/ImageBoard/ImageBoardUpload'
-// import SideAppBar from './components/views/AppBar/SideAppBar'
-// import AppBarCmp from './components/views/AppBar/AppBarCmp';
+import OtherProfileCmp from './components/views/Profile/OtherProfileCmp';
+// import SideAppBar from './components/views/AppBar/SideAppBar' 라우팅 노필요
+// import AppBarCmp from './components/views/AppBar/AppBarCmp'; 지울거
 
 
 function App() {
@@ -38,7 +39,7 @@ function App() {
         <Route  exact 
                 path={  ['/','/boards/detail/:key', '/createboard','/boards',
                         '/boards/detail/:key/update','/chat','/chat/create',
-                        '/chat/list','/profile']} 
+                        '/chat/list','/profile','/profile/:key']} 
                 component={Auth(SearchAppBar, true)}/>
         <Switch>
           {/* <Route exact path="/" component={Auth(LandingPage, null)}/> */}
@@ -55,9 +56,7 @@ function App() {
           <Route exact path="/imageBoard/:key" component={ImageBoard} />
           <Route exact path="/" component={Auth(ImageBoardList,true)} />
           <Route exact path="/imageBoardUpdate" component={Auth(ImageBoardUpdate,true)} />
-          {/* <Route exact path="/AppBar" component={AppBarCmp}/> 필요없음*/}
-          {/* <Route exact path="/SideBar" component={SideAppBar}/> 지울거*/}
-
+          <Route exact path="/profile/:key" component={ OtherProfileCmp }/>
           <Route exact path="/modal" component={ Profile }/>
         </Switch>
         

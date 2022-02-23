@@ -9,17 +9,11 @@ function ProfileCmp(props) {
 
 
   const userData = useSelector(state => state.user.userData,shallowEqual)
-
   
   const dispatch = useDispatch()
   dispatch(auth())
 
-
   //profile 최적화 필요
-  
-  
-
-
    
     return (
       <div>
