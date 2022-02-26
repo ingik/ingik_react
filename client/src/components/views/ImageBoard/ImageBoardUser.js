@@ -4,8 +4,6 @@ import React, { useState,useEffect } from 'react'
 
 function ImageBoardUser(props) {
 
-    console.log(props.userId)
-
     const [UserData, setUserData] = useState({})
 
     useEffect(() => {
@@ -20,27 +18,27 @@ function ImageBoardUser(props) {
 
   return (
     <ListItem>
-            <Avatar
-              alt={UserData?.name}
-              src={UserData?.image}
-              style={{
-                display: "inline-block",
-                verticalAlign: "top",
-              }}
-            />
-            <Typography
-              variant="h6"
-              component="div"
-              style={{
-                display: "inline-block",
-                verticalAlign: "top",
-                margin: "5px 0 0 15px",
-              }}
-            >
-              {UserData?.name}
-            </Typography>
-          </ListItem>
-  )
+      <Avatar
+        alt={UserData?.name}
+        src={UserData?.image}
+        style={{
+          display: "inline-block",
+          verticalAlign: "top",
+        }}
+      />
+      <Typography
+        variant="h6"
+        component="div"
+        style={{
+          display: "inline-block",
+          verticalAlign: "top",
+          margin: "5px 0 0 15px",
+        }}
+      >
+        {UserData?.name}
+      </Typography>
+    </ListItem>
+  );
 }
 
 export default ImageBoardUser

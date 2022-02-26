@@ -8,10 +8,6 @@ import { FixedSizeList } from 'react-window';
 function ImageBoardComment(props) {
 
   const [ListComment, setListComment] = useState([])
-
-  console.log(props.CommentStatus)
-
-
   useEffect(() => {
     async function get(){
 

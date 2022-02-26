@@ -1,27 +1,30 @@
-import { ImageList, ImageListItem } from '@mui/material';
+import { Box, ImageList, ImageListItem, Modal } from '@mui/material';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { withRouter } from 'react-router-dom';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
-import ImageBoard from './ImageBoard'
+import React from 'react'
+import { useState } from 'react';
+import { useEffect } from 'react';
+import ImageBoard from '../ImageBoard/ImageBoard';
 
+function ProfileImageBoardList(props) {
 
-function ImageBoardList(props) {
-
+  
   const [PreviewList,setPreviewList] = useState([])
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const [ParamKey, setParamKey] = useState("")
 
+  console.log(props.ParamsUserId)
+
 
   useEffect(() => {
 
     async function get(){
-      const result = await axios.get("/api/boards/imageBoardList")
+      const result = await axios.get('/api/boards/imageBoard/profileList/'+props.ParamsUserId)
         const value = [];
+        
+        console.log(result.data)
 
-        result?.data.map((list) => {
+        result.data?.map((list) => {
           list.image[0]._id = list._id;
           value.push(list.image[0]);
           console.log(value);
@@ -31,7 +34,11 @@ function ImageBoardList(props) {
         console.log("value : " + value);
     }
     get()
-  },[])
+
+    // axios.get('/api/boards/imageBoard/'+props.ParamsUserId).then(response => {
+    //   console.log(response.data)
+    // })
+  },[props.ParamsUserId])
   
   useEffect(() => {
     console.log("PreviewList : " + JSON.stringify(PreviewList));
@@ -57,9 +64,7 @@ const style = {
   p: 4,
   padding:'0'
 };
-
-  
-
+    
   return (
     <div>
     <div 
@@ -68,10 +73,10 @@ const style = {
       justifyContent: "center",
       alignItems: "center",
       width: "100%",
-      // height: "100vh",
       marginTop:'5vh'
     }}>
       <ImageList sx={{ width: '70%', height:'100%' }} cols={3} >
+
       {PreviewList.map((item) => (
         <ImageListItem key={item.img}>
           <img
@@ -81,6 +86,7 @@ const style = {
             loading="lazy"
             onClick={ 
               function(){  
+                console.log(item._id)
                 setOpen(true)
                 setParamKey(item._id)
                }
@@ -105,7 +111,7 @@ const style = {
       </Modal>
 
     </div>
-  );
+  )
 }
 
-export default withRouter(ImageBoardList);
+export default ProfileImageBoardList

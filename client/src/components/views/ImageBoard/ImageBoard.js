@@ -13,6 +13,10 @@ import ImageBoardComment from './ImageBoardComment';
 import ImageBoardUser from './ImageBoardUser';
 import './ImageBoard.css'
 
+import Recommand from '../../../moduls/Recommand'
+import UnRecommand from '../../../moduls/UnRecommand'
+
+
 
 
 import { useSelector,shallowEqual } from 'react-redux'
@@ -30,11 +34,11 @@ function ImageBoard(props) {
   const [UserData, setUserData] = useState({});
   const [ImageDataList, setImageDataList] = useState([]);
   const [Comment, setComment] = useState("");
-  const [Recommand, setRecommand] = useState("");
   const [ListComment, setListComment] = useState([]);
   const [Body, setBody] = useState({});
   const [CommentStatus, setCommentStatus] = useState(0)
   const [Number,setNumber] = useState(0)
+  const [RecommandDisplay, setRecommandDisplay] = useState()
 
 
 
@@ -72,7 +76,6 @@ function ImageBoard(props) {
         console.log(response.data)
         setUserData(response.data);
         setImageDataList(response.data[0].image);
-        setRecommand(response.data.recommand);
       } else {
         console.log("no imageBoardData");
       }
@@ -140,9 +143,25 @@ function ImageBoard(props) {
 
 
 
+  // Recommand 
 
+  const onRecommandHandler = () => {
+    Recommand(UserData[0]._id,UserSelectData._id) 
+    // setUpdateFollow(test)
+  }
+
+  const onUnRecommandHanler = () => {
+    UnRecommand(UserData[0]._id,UserSelectData._id) 
+    // setUpdateFollow(test)
+  }
  
-
+  const RecommandFunc = () => {
+    if (RecommandDisplay === false) {
+      return <FavoriteBorderIcon onClick={onRecommandHandler}>follow</FavoriteBorderIcon>;
+    } else {
+      return <FavoriteIcon onClick={onUnRecommandHanler}>Unfollow</FavoriteIcon>;
+    }
+  }
 
   
 
@@ -254,7 +273,9 @@ function ImageBoard(props) {
               <ImageBoardComment paramKey={ props.paramKey } CommentStatus={ CommentStatus }/>
           </List>
         </div>
-        <div className="buttonMenu"></div>
+        <div className="buttonMenu">
+          { RecommandFunc() }
+        </div>
         <div className="commentCreate" style={{ width: "100%" }}>
           <form onSubmit={onSubmitHandler}>
             <TextField 

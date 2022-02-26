@@ -21,6 +21,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { Autocomplete, Avatar, List, ListItem, ListItemAvatar, ListItemText, TextField } from '@mui/material';
 import { useRef } from 'react';
+import { useSelector } from 'react-redux';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -66,9 +67,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 function SearchAppBar(props) {
+
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [SearchValue, setSearchValue] = useState("");
   const [UserList, setUserList] = useState([]);
+
+  const userData = useSelector(state => state.user.userData)
+  console.log(userData)
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -133,6 +138,7 @@ function SearchAppBar(props) {
   const handleClose = () => {
     setAnchorEl(null);
     setSearchValue("")
+    setUserList([])
   };
 
 
@@ -155,9 +161,9 @@ function SearchAppBar(props) {
       setAnchorEl(event.currentTarget)
     } else {
       handleClose()
-    } 
-
-    setAnchorEl("")
+    }
+    
+    setUserList([])
   }
 
 
@@ -188,14 +194,6 @@ function SearchAppBar(props) {
               onChange={onSearchHanler}
             />
 
-            {/* <Autocomplete
-              id="free-solo-demo"
-              freeSolo
-              options={UserList.map((option) => option.name)}
-              renderInput={(params) => <TextField {...params} />}
-              value={SearchValue}
-              onChange={onSearchHanler}
-            /> */}
             <List
               style={{
                 position: "absolute",
@@ -218,10 +216,19 @@ function SearchAppBar(props) {
                     key={item.name}
                     style={{ width: "100%" }}
                     onClick={() => {
-                      props.history.push("/profile/" + item._id);
-                      setOnOff(false)
-                      setUserList([])
-                      setSearchValue("")
+                      console.log(props)
+                      console.log(item._id)
+                      if(userData._id === item._id){
+                        props.history.push("/profile");
+                        setOnOff(false)
+                        setUserList([])
+                        setSearchValue("")
+                      } else {
+                        props.history.push("/profile/" + item._id);
+                        setOnOff(false)
+                        setUserList([])
+                        setSearchValue("")
+                      }
                     }}
                   >
                     <ListItemAvatar>
@@ -254,26 +261,6 @@ function SearchAppBar(props) {
             </List>
           </Search>
 
-          {/* <Menu
-            // id="demo-positioned-menu"
-            // aria-labelledby="demo-positioned-button"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "center",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "left",
-            }}
-            style={{ height: "500px", overflowY: "auto" }}
-          >
-            {UserList.map((item) => {
-              return <MenuItem>{item.name}</MenuItem>;
-            })}
-          </Menu> */}
 
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>

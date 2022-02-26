@@ -30,6 +30,8 @@ const { Chat } = require('./models/Chat')
 const { Room } = require('./models/Room') 
 const { ImageBoard } = require('./models/ImageBoard')
 const { Comment } = require('./models/Comment')
+const { Follow } = require('./models/follow')
+const { Recommand } = require('./models/Recommand')
 
 
 mongoose.connect(config.mongoURI,{
@@ -59,11 +61,18 @@ app.post('/api/users/register', (req, res) => {
       if(!userEmail) {
         User.findOne({name : req.body.name},(err,userName) => {
           if(!userName){
-            user.save((err, userInfo) => {
+            user.save((err) => {
               if (err) return res.json({success: false, err})
-              return res.status(200).json({
-                success: true
+              // return res.status(200).json({ success: true })
+
+              const follow = new Follow()
+              follow.followerId = user._id
+
+              follow.save((err) => {
+                if(err) return res.json({success: false, err})
+                return res.status(200).json({ success: true })
               })
+
             })
           } else if(err) {
             return res.status(500).send({error:'namecheck failed'})
@@ -189,11 +198,8 @@ app.post('/api/users/profileUpdate', auth , (req,res) => {
 
   
   const user = new User(req.body)
-  // console.log('req.body : '+JSON.stringify(req.body))
   let imageUrl = req.body.updateImage
   user.image = imageUrl
-  // console.log('req.user : ' + JSON.stringify(req.user))
-  // console.log('user : ' + user)
 
   User.findOneAndUpdate({_id : req.user._id ,name : req.user.name},
     {$set: { 'name':user.name , 'email':user.email,'intro':user.intro, 'image':user.image }},
@@ -213,6 +219,112 @@ app.post('/api/users/list',(req,res) => {
     return res.status(200).json(user)
   })
 })
+
+//Following
+app.post('/api/users/following',(req,res) => {
+  
+  Follow.findOneAndUpdate(
+    { followerId : req.body.followerId },
+    {
+      $push: {
+        following: {
+          followingId: req.body.followingId,
+        },
+      },
+    },
+    (err, follow) => {
+      if (err) return res.status(500).send({ error: "Following failure" });
+      return res.status(200).send(follow);
+    }
+  );
+
+})
+
+//UnFollowing
+app.post('/api/users/unfollowing',(req,res) => {
+  Follow.findOneAndUpdate(
+    { followerId : req.body.followerId },
+    {
+      $pull: {
+        following: {
+          followingId: req.body.followingId,
+        },
+      },
+    },
+    (err, follow) => {
+      if (err) return res.status(500).send({ error: "UnFollowing failure" });
+      return res.status(200).send(follow);
+    }
+  )
+})
+
+//FollowCheck
+app.post('/api/users/followCheck',(req,res) => {
+  console.log('followCheck'+req.body.followerId)
+  console.log('followCheck'+req.body.followingId)
+
+  Follow.findOne(
+        { followerId: req.body.followerId , following: { followingId: req.body.followingId }},
+    (err, follow) => {
+      if (err) return res.status(500).send({ error: "followCheck failure" });
+      return res.status(200).send(follow)
+    }
+  );
+})
+
+//recommand
+app.post('/api/boards/recommand',(req,res) => {
+  
+  Recommand.findOneAndUpdate(
+    { boardId : req.body.boardId },
+    {
+      $push: {
+        recommand: {
+          recommandId: req.body.recommandId,
+        },
+      },
+    },
+    (err, recommand) => {
+      if (err) return res.status(500).send({ error: "Following failure" });
+      return res.status(200).send(recommand);
+    }
+  );
+
+})
+
+//unrecommand
+app.post('/api/boards/unrecommand',(req,res) => {
+
+  Recommand.findOneAndUpdate(
+    { followerId : req.body.followerId },
+    {
+      $pull: {
+        following: {
+          followingId: req.body.followingId,
+        },
+      },
+    },
+    (err, follow) => {
+      if (err) return res.status(500).send({ error: "UnFollowing failure" });
+      return res.status(200).send(follow);
+    }
+  )
+})
+
+//recommandCheck
+app.post('/api/boards/recommandCheck',(req,res) => {
+  console.log('recommandCheck'+req.body.boardId)
+  console.log('recommandCheck'+req.body.recommandId)
+
+  Recommand.findOne(
+        { boardId: req.body.boardId , recommand: { recommandId: req.body.recommandId }},
+    (err, recommand) => {
+      if (err) return res.status(500).send({ error: "followCheck failure" });
+      return res.status(200).send(recommand)
+    }
+  );
+})
+
 
 
 //ImageBoardUpload
@@ -248,8 +360,17 @@ app.post('/api/boards/imageBoardCreate',(req,res) => {
     comment.boardId = AsyncData;
     comment.save((err) => {
       if (err) return res.json({ success: false, err });
+    });
+
+    const recommand = new Recommand();
+
+    recommand.boardId = AsyncData;
+    recommand.save((err) => {
+      if (err) return res.json({ success: false, err });
       return res.status(200).json({ success: true });
     });
+
+    
   }
 
 //수정 필요 비동기 처리 필요
@@ -266,6 +387,15 @@ app.get('/api/boards/imageBoardList', auth ,(req,res) => {
 app.get('/api/boards/imageBoard/:key',(req,res) => {
 
   ImageBoard.find({ '_id': req.params.key },(err,board) => {
+    if(err) return res.status(500).send({error: 'database failure'})
+    return res.status(200).json(board)
+  })
+
+})
+
+app.get('/api/boards/imageBoard/profileList/:key',(req,res) => {
+
+  ImageBoard.find({ 'user': req.params.key },(err,board) => {
     if(err) return res.status(500).send({error: 'database failure'})
     return res.status(200).json(board)
   })

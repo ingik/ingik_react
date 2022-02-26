@@ -4,6 +4,7 @@ import { useSelector,shallowEqual, useDispatch } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { auth } from '../../../_actions/user_action'
 import ProfileUpdate from './ProfileUpdate'
+import ProfileImageBoardList from './ProfileImageBoardList'
 
 function ProfileCmp(props) {
 
@@ -33,6 +34,10 @@ function ProfileCmp(props) {
         <div style={{ display: "flex", justifyContent: 'center', alignItems: 'center',marginTop:'20px'}}>
           {/* ProfileUpdate Component */}
             <ProfileUpdate user={userData}/>
+        </div>
+        <div>
+         <ProfileImageBoardList ParamsUserId = {userData?._id}/>
+
         </div>
       </div>
     );
