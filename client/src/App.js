@@ -25,6 +25,7 @@ import ImageBoard from './components/views/ImageBoard/ImageBoard'
 import ImageBoardList from './components/views/ImageBoard/ImageBoardList'
 import ImageBoardUpdate from './components/views/ImageBoard/ImageBoardUpload'
 import OtherProfileCmp from './components/views/Profile/OtherProfileCmp';
+import ImageBoardCmpList from './components/views/ImageBoard/ImageBoardCmpList';
 // import SideAppBar from './components/views/AppBar/SideAppBar' 라우팅 노필요
 // import AppBarCmp from './components/views/AppBar/AppBarCmp'; 지울거
 
@@ -39,7 +40,7 @@ function App() {
         <Route  exact 
                 path={  ['/','/boards/detail/:key', '/createboard','/boards',
                         '/boards/detail/:key/update','/chat','/chat/create',
-                        '/chat/list','/profile','/profile/:key']} 
+                        '/chat/list','/profile','/profile/:key','/imageBoardCmp']} 
                 component={Auth(SearchAppBar, true)}/>
         <Switch>
           {/* <Route exact path="/" component={Auth(LandingPage, null)}/> */}
@@ -56,6 +57,7 @@ function App() {
           <Route exact path="/imageBoard/:key" component={ImageBoard} />
           <Route exact path="/" component={Auth(ImageBoardList,true)} />
           <Route exact path="/imageBoardUpdate" component={Auth(ImageBoardUpdate,true)} />
+          <Route exact path="/imageBoardCmp" component={ Auth(ImageBoardCmpList,true) }/>
           <Route exact path="/profile/:key" component={ OtherProfileCmp }/>
           <Route exact path="/modal" component={ Profile }/>
         </Switch>

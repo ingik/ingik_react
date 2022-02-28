@@ -1,6 +1,6 @@
 import { ImageList, ImageListItem } from '@mui/material';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -13,24 +13,39 @@ function ImageBoardList(props) {
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const [ParamKey, setParamKey] = useState("")
+  const lengthStyle = useRef()
 
 
   useEffect(() => {
 
-    async function get(){
-      const result = await axios.get("/api/boards/imageBoardList")
-        const value = [];
+    async function get() {
+      const result = await axios.get("/api/boards/imageBoardList");
+      const value = [];
 
-        result?.data.map((list) => {
-          list.image[0]._id = list._id;
-          value.push(list.image[0]);
-          console.log(value);
-        });
+      console.log(result)
 
-        setPreviewList(value);
-        console.log("value : " + value);
+      result?.data.map((list) => {
+
+        console.log(list)
+        list.image[0]._id = list._id;
+
+        axios.get('/api/boards/recommandLength/'+list._id).then(response => {
+          console.log(response.data)
+          list.image[0].length = response.data[0]?.recommand.length
+        })
+        
+        value.push(list.image[0]);
+    
+      });
+
+      setPreviewList(value);
+      console.log(value);
     }
+
     get()
+
+
+    
   },[])
   
   useEffect(() => {
@@ -38,12 +53,16 @@ function ImageBoardList(props) {
   },[PreviewList])
 
   const onHoverHandler = (event) => {
-    event.target.style =`opacity:0.5`
+    event.target.style=`opacity: 0.3;`
+    lengthStyle.current.style=`display:block`
+  }
+  
+  const onLeaveHandler = (event) => {
+    event.target.style =`opacity:1;`
+    lengthStyle.current.style=`display:none`
   }
 
-  const onLeaveHandler = (event) => {
-    event.target.style =`opacity:1`
-  }
+  
   
 const style = {
   position: 'absolute',
@@ -55,7 +74,8 @@ const style = {
   height:'500px',
   boxShadow: 24,
   p: 4,
-  padding:'0'
+  padding:'0',
+  
 };
 
   
@@ -89,6 +109,12 @@ const style = {
             onMouseEnter={ onHoverHandler }
             onMouseLeave={ onLeaveHandler }
           />
+        <div 
+          style={{position:'absolute' ,top:'50%',left:'50%',color:'white'}}
+          ref={ lengthStyle }
+        >
+          {item.length}
+        </div>
         </ImageListItem >
       ))}
     </ImageList>
@@ -100,7 +126,7 @@ const style = {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <ImageBoard paramKey={ParamKey}></ImageBoard>
+          <ImageBoard paramKey={ParamKey} contentPosition={true}></ImageBoard>
         </Box>
       </Modal>
 

@@ -20,25 +20,19 @@ import UnRecommand from '../../../moduls/UnRecommand'
 
 
 import { useSelector,shallowEqual } from 'react-redux'
+import RecommandCmp from '../../../moduls/RecommandCmp';
 
 function ImageBoard(props) {
   const ListRef = useRef({ x: 0, y: 0 });
 
-  const UserSelectData = useSelector(
-    (state) => state.user.userData,
-    shallowEqual
-  );
-
-
-
+  const UserSelectData = useSelector((state) => state.user.userData);
+  console.log(UserSelectData)
   const [UserData, setUserData] = useState({});
   const [ImageDataList, setImageDataList] = useState([]);
   const [Comment, setComment] = useState("");
-  const [ListComment, setListComment] = useState([]);
-  const [Body, setBody] = useState({});
   const [CommentStatus, setCommentStatus] = useState(0)
   const [Number,setNumber] = useState(0)
-  const [RecommandDisplay, setRecommandDisplay] = useState()
+
 
 
 
@@ -124,7 +118,6 @@ function ImageBoard(props) {
     };
 
     setCommentStatus(CommentStatus + 1)
-    // CommentStatus = true
 
     axios.post("/api/boards/imageBoardComment", body).then((response) => {
       setComment("");
@@ -142,29 +135,89 @@ function ImageBoard(props) {
   };
 
 
+  function ContentBox(){
+    console.log()
 
-  // Recommand 
+    if( props.contentPosition === true){
 
-  const onRecommandHandler = () => {
-    Recommand(UserData[0]._id,UserSelectData._id) 
-    // setUpdateFollow(test)
-  }
+    return <div
+        className="rigthBox"
+        style={{ position: "absolute", display: "inline-block" }}
+      >
+        <List>
+          <ImageBoardUser userId={UserData[0]?.user}/>
+        </List>
 
-  const onUnRecommandHanler = () => {
-    UnRecommand(UserData[0]._id,UserSelectData._id) 
-    // setUpdateFollow(test)
-  }
- 
-  const RecommandFunc = () => {
-    if (RecommandDisplay === false) {
-      return <FavoriteBorderIcon onClick={onRecommandHandler}>follow</FavoriteBorderIcon>;
-    } else {
-      return <FavoriteIcon onClick={onUnRecommandHanler}>Unfollow</FavoriteIcon>;
+        <div className="ScrollbarStyle">
+          <List style={{padding :'8px 16px'}}>
+            <div> {UserData[0]?.content}</div>
+          </List>
+          <List>
+              <ImageBoardComment paramKey={ props.paramKey } CommentStatus={ CommentStatus }/>
+          </List>
+        </div>
+
+        <div className="buttonMenu">
+          <RecommandCmp boardId={UserData[0]?._id} recommandId={UserSelectData._id} />
+        </div>
+
+        <div className="commentCreate" style={{ width: "100%" }}>
+          <form onSubmit={onSubmitHandler}>
+            <TextField 
+            value={Comment} 
+            onChange={onCommentHandler} 
+            style={{width:'100%',padding:'0'}}
+            variant='standard'
+            InputProps={{
+              endAdornment: <Button onClick={onSubmitHandler} postion="end">작성</Button>
+            }}
+            >
+            </TextField>
+          </form>
+        </div>
+      </div>
     }
+
+    if( props.contentPosition  === false){
+      return <div
+      className="rigthBox"
+      style={{ display: "inline-block" }}
+    >
+      <List>
+        <ImageBoardUser userId={UserData[0]?.user}/>
+      </List>
+
+      <div className="ScrollbarStyle">
+        <List style={{padding :'8px 16px'}}>
+          <div> {UserData[0]?.content}</div>
+        </List>
+        <List>
+            <ImageBoardComment paramKey={ props.paramKey } CommentStatus={ CommentStatus }/>
+        </List>
+      </div>
+
+      <div className="buttonMenu">
+        <RecommandCmp boardId={UserData[0]?._id} recommandId={UserSelectData?._id} />
+      </div>
+
+      <div className="commentCreate" style={{ width: "100%" }}>
+        <form onSubmit={onSubmitHandler}>
+          <TextField 
+          value={Comment} 
+          onChange={onCommentHandler} 
+          style={{width:'100%',padding:'0'}}
+          variant='standard'
+          InputProps={{
+            endAdornment: <Button onClick={onSubmitHandler} postion="end">작성</Button>
+          }}
+          >
+          </TextField>
+        </form>
+      </div>
+    </div>
+    }
+
   }
-
-  
-
 
 
   return (
@@ -258,39 +311,9 @@ function ImageBoard(props) {
         </div>
       </div>
 
-      <div
-        className="rigthBox"
-        style={{ position: "absolute", display: "inline-block" }}
-      >
-        <List>
-          <ImageBoardUser userId={UserData[0]?.user}/>
-        </List>
-        <div className="ScrollbarStyle">
-          <List style={{padding :'8px 16px'}}>
-            <div> {UserData[0]?.content}</div>
-          </List>
-          <List>
-              <ImageBoardComment paramKey={ props.paramKey } CommentStatus={ CommentStatus }/>
-          </List>
-        </div>
-        <div className="buttonMenu">
-          { RecommandFunc() }
-        </div>
-        <div className="commentCreate" style={{ width: "100%" }}>
-          <form onSubmit={onSubmitHandler}>
-            <TextField 
-            value={Comment} 
-            onChange={onCommentHandler} 
-            style={{width:'100%',padding:'0'}}
-            variant='standard'
-            InputProps={{
-              endAdornment: <Button onClick={onSubmitHandler} postion="end">작성</Button>
-            }}
-            >
-            </TextField>
-          </form>
-        </div>
-      </div>
+      
+      { ContentBox() }
+
     </div>
   );
 }

@@ -12,7 +12,7 @@ function UnRecommand(board,recommand) {
         console.log(response.data)
     })
 
-    return true
+    return false
 }
 
 export default UnRecommand

@@ -12,8 +12,9 @@ function ImageBoardComment(props) {
     async function get(){
 
       const result = await axios.get("/api/baords/imageBoard/comment/" + props.paramKey)
-      console.log(result)
+      if(result.data){
         setListComment(result.data)
+      }
       }
       
     get()
@@ -25,7 +26,7 @@ function ImageBoardComment(props) {
   return (
     <div>
     {
-    ListComment.map((item,index) => {
+    ListComment && ListComment.map((item,index) => {
       return (
         <ListItem key={index}>
           <Avatar

@@ -39,11 +39,11 @@ export default function SideAppBar(props) {
    };
 
    const onBoard = () => {
-     props.propsData.history.push("/boards")
+     props.propsData.history.push("/")
    };
 
    const onHome = () => {
-    props.propsData.history.push("/")
+    props.propsData.history.push("/imageBoardCmp")
    };
 
    const onImageUpload = () => {

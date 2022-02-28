@@ -285,7 +285,7 @@ app.post('/api/boards/recommand',(req,res) => {
       },
     },
     (err, recommand) => {
-      if (err) return res.status(500).send({ error: "Following failure" });
+      if (err) return res.status(500).send({ error: "recommand failure" });
       return res.status(200).send(recommand);
     }
   );
@@ -296,17 +296,17 @@ app.post('/api/boards/recommand',(req,res) => {
 app.post('/api/boards/unrecommand',(req,res) => {
 
   Recommand.findOneAndUpdate(
-    { followerId : req.body.followerId },
+    { boardId : req.body.boardId },
     {
       $pull: {
-        following: {
-          followingId: req.body.followingId,
+        recommand: {
+          recommandId: req.body.recommandId,
         },
       },
     },
-    (err, follow) => {
-      if (err) return res.status(500).send({ error: "UnFollowing failure" });
-      return res.status(200).send(follow);
+    (err, recommand) => {
+      if (err) return res.status(500).send({ error: "Unrecommand failure" });
+      return res.status(200).send(recommand);
     }
   )
 })
@@ -319,10 +319,19 @@ app.post('/api/boards/recommandCheck',(req,res) => {
   Recommand.findOne(
         { boardId: req.body.boardId , recommand: { recommandId: req.body.recommandId }},
     (err, recommand) => {
-      if (err) return res.status(500).send({ error: "followCheck failure" });
+      if (err) return res.status(500).send({ error: "recommandCheck failure" });
       return res.status(200).send(recommand)
     }
   );
+})
+
+//recommandLength
+
+app.get('/api/boards/recommandLength/:key',(req,res) => {
+  Recommand.find({boardId:req.params.key},(err,recommand) =>{
+    if (err) return res.status(500).send({ err: "recommandLength failure"})
+    return res.status(200).send(recommand)
+  })
 })
 
 
@@ -373,8 +382,9 @@ app.post('/api/boards/imageBoardCreate',(req,res) => {
     
   }
 
-//수정 필요 비동기 처리 필요
 })
+
+//imageBoardList
 
 app.get('/api/boards/imageBoardList', auth ,(req,res) => {
 

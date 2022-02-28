@@ -18,6 +18,10 @@ function ImageBoardUpload(props) {
 
   const mounted = useRef(false)
 
+  useEffect(()=>{
+    
+  },[ImageListValue])
+
 
   const ImageUploads = (event) => {
     event.preventDefault();
@@ -65,14 +69,8 @@ function ImageBoardUpload(props) {
       console.log(Data.get("ImageArr"));
     });
     
-      console.log(Data.getAll('ImageArr'));
-      
-      // for (let i = 0; i < ImageArr.length; i++) {
-      //   console.log(ImageArr[i])
-      //   Data.append("ImageArr", ImageArr[i]);
-      // }
-
-
+    console.log(Data.getAll('ImageArr'));
+ 
     console.log(Data.get("ImageArr"));
     console.log("Data.name : " + Data.get("userName"));
 
@@ -139,17 +137,8 @@ function ImageBoardUpload(props) {
           <div component="span">버튼</div>
         </label>
         <ImageList sx={{}} cols={3} rowHeight={150} variant="masonry">
-          {/* {ImageListValue.map((item, index) => (
-            <ImageListItem key={index}>
-              <img
-                src={item}
-                alt="a"
-                loading="lazy"
-                style={{ width: 150, height: 150 }}
-              />
-            </ImageListItem>
-          ))} */}
-          {ImageListValue &&
+         
+          {
             ImageListValue.map((item, index) => (
               <ImageListItem key={index}>
                 <img
