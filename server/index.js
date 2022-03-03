@@ -32,6 +32,7 @@ const { ImageBoard } = require('./models/ImageBoard')
 const { Comment } = require('./models/Comment')
 const { Follow } = require('./models/follow')
 const { Recommand } = require('./models/Recommand')
+const { Follower } = require('./models/Follower')
 
 
 mongoose.connect(config.mongoURI,{
@@ -68,10 +69,20 @@ app.post('/api/users/register', (req, res) => {
               const follow = new Follow()
               follow.followerId = user._id
 
+              const follower = new Follower()
+              follower.UserId = user._id
+
               follow.save((err) => {
+                if(err) return res.json({success: false, err})
+                // res.status(200).json({ success: true })
+              })
+
+              follower.save((err) => {
                 if(err) return res.json({success: false, err})
                 return res.status(200).json({ success: true })
               })
+
+              
 
             })
           } else if(err) {
@@ -233,10 +244,27 @@ app.post('/api/users/following',(req,res) => {
       },
     },
     (err, follow) => {
-      if (err) return res.status(500).send({ error: "Following failure" });
-      return res.status(200).send(follow);
+      // if (err) return res.status(500).send({ error: "Following failure" });
+      console.log(follow)
+
+      Follower.findOneAndUpdate(
+        { UserId : req.body.followingId},
+        {
+          $push: {
+            Myfollowing: {
+              MyfollowingId: req.body.followerId,
+            },
+          },
+        },
+        (err, follower) => {
+          if (err) return res.status(500).send({ error: "Follower failure" });
+          return res.status(200).send(follower);
+        }
+      );
     }
-  );
+  )
+
+  
 
 })
 
@@ -252,10 +280,26 @@ app.post('/api/users/unfollowing',(req,res) => {
       },
     },
     (err, follow) => {
-      if (err) return res.status(500).send({ error: "UnFollowing failure" });
-      return res.status(200).send(follow);
+      // if (err) return res.status(500).send({ error: "UnFollowing failure" });
+      // return res.status(200).send(follow);
+      console.log(follow)
+      Follower.findOneAndUpdate(
+        { UserId : req.body.followingId },
+        {
+          $pull: {
+            Myfollowing: {
+              MyfollowingId: req.body.followerId,
+            },
+          },
+        },
+        (err, follower) => {
+          if (err) return res.status(500).send({ error: "UnFollower failure" });
+          return res.status(200).send(follower);
+        }
+      )
     }
   )
+
 })
 
 //FollowCheck
@@ -272,7 +316,26 @@ app.post('/api/users/followCheck',(req,res) => {
   );
 })
 
+//FollowLength
+
+app.get('/api/users/followLength/:key',(req,res) => {
+  Follow.find({followerId:req.params.key},(err,follow) => {
+    if(err) return res.status(500).send({ error: "followLength failure"})
+    return res.status(200).send(follow)
+  })
+})
+
+//FollowerLength
+
+app.get('/api/user/followerLength/:key',(req,res) => {
+  Follower.find({UserId:req.params.key},(err,follower) => {
+    if(err) return res.status(500).send({ error: "followLength failure"})
+    return res.status(200).send(follower)
+  })
+})
+
 //recommand
+
 app.post('/api/boards/recommand',(req,res) => {
   
   Recommand.findOneAndUpdate(
@@ -392,6 +455,7 @@ app.get('/api/boards/imageBoardList', auth ,(req,res) => {
     if(err) return res.status(500).send({error: 'database failure'})
     return res.status(200).json(imageBoard)
   })
+
 })
 
 app.get('/api/boards/imageBoard/:key',(req,res) => {

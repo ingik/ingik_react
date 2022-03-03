@@ -13,14 +13,9 @@ import ImageBoardComment from './ImageBoardComment';
 import ImageBoardUser from './ImageBoardUser';
 import './ImageBoard.css'
 
-import Recommand from '../../../moduls/Recommand'
-import UnRecommand from '../../../moduls/UnRecommand'
-
-
-
-
 import { useSelector,shallowEqual } from 'react-redux'
 import RecommandCmp from '../../../moduls/RecommandCmp';
+import RecommandLength from '../../../moduls/RecommandLength';
 
 function ImageBoard(props) {
   const ListRef = useRef({ x: 0, y: 0 });
@@ -32,8 +27,7 @@ function ImageBoard(props) {
   const [Comment, setComment] = useState("");
   const [CommentStatus, setCommentStatus] = useState(0)
   const [Number,setNumber] = useState(0)
-
-
+  const ImgRef = useRef()
 
 
   const onLeftMove = (event) => {
@@ -45,7 +39,8 @@ function ImageBoard(props) {
 
     setNumber(Number - 1)
     ListRef.current.style.transition = "300ms";
-    ListRef.current.style.transform = ListRef.current.style.transform + `translateX(500px)`;
+    ListRef.current.style.transform = ListRef.current.style.transform + `translateX(${ImgRef.current.offsetWidth}px)`;
+    console.log(ListRef.current.style.transform)
     console.log("Left");
   };
   
@@ -53,14 +48,17 @@ function ImageBoard(props) {
     
     console.log(Number)
     console.log(ImageDataList.length);
+    console.log(ImgRef.current.offsetWidth)
     
     if (Number >= ImageDataList.length - 1) {
       return console.log("lastpage");
     }
+
     setNumber(Number + 1)
 
-    ListRef.current.style.transition = "400ms";
-    ListRef.current.style.transform = ListRef.current.style.transform + `translateX(-500px)`;
+    ListRef.current.style.transition = "300ms";
+    ListRef.current.style.transform = ListRef.current.style.transform + `translateX(-${ImgRef.current.offsetWidth}px)`;
+    console.log(ListRef.current.style.transform)
     console.log("right");
   };
 
@@ -134,15 +132,17 @@ function ImageBoard(props) {
     setComment(event.currentTarget.value);
   };
 
+  const [RecState,setRecState] = useState(0)
 
   function ContentBox(){
     console.log()
 
     if( props.contentPosition === true){
-
+      console.log("right")
+      console.log(UserData[0]?._id)
     return <div
         className="rigthBox"
-        style={{ position: "absolute", display: "inline-block" }}
+        style={{ position: "absolute", display: "inline-block",width:'48.5%',padding:'10px' }}
       >
         <List>
           <ImageBoardUser userId={UserData[0]?.user}/>
@@ -158,7 +158,8 @@ function ImageBoard(props) {
         </div>
 
         <div className="buttonMenu">
-          <RecommandCmp boardId={UserData[0]?._id} recommandId={UserSelectData._id} />
+          <RecommandCmp boardId={UserData[0]?._id} recommandId={UserSelectData._id} getRec={setRecState}/>
+          <div style={{margin:'5px 0 5px', display:'inline-block'}}>좋아요</div><RecommandLength boardId={UserData[0]?._id} testRec={RecState}/>
         </div>
 
         <div className="commentCreate" style={{ width: "100%" }}>
@@ -167,7 +168,7 @@ function ImageBoard(props) {
             value={Comment} 
             onChange={onCommentHandler} 
             style={{width:'100%',padding:'0'}}
-            variant='standard'
+            variant='outlined'
             InputProps={{
               endAdornment: <Button onClick={onSubmitHandler} postion="end">작성</Button>
             }}
@@ -178,23 +179,25 @@ function ImageBoard(props) {
       </div>
     }
 
-    if( props.contentPosition  === false){
+    if(props.contentPosition  === false){
+      console.log("bottom")
       return <div
       className="rigthBox"
-      style={{ display: "inline-block" }}
+      style={{ width:'500px'}}
     >
-      <List>
+      <List sx={{display:'inline-block'}}>
+        <ListItem>
         <ImageBoardUser userId={UserData[0]?.user}/>
+          <div style={{display:'inline-block'}}> {UserData[0]?.content}</div>
+          </ListItem>
       </List>
 
-      <div className="ScrollbarStyle">
-        <List style={{padding :'8px 16px'}}>
-          <div> {UserData[0]?.content}</div>
-        </List>
-        <List>
+      {/* <div className="ScrollbarStyle"> */}
+        
+        {/* <List>
             <ImageBoardComment paramKey={ props.paramKey } CommentStatus={ CommentStatus }/>
-        </List>
-      </div>
+        </List> */}
+      {/* </div> */}
 
       <div className="buttonMenu">
         <RecommandCmp boardId={UserData[0]?._id} recommandId={UserSelectData?._id} />
@@ -206,7 +209,7 @@ function ImageBoard(props) {
           value={Comment} 
           onChange={onCommentHandler} 
           style={{width:'100%',padding:'0'}}
-          variant='standard'
+          variant='outlined'
           InputProps={{
             endAdornment: <Button onClick={onSubmitHandler} postion="end">작성</Button>
           }}
@@ -222,9 +225,6 @@ function ImageBoard(props) {
 
   return (
     <div>
-      {/* ImageBoardComponent InfoBar 부분  */}
-
-      {/* Image  */}
       <div
         style={{
           width: "500px",
@@ -304,6 +304,7 @@ function ImageBoard(props) {
                   }}
                   alt={image.name}
                   src={image.img}
+                  ref={ImgRef}
                 />
               </div>
             </div>

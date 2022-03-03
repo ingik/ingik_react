@@ -2,8 +2,7 @@ import { Avatar, Button } from '@mui/material'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import Following from '../../../moduls/Following'
-import UnFollowing from '../../../moduls/UnFollowing'
+import FollowingCmp from '../../../moduls/FollowingCmp'
 import ProfileImageBoardList from './ProfileImageBoardList'
 
 function OtherProfileCmp(props) {
@@ -12,8 +11,6 @@ function OtherProfileCmp(props) {
 
     const userData = useSelector(state => state.user.userData)
     const [UserData, setUserData] = useState({})
-    const [FollowDisplay, setFollowDisplay] = useState()
-    const [UpdateFollow, setUpdateFollow] = useState()
 
 
     useEffect(() => {
@@ -23,54 +20,8 @@ function OtherProfileCmp(props) {
         })
     },[props.match.params.key])
 
-    useEffect(() => {
-
-      setUpdateFollow(false)
-
-      let body = {
-        followerId: UserData?._id,
-        followingId: userData?._id
-      }
-
-      console.log(body)
-
-      axios.post('/api/users/followCheck',body).then(response => {
-        console.log(response.data)
-        if(!response.data){
-          setFollowDisplay(false)
-        }else{
-          setFollowDisplay(true)
-        }
-
-      })
-
-
-    },[UserData,UpdateFollow])
-
-
-
-    const onFollowHandler = () => {
-      let test = Following(UserData?._id,userData?._id) 
-      setUpdateFollow(test)
-    }
-
-    const onUnFollowHanler = () => {
-      let test = UnFollowing(UserData?._id,userData?._id) 
-      setUpdateFollow(test)
-    }
-
-    const FollowFunc = () => {
-      if (FollowDisplay === false) {
-        return <Button onClick={onFollowHandler}>follow</Button>;
-      } else {
-        return <Button onClick={onUnFollowHanler}>Unfollow</Button>;
-      }
-    }
-
-   
-
   return (
-    <div>
+    <div style={{ paddingTop: "64px" }}>
       <div>
         <div
           style={{
@@ -87,13 +38,43 @@ function OtherProfileCmp(props) {
               display: "flex",
               flexDirection: "column",
               marginLeft: "30px",
+              width: "400px",
             }}
           >
-            <div>{UserData?.name}</div>
-            <div>{UserData?.email}</div>
-            <div>{UserData?.intro}</div>
+            <div
+              style={{
+                fontSize: "25px",
+                marginBottom: "5px",
+                display: "inline-block",
+              }}
+            >
+              {UserData?.name}
+              <FollowingCmp
+                followerId={UserData?._id}
+                followingId={userData?._id}
+              />
+            </div>
+            <div style={{display:'flex',justifyContent:'space-evenly',marginBottom:'15px'}}>
+              <div>
+                <div style={{fontSize:'13px',fontWeight:'bold'}}>게시물</div>
+                <div style={{textAlign:'center'}}>0</div>
+              </div>
+              <div>
+                <div style={{fontSize:'13px',fontWeight:'bold'}}>팔로워</div>
+                <div style={{textAlign:'center'}}>0</div>
+              </div>
+              <div>
+                <div style={{fontSize:'13px',fontWeight:'bold'}}>팔로우</div>
+                <div style={{textAlign:'center'}}>0</div>
+              </div>
+            </div>
+            <div style={{ fontSize: "15px", marginBottom: "5px" }}>
+              {UserData?.email}
+            </div>
+            <div style={{ fontSize: "13px", marginBottom: "5px" }}>
+              {UserData?.intro}
+            </div>
           </div>
-          { FollowFunc() }
         </div>
         <div
           style={{
@@ -103,10 +84,10 @@ function OtherProfileCmp(props) {
             marginTop: "20px",
           }}
         >
-          {/* ProfileUpdate Component */}
         </div>
       </div>
 
+      <div style={{ textAlign: "center" }}>게시물</div>
       <div>
         <ProfileImageBoardList ParamsUserId={props.match.params.key} />
       </div>

@@ -25,8 +25,6 @@ export default function SideAppBar(props) {
    const handleOpen = () => setOpen(true);
    const handleClose = () => setOpen(false);
 
-  console.log('(SideAppBar)props : '+ JSON.stringify(props))
-
   const toggleDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
@@ -56,7 +54,7 @@ export default function SideAppBar(props) {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     bgcolor: 'background.paper',
-    width:'90%',
+    width:'63em',
     height:'500px',
     boxShadow: 24,
     p: 4,

@@ -17,13 +17,15 @@ function ImageBoardUser(props) {
 
 
   return (
-    <ListItem>
+    <React.Fragment>
       <Avatar
         alt={UserData?.name}
         src={UserData?.image}
         style={{
           display: "inline-block",
           verticalAlign: "top",
+          width:'32px',
+          height:'32px'
         }}
       />
       <Typography
@@ -37,7 +39,7 @@ function ImageBoardUser(props) {
       >
         {UserData?.name}
       </Typography>
-    </ListItem>
+      </React.Fragment>
   );
 }
 

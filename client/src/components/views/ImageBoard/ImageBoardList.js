@@ -24,19 +24,21 @@ function ImageBoardList(props) {
 
       console.log(result)
 
-      result?.data.map((list) => {
+      if(result){
+        result.data.map((list) => {
+          console.log(list);
+          list.image[0]._id = list._id;
 
-        console.log(list)
-        list.image[0]._id = list._id;
+          axios
+            .get("/api/boards/recommandLength/" + list._id)
+            .then((response) => {
+              console.log(response.data);
+              list.image[0].length = response.data[0]?.recommand.length;
+            });
 
-        axios.get('/api/boards/recommandLength/'+list._id).then(response => {
-          console.log(response.data)
-          list.image[0].length = response.data[0]?.recommand.length
-        })
-        
-        value.push(list.image[0]);
-    
-      });
+          value.push(list.image[0]);
+        });
+      }
 
       setPreviewList(value);
       console.log(value);
@@ -49,7 +51,7 @@ function ImageBoardList(props) {
   },[])
   
   useEffect(() => {
-    console.log("PreviewList : " + JSON.stringify(PreviewList));
+    console.log(PreviewList);
   },[PreviewList])
 
   const onHoverHandler = (event) => {
@@ -70,7 +72,7 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   bgcolor: 'background.paper',
-  width:'90%',
+  width:'63em',
   height:'500px',
   boxShadow: 24,
   p: 4,
@@ -81,7 +83,7 @@ const style = {
   
 
   return (
-    <div>
+    <div style={{paddingTop:'64px'}}>
     <div 
     style={{
       display: "flex",

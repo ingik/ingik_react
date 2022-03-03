@@ -265,9 +265,8 @@ export default function ProfileUpdate(props) {
   );
 
   return (
-    <div>
         <React.Fragment>
-          <Button variant='outlined' onClick={toggleDrawer(true)}>Profile Update</Button>
+          <Button variant='contained' onClick={toggleDrawer(true)} style={{display:'inline-block',float:'right'}}>Profile Update</Button>
           <Drawer
             anchor="bottom"
             open={OnSideBar} //true false
@@ -276,7 +275,5 @@ export default function ProfileUpdate(props) {
             {list()}
           </Drawer>
         </React.Fragment>
-        
-    </div>
   );
 }

@@ -4,7 +4,8 @@ import {
      BOARD_LIST,
      BOARD_DETAIL,
      UPDATE_BOARD,
-     DELETE_BOARD
+     DELETE_BOARD,
+     RECCOMAND_LIST
     } from "./types"
 
 
@@ -57,6 +58,17 @@ export function deleteBoard(dataToSubmit){
 
     return {
         type: DELETE_BOARD,
+        payload: request
+    }
+}
+
+export function ReccomandList(dataToSubmit){
+
+    console.log(dataToSubmit)
+    const request = dataToSubmit
+    
+    return {
+        type: RECCOMAND_LIST,
         payload: request
     }
 }

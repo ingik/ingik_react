@@ -40,10 +40,15 @@ function ImageBoardCmpList() {
 
     
   return (
-  <div>
+  <div style={{paddingTop:'64px'}}>
     {DataList.map((item) => {
       return (
         <div key={item._id}
+          style={{
+            width:'500px',
+            marginLeft:'calc(50% - 250px)',
+            marginTop:'20px'
+          }}
         >
         <ImageBoard paramKey={item._id} contentPosition={false} />
         </div>

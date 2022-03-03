@@ -19,17 +19,15 @@ function ChatList(props) {
     useEffect(() => {
         dispatch(chatList()).then( response => {
             if(response.payload){
-              const ListData = response.payload
-                setData(ListData)
-                console.log('(ChatList)ListData : '+JSON.stringify(ListData))
-                console.log('(ChatList)Data : '+JSON.stringify(Data))
+              console.log(response.payload)
+                setData(response.payload)
             } else {
                 alert("Failed to chatList")
             }
         })
     }, [])
 
-    const List = () => { 
+    function List(){ 
         Data.map((data) =>{
 
         const url = data.roomName
@@ -84,6 +82,7 @@ function ChatList(props) {
           >
             {Data}
           </List> */}
+            {List()}
         </Box>
       </div>
     );

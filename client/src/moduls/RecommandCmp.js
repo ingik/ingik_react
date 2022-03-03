@@ -4,13 +4,18 @@ import Recommand from './Recommand'
 import UnRecommand from './UnRecommand'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import RecommandLength from './RecommandLength';
 
 function RecommandCmp(props) {
 
     const [RecommandDisplay, setRecommandDisplay] = useState(false)
     
+    console.log(props)
+    
     useEffect(() => {
         
+      console.log('Recommand')
+
         let body = {
           boardId: props.boardId,
           recommandId: props.recommandId
@@ -30,14 +35,16 @@ function RecommandCmp(props) {
     
         })
     
-      },[props.recommandId,RecommandDisplay])
+      },[props.recommandId,props.boardId,RecommandDisplay])
     
     const onRecommandHandler = () => {
         setRecommandDisplay(Recommand(props.boardId, props.recommandId)) 
+        props.getRec(1)
     }
     
     const onUnRecommandHanler = () => {
         setRecommandDisplay(UnRecommand(props.boardId, props.recommandId)) 
+        props.getRec(2)
     }
 
     const RecommandFunc = () => {
@@ -49,9 +56,9 @@ function RecommandCmp(props) {
       }
 
   return (
-    <div>
+    <React.Fragment>
         { RecommandFunc() }
-    </div>
+    </React.Fragment>
   )
 }
 

@@ -3,7 +3,8 @@ import {
     BOARD_LIST,
     BOARD_DETAIL,
     UPDATE_BOARD,
-    DELETE_BOARD
+    DELETE_BOARD,
+    RECCOMAND_LIST
 } from '../_actions/types'
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -25,6 +26,9 @@ export default function(state = {}, action){
 
         case DELETE_BOARD : 
             return {...state, deleteBoardDate: action.payload}
+        
+        case RECCOMAND_LIST :
+            return {...state, reccomandList: action.payload}
 
         default:
             return state;

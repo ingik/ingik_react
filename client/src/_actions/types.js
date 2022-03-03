@@ -8,6 +8,7 @@ export const BOARD_LIST = "board_list"
 export const BOARD_DETAIL = "board_detail"
 export const UPDATE_BOARD = "update_board"
 export const DELETE_BOARD = "delete_board"
+export const RECCOMAND_LIST = "reccomand_list"
 //chat
 export const SEND_CHAT = "send_chat"
 export const RECEIVE_CHAT = "receive_chat"

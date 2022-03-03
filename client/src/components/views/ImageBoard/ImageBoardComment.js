@@ -7,18 +7,23 @@ import { FixedSizeList } from 'react-window';
 
 function ImageBoardComment(props) {
 
+  const [Status,setStatus] = useState(0)
+
+  
   const [ListComment, setListComment] = useState([])
   useEffect(() => {
-    async function get(){
-
-      const result = await axios.get("/api/baords/imageBoard/comment/" + props.paramKey)
-      if(result.data){
-        setListComment(result.data)
+    
+    setStatus(props.CommentStatus)
+    async function get() {
+      const result = await axios.get(
+        "/api/baords/imageBoard/comment/" + props.paramKey
+      );
+      if (result.data) {
+        setListComment(result.data);
       }
-      }
-      
-    get()
+    }
 
+    get();
   },[props.CommentStatus])
 
       
@@ -26,7 +31,7 @@ function ImageBoardComment(props) {
   return (
     <div>
     {
-    ListComment && ListComment.map((item,index) => {
+    ListComment.map((item,index) => {
       return (
         <ListItem key={index}>
           <Avatar
@@ -35,10 +40,25 @@ function ImageBoardComment(props) {
             style={{
               display: "inline-block",
               verticalAlign: "top",
+              width: "32px",
+              height: "32px",
             }}
           />
-          <Typography variant='h6' style={{fontSize:'15px',margin:'0 10px 0 10px',fontWeight:'600'}}>{item.user.name}</Typography>
-          <Typography variant='body1'>{item.content}</Typography>
+          <div>
+            <Typography variant="body1" style={{ display: "inline-block",marginLeft:'5px' }}>
+              <span
+                style={{
+                  fontSize: "15px",
+                  fontWeight: "600",
+                  display: "inline-block",
+                  marginRight: "5px",
+                }}
+              >
+                {item.user.name}
+              </span>
+              {item.content}
+            </Typography>
+          </div>
         </ListItem>
       );
     })

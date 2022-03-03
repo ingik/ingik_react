@@ -1,6 +1,6 @@
 .ScrollbarStyle {
     overflow-y: scroll;
-    height: 50vh;
+    height: 43vh;
 }
 
 .ScrollbarStyle::-webkit-scrollbar {

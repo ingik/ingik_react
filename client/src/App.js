@@ -57,7 +57,7 @@ function App() {
           <Route exact path="/imageBoard/:key" component={ImageBoard} />
           <Route exact path="/" component={Auth(ImageBoardList,true)} />
           <Route exact path="/imageBoardUpdate" component={Auth(ImageBoardUpdate,true)} />
-          <Route exact path="/imageBoardCmp" component={ Auth(ImageBoardCmpList,true) }/>
+          <Route exact path="/imageBoardCmp" component={ Auth(ImageBoardCmpList,true) } />
           <Route exact path="/profile/:key" component={ OtherProfileCmp }/>
           <Route exact path="/modal" component={ Profile }/>
         </Switch>

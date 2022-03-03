@@ -106,7 +106,7 @@ const style = {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <ImageBoard paramKey={ParamKey}></ImageBoard>
+          <ImageBoard paramKey={ParamKey} contentPosition={true}></ImageBoard>
         </Box>
       </Modal>
 

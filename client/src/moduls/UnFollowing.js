@@ -12,7 +12,7 @@ function UnFollowing(fowller,following) {
         console.log(response.data)
     })
 
-    return true
+    return false
 }
 
 export default UnFollowing

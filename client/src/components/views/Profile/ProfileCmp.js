@@ -17,28 +17,74 @@ function ProfileCmp(props) {
   //profile 최적화 필요
    
     return (
-      <div>
-        <div style={{ display: "flex", justifyContent: 'center', alignItems: 'center',marginTop:'20px'}}>
-          <Avatar
-            src={userData?.image}
-            sx={{ width: 150, height: 150 }}
-          />
+      <div style={{paddingTop:'64px'}}>
+        <div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: "20px",
+          }}
+        >
+          <Avatar src={userData?.image} sx={{ width: 150, height: 150 }} />
 
-          <div style={{ display: "flex", flexDirection: "column", marginLeft:'30px' }}>
-            <div>{userData?.name}</div>
-            <div>{userData?.email}</div>
-            <div>{userData?.intro}</div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              marginLeft: "30px",
+              width: "400px",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "25px",
+                marginBottom: "5px",
+                display: "inline-block",
+              }}
+            >
+              {userData?.name}
+              <ProfileUpdate user={userData}/>
+            </div>
+            <div style={{display:'flex',justifyContent:'space-evenly',marginBottom:'15px'}}>
+              <div>
+                <div style={{fontSize:'13px',fontWeight:'bold'}}>게시물</div>
+                <div style={{textAlign:'center'}}>0</div>
+              </div>
+              <div>
+                <div style={{fontSize:'13px',fontWeight:'bold'}}>팔로워</div>
+                <div style={{textAlign:'center'}}>0</div>
+              </div>
+              <div>
+                <div style={{fontSize:'13px',fontWeight:'bold'}}>팔로우</div>
+                <div style={{textAlign:'center'}}>0</div>
+              </div>
+            </div>
+            <div style={{ fontSize: "15px", marginBottom: "5px" }}>
+              {userData?.email}
+            </div>
+            <div style={{ fontSize: "13px", marginBottom: "5px" }}>
+              {userData?.intro}
+            </div>
           </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: "20px",
+          }}
+        >
+        </div>
+      </div>
 
-        </div>
-        <div style={{ display: "flex", justifyContent: 'center', alignItems: 'center',marginTop:'20px'}}>
-          {/* ProfileUpdate Component */}
-            <ProfileUpdate user={userData}/>
-        </div>
+
         <div>
          <ProfileImageBoardList ParamsUserId = {userData?._id}/>
-
         </div>
+        
       </div>
     );
 }
