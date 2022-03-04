@@ -8,7 +8,9 @@
 <img src="https://img.shields.io/badge/Socket.io-black?style=for-the-badge&logo=socket.io&badgeColor=010101"/>
 <img src="https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens"/><br>
 
-react를 너무 사용해보고 싶어서 토이프로젝트 느낌으로 제작하게 되었다.
+react를 너무 사용해보고 싶어서 토이프로젝트 느낌으로 제작하게 되었다.<br>
+
+# 수정이 필요한 부분 메모
 
 현재 팔로워 및 팔로우 업데이트까지 완료된 상황 2022-03-03
 
