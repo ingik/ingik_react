@@ -50,7 +50,7 @@ function FollowingCmp(props) {
       return (
         <Button
           onClick={onUnFollowHanler}
-          style={{ display: "inline-block", width: "150px" }}
+          style={{ display: "inline-block", width: "150px",float:'right' }}
           variant="outlined"
         >
           Unfollow

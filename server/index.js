@@ -327,7 +327,7 @@ app.get('/api/users/followLength/:key',(req,res) => {
 
 //FollowerLength
 
-app.get('/api/user/followerLength/:key',(req,res) => {
+app.get('/api/users/followerLength/:key',(req,res) => {
   Follower.find({UserId:req.params.key},(err,follower) => {
     if(err) return res.status(500).send({ error: "followLength failure"})
     return res.status(200).send(follower)

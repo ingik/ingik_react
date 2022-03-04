@@ -2,7 +2,10 @@ import { Avatar, Button } from '@mui/material'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import FollowerLength from '../../../moduls/FollowerLength'
 import FollowingCmp from '../../../moduls/FollowingCmp'
+import FollowLength from '../../../moduls/FollowLength'
+import ImageBoardLength from '../../../moduls/ImageBoardLength'
 import ProfileImageBoardList from './ProfileImageBoardList'
 
 function OtherProfileCmp(props) {
@@ -11,6 +14,7 @@ function OtherProfileCmp(props) {
 
     const userData = useSelector(state => state.user.userData)
     const [UserData, setUserData] = useState({})
+    const [CallData,setCallData] = useState(0)
 
 
     useEffect(() => {
@@ -19,6 +23,9 @@ function OtherProfileCmp(props) {
             setUserData(response.data)
         })
     },[props.match.params.key])
+
+   
+ 
 
   return (
     <div style={{ paddingTop: "64px" }}>
@@ -57,15 +64,15 @@ function OtherProfileCmp(props) {
             <div style={{display:'flex',justifyContent:'space-evenly',marginBottom:'15px'}}>
               <div>
                 <div style={{fontSize:'13px',fontWeight:'bold'}}>게시물</div>
-                <div style={{textAlign:'center'}}>0</div>
+                <div style={{textAlign:'center'}}><ImageBoardLength UserId={UserData?._id} /></div>
               </div>
               <div>
                 <div style={{fontSize:'13px',fontWeight:'bold'}}>팔로워</div>
-                <div style={{textAlign:'center'}}>0</div>
+                <div style={{textAlign:'center'}}><FollowLength followerId={UserData?._id}/></div>
               </div>
               <div>
                 <div style={{fontSize:'13px',fontWeight:'bold'}}>팔로우</div>
-                <div style={{textAlign:'center'}}>0</div>
+                <div style={{textAlign:'center'}}><FollowerLength UserId={UserData?._id}/></div>
               </div>
             </div>
             <div style={{ fontSize: "15px", marginBottom: "5px" }}>

@@ -5,6 +5,9 @@ import { withRouter } from 'react-router-dom'
 import { auth } from '../../../_actions/user_action'
 import ProfileUpdate from './ProfileUpdate'
 import ProfileImageBoardList from './ProfileImageBoardList'
+import ImageBoardLength from '../../../moduls/ImageBoardLength'
+import FollowLength from '../../../moduls/FollowLength'
+import FollowerLength from '../../../moduls/FollowerLength'
 
 function ProfileCmp(props) {
 
@@ -50,15 +53,15 @@ function ProfileCmp(props) {
             <div style={{display:'flex',justifyContent:'space-evenly',marginBottom:'15px'}}>
               <div>
                 <div style={{fontSize:'13px',fontWeight:'bold'}}>게시물</div>
-                <div style={{textAlign:'center'}}>0</div>
+                <div style={{textAlign:'center'}}><ImageBoardLength UserId={userData?._id}/></div>
               </div>
               <div>
                 <div style={{fontSize:'13px',fontWeight:'bold'}}>팔로워</div>
-                <div style={{textAlign:'center'}}>0</div>
+                <div style={{textAlign:'center'}}><FollowLength followerId={userData?._id}/></div>
               </div>
               <div>
                 <div style={{fontSize:'13px',fontWeight:'bold'}}>팔로우</div>
-                <div style={{textAlign:'center'}}>0</div>
+                <div style={{textAlign:'center'}}><FollowerLength UserId={userData?._id}/></div>
               </div>
             </div>
             <div style={{ fontSize: "15px", marginBottom: "5px" }}>
