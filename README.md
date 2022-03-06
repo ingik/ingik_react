@@ -12,6 +12,11 @@ react를 너무 사용해보고 싶어서 토이프로젝트 느낌으로 제작
 
 # 수정이 필요한 부분 메모
 
+게시물이나 댓글에서 아바타이미지나 이름에 마우스를 올리면 간단한 유저 정보 및 팔로우 버튼 <br>
+게시물,팔로우,팔로워 수를 보여주도록 만들었는데 ImageBoardUser 에서 팝오버시 HoverProfile 컴포넌트를 렌더링하고 <br>
+HoverProfile 컴포넌트에선 FollowingCmp(팔로우 버튼),ImageBoardLength(게시물 수),FollowLength(팔로우 수),FollowerLength(팔로워 수) <br>
+각각 컴포넌트 렌더링 해주는데 저 컴포넌트 안에서 각각 api호출 해주니 최적화가 너무 구리다.. <br>
+HoverProfile 컴포넌트 부모 컴포넌트에서 미리 데이터를 호출해서 뿌려주기만 하면 괜찮을 것 같다.
 
 게시물 업로드 페이지 전체수정 중 Preview로 인풋파일을 했을때 내가 올린 여러 사진들을 <br>
 이미지 리스트로 보여주는데 이미지 리스트보다 기존 제작된 ImageBoard.js 페이지 느낌으로 <br>
