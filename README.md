@@ -1,4 +1,4 @@
-# 이미지 기반 SNS
+# 이미지 기반 SNS (2021.12 ~ )
 
 <img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB"/> <img src="https://img.shields.io/badge/redux-%23593d88.svg?style=for-the-badge&logo=redux&logoColor=white"/>
 <img src="https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white"/>
@@ -12,7 +12,11 @@ react를 너무 사용해보고 싶어서 토이프로젝트 느낌으로 제작
 
 # 수정이 필요한 부분 메모
 
-현재 팔로워 및 팔로우 업데이트까지 완료된 상황 2022-03-03
+게시물이나 댓글에서 아바타이미지나 이름에 마우스를 올리면 간단한 유저 정보 및 팔로우 버튼 <br>
+게시물,팔로우,팔로워 수를 보여주도록 만들었는데 ImageBoardUser 에서 팝오버시 HoverProfile 컴포넌트를 렌더링하고 <br>
+HoverProfile 컴포넌트에선 FollowingCmp(팔로우 버튼),ImageBoardLength(게시물 수),FollowLength(팔로우 수),FollowerLength(팔로워 수) <br>
+각각 컴포넌트 렌더링 해주는데 저 컴포넌트 안에서 각각 api호출 해주니 최적화가 너무 구리다.. <br>
+HoverProfile 컴포넌트 부모 컴포넌트에서 미리 데이터를 호출해서 뿌려주기만 하면 괜찮을 것 같다.
 
 게시물 업로드 페이지 전체수정 중 Preview로 인풋파일을 했을때 내가 올린 여러 사진들을 <br>
 이미지 리스트로 보여주는데 이미지 리스트보다 기존 제작된 ImageBoard.js 페이지 느낌으로 <br>
@@ -35,11 +39,11 @@ profile 최적화 필요 --- 완료
 api호출 내부 api호출 루프를 돌려버리니 골치아픈일이 발생 마지막 루프에 res 처리를 해주거나 <br>async.series를 사용하니 간단하게 해결됬다.
 
 <br>
-검색 preview 구현시 한글 자음부분에서 프리뷰가 끊기는현상 한글 전문 검색으로 변경필요 
+검색 preview 구현시 한글 자음부분에서 프리뷰가 끊기는현상이 있다. <br>한글 전문 검색으로 수정 할 필요가 있겠다.
  <br>
  
 # 진행중 아쉬운 점<br>
-무계획으로 진행한 프로젝트다 보니 컴포넌트를 좀더 세분화 시킬수 있었는데<br>리액트의 강점을 하나도 못살린 느낌<br>
+무계획으로 진행한 프로젝트다 보니 컴포넌트를 좀더 세분화 시킬수 있었는데<br>리액트의 강점을 못살린 느낌<br>
 작은 컴포넌트로 쪼개서 기능과 css 추가해서 프롭스로 값만 넘겨주며 사용하니 너무 편하다<br>
 
 오픈채팅을 dm으로 전환하고 푸쉬 알림기능 까지 마무리하면 리팩토링이 전체적으로 필요한 것 같다. <br>
