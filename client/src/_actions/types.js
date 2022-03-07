@@ -2,6 +2,7 @@ export const LOGIN_USER = "login_user"
 export const REGISTER_USER = "register_user"
 export const AUTH_USER = "auth_user"
 // export const AUTH_USER_UPDATE = "auth_user_update"
+export const FOLLOW_LENGTH = "follow_length"
 //board
 export const CREATE_BOARD = "create_board"
 export const BOARD_LIST = "board_list"

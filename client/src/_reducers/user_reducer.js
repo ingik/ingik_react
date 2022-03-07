@@ -2,6 +2,7 @@ import {
     LOGIN_USER,
     REGISTER_USER,
     AUTH_USER,
+    FOLLOW_LENGTH,
     // AUTH_USER_UPDATE
 } from '../_actions/types';
 
@@ -32,6 +33,10 @@ export default function (state = {}, action) {
         //     // eslint-disable-next-line no-unreachable
         //     break;
 
+        case FOLLOW_LENGTH:
+            return { ...state, followLength: action.payload}
+            // eslint-disable-next-line no-unreachable
+            break;
         default:
             return state;
     }

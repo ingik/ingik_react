@@ -1,14 +1,15 @@
 import { Avatar, Button } from '@mui/material'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import FollowerLength from '../../../moduls/FollowerLength'
 import FollowingCmp from '../../../moduls/FollowingCmp'
-import FollowLength from '../../../moduls/FollowLength'
+import FollowLength, { FollowContext } from '../../../moduls/FollowLength'
 import ImageBoardLength from '../../../moduls/ImageBoardLength'
 import ProfileImageBoardList from './ProfileImageBoardList'
 
 function OtherProfileCmp(props) {
+
 
     console.log(props)
 
@@ -24,7 +25,12 @@ function OtherProfileCmp(props) {
         })
     },[props.match.params.key])
 
-   
+
+    const getFunc = (data) => {
+      setCallData(data)
+    }
+
+    
  
 
   return (
@@ -59,6 +65,7 @@ function OtherProfileCmp(props) {
               <FollowingCmp
                 followerId={UserData?._id}
                 followingId={userData?._id}
+                getFunc={getFunc}
               />
             </div>
             <div style={{display:'flex',justifyContent:'space-evenly',marginBottom:'15px'}}>
@@ -68,7 +75,7 @@ function OtherProfileCmp(props) {
               </div>
               <div>
                 <div style={{fontSize:'13px',fontWeight:'bold'}}>팔로워</div>
-                <div style={{textAlign:'center'}}><FollowLength followerId={UserData?._id}/></div>
+                <div style={{textAlign:'center'}}><FollowLength followerId={UserData?._id} CallData={CallData}/></div>
               </div>
               <div>
                 <div style={{fontSize:'13px',fontWeight:'bold'}}>팔로우</div>

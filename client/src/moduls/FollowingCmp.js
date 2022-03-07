@@ -3,12 +3,18 @@ import React, { useEffect, useState } from 'react'
 import Button from '@mui/material/Button';
 import Following from './Following'
 import UnFollowing from './UnFollowing'
+import { useDispatch, useSelector } from 'react-redux';
+import { FOLLOW_LENGTH } from '../_actions/types';
 
 function FollowingCmp(props) {
   const [FollowDisplay, setFollowDisplay] = useState(false);
 
+  
   useEffect(() => {
     console.log("FollowCheck");
+    
+    console.log(props)
+    
 
     let body = {
       followerId: props.followerId,
@@ -28,10 +34,12 @@ function FollowingCmp(props) {
   }, [props.followerId, props.followingId, FollowDisplay]);
 
   const onFollowHandler = () => {
+    props.getFunc(1)
     setFollowDisplay(Following(props.followerId, props.followingId));
   };
 
   const onUnFollowHanler = () => {
+    props.getFunc(2)
     setFollowDisplay(UnFollowing(props.followerId, props.followingId));
   };
 

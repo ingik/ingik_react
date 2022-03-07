@@ -26,6 +26,7 @@ import ImageBoardList from './components/views/ImageBoard/ImageBoardList'
 import ImageBoardUpdate from './components/views/ImageBoard/ImageBoardUpload'
 import OtherProfileCmp from './components/views/Profile/OtherProfileCmp';
 import ImageBoardCmpList from './components/views/ImageBoard/ImageBoardCmpList';
+import HoverProfile from './components/views/Profile/HoverProfile';
 // import SideAppBar from './components/views/AppBar/SideAppBar' 라우팅 노필요
 // import AppBarCmp from './components/views/AppBar/AppBarCmp'; 지울거
 
@@ -60,6 +61,7 @@ function App() {
           <Route exact path="/imageBoardCmp" component={ Auth(ImageBoardCmpList,true) } />
           <Route exact path="/profile/:key" component={ OtherProfileCmp }/>
           <Route exact path="/modal" component={ Profile }/>
+          <Route exact path="/hover" component={HoverProfile}/>
         </Switch>
         
       </div>

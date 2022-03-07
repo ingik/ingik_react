@@ -181,7 +181,7 @@ function SearchAppBar(props) {
             component="div"
             sx={{ display: { xs: "none", sm: "block" } }}
           >
-            LOGO
+            SNAP STORY
           </Typography>
           <Search>
             <SearchIconWrapper>

@@ -34,8 +34,6 @@ function ImageBoardUpload(props) {
     }
 
     let ArrayArr = Array.from(event.target.files)
-
-
     let value = []
 
     ArrayArr.map((list) => {
@@ -49,9 +47,14 @@ function ImageBoardUpload(props) {
     console.log(value)
     setImageListValue(value)
 
-
-
+    ListRef.current.style.width = ImageListValue.length * 500 + "px";
+    
   };
+
+  // useEffect(() => {
+  //   console.log('ImageDataList')
+  //   ListRef.current.style.width = ImageListValue.length * 500 + "px";
+  // }, [ImageListValue]);
   
 
 
@@ -105,7 +108,6 @@ function ImageBoardUpload(props) {
     <div
       style={{
         position: "relative",
-        width: "",
         margin: "auto",
         paddingBottom: "30px",
         transform: `translateX(0)`,
@@ -133,6 +135,7 @@ function ImageBoardUpload(props) {
                 float: "left",
                 display: "table",
               }}
+              alt={image.name}
               src={image}
               ref={ImgRef}
             />
@@ -141,7 +144,6 @@ function ImageBoardUpload(props) {
       ))}
     </div>
   </div>
-    
   }
 
 

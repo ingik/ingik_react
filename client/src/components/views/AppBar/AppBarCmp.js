@@ -86,7 +86,7 @@ function AppBarCmp(props) {
               component="div"
               sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none'  },color:'black'}}
             >
-              LOGO
+              SNAP STORY
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               {pages.map((page) => (

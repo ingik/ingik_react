@@ -163,7 +163,7 @@ function ImageBoard(props) {
         </div>
 
         <div className="commentCreate" style={{ width: "100%" }}>
-          <form onSubmit={onSubmitHandler}>
+          <form onSubmit={onSubmitHandler} style={{ width: "100%" }}>
             <TextField 
             value={Comment} 
             onChange={onCommentHandler} 
@@ -274,7 +274,6 @@ function ImageBoard(props) {
         <div
           style={{
             position: "relative",
-            width: "",
             margin: "auto",
             paddingBottom: "30px",
             transform: `translateX(0)`,

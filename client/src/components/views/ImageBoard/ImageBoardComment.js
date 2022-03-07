@@ -44,7 +44,6 @@ function ImageBoardComment(props) {
               height: "32px",
             }}
           />
-          <div>
             <Typography variant="body1" style={{ display: "inline-block",marginLeft:'5px' }}>
               <span
                 style={{
@@ -58,7 +57,6 @@ function ImageBoardComment(props) {
               </span>
               {item.content}
             </Typography>
-          </div>
         </ListItem>
       );
     })
