@@ -170,7 +170,7 @@ function SearchAppBar(props) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" color="inherit"
-      style={{position:'fixed',backgroundColor:'',zIndex:'100',top:0}}
+      style={{position:'fixed',backgroundColor:'',zIndex:'200',top:0}}
       >
         <Toolbar>
           {/* SidsAppBar Component */}

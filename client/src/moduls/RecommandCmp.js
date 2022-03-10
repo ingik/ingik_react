@@ -49,9 +49,9 @@ function RecommandCmp(props) {
 
     const RecommandFunc = () => {
         if (RecommandDisplay === false) {
-          return <FavoriteBorderIcon onClick={onRecommandHandler}></FavoriteBorderIcon>;
+          return <FavoriteBorderIcon style={{verticalAlign:'middle'}} onClick={onRecommandHandler}></FavoriteBorderIcon>;
         } else {
-          return <FavoriteIcon onClick={onUnRecommandHanler}></FavoriteIcon>;
+          return <FavoriteIcon style={{verticalAlign:'middle'}} onClick={onUnRecommandHanler}></FavoriteIcon>;
         }
       }
 

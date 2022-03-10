@@ -1,13 +1,14 @@
 import { ImageListItem,ImageList, Box } from '@mui/material';
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { shallowEqual, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import  { TextField , Button } from '@mui/material'
+import  { TextField , Button , Avatar , Typography } from '@mui/material'
 import Modal from '@mui/material/Modal';
 
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 
 
@@ -20,6 +21,8 @@ function ImageBoardUpload(props) {
   const [PreviewArr, setPreviewArr] = useState([]);
   const [Content, setContent] = useState("");
   const ImgRef = useRef()
+  const MainRef = useRef()
+  const labelRef = useRef()
 
 
   const ImageUploads = (event) => {
@@ -32,30 +35,46 @@ function ImageBoardUpload(props) {
       setImageArr(Array.from(event.target.files));
       setPreviewArr(Array.from(event.target.files));
     }
-
-    let ArrayArr = Array.from(event.target.files)
-    let value = []
-
-    ArrayArr.map((list) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(list);
-      reader.onload = function (event) {
-        value.push(event.target.result);
-      };
-    });
-
-    console.log(value)
-    setImageListValue(value)
-
-    ListRef.current.style.width = ImageListValue.length * 500 + "px";
     
+    let ArrayArr = Array.from(event.target.files)
+
+    // let value = []
+    // ArrayArr.map((list) => {
+      // const reader = new FileReader();
+      // reader.readAsDataURL(list);
+      // reader.onload = function (event) {
+      //   value.push(event.target.result);
+      //   setImageListValue([...event.target.result])
+      // };
+    // });
+
+    let fileURLs = [];
+   
+    let file;
+    for (let i = 0; i < ArrayArr.length; i++) {
+      file = ArrayArr[i];
+    
+      let reader = new FileReader();
+      reader.onload = () => {
+        console.log(reader.result);
+        fileURLs[i] = reader.result;
+        setImageListValue([...fileURLs]);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    labelRef.current.style.display = "none"
+    MainRef.current.style.width = 500+"px";
+    ListRef.current.style.width = ArrayArr.length * 500 + "px";
+    console.log(ListRef.current.style.width)
   };
 
-  // useEffect(() => {
-  //   console.log('ImageDataList')
-  //   ListRef.current.style.width = ImageListValue.length * 500 + "px";
-  // }, [ImageListValue]);
+  useEffect(()=>{
+    MainRef.current.style.width = 0+"px";
+  },[])
+
   
+
 
 
   function result(){
@@ -67,6 +86,8 @@ function ImageBoardUpload(props) {
       display: "inline-block",
       position: "relative",
     }}
+
+    ref={MainRef}
   >
     <div
       className="LeftButton"
@@ -99,7 +120,7 @@ function ImageBoardUpload(props) {
       onClick={onRightMove}
     >
       <ArrowForwardIosIcon
-        style={Number >= ImageList.length - 1 ? none : display}
+        style={Number >= ImageListValue.length - 1 ? none : display}
         fontSize="large"
       />
     </div>
@@ -202,6 +223,8 @@ function ImageBoardUpload(props) {
           console.log(response.data);
         });
       });
+
+      props.handleClose(false)
   };
 
   const onContentHander = (event) => {
@@ -236,6 +259,7 @@ function ImageBoardUpload(props) {
     ListRef.current.style.transform = ListRef.current.style.transform + `translateX(${ImgRef.current.offsetWidth}px)`;
     console.log(ListRef.current.style.transform)
     console.log("Left");
+
   };
   
   const onRightMove = () => {
@@ -279,77 +303,85 @@ function ImageBoardUpload(props) {
   };
 
   return (
-    // <div>
-    //   <form onSubmit={onSubmitHandler} >
-    //     <label htmlFor="input-file"  style={{width:'500px',height:'500px',display:'inline-block'}}>
-    //       <input
-    //         type="file"
-    //         id="input-file"
-    //         accept="image/*"
-    //         onChange={ImageUploads}
-    //         multiple
-    //         style={{display:'none'}}
-    //       ></input>
-    //       {/* <div component="span">버튼</div> */}
-    //     <ImageList sx={{}} cols={3} rowHeight={150} variant="masonry">
-         
-    //       {
-    //         ImageListValue.map((item, index) => (
-    //           <ImageListItem key={index}>
-    //             <img
-    //               src={item}
-    //               alt="a"
-    //               loading="lazy"
-    //               style={{ width: 150, height: 150 }}
-    //             />
-    //           </ImageListItem>
-    //         ))}
-    //     </ImageList>
-    //     </label>
-    //   <div 
-    //     className='rightBox'
-    //     style={{display:'inline-block'}}
-    //   >
-    //     <TextField
-    //       type="text"
-    //       value={Content}
-    //       onChange={onContentHander}
-    //       multiline
-    //     />
-    //     <Button variant="outlined" onClick={onSubmitHandler}>
-    //       버튼
-    //     </Button>
-    //     </div>
-    //   </form>
-    // </div>
-
     <div>
-      { result() }
-
-      <form onSubmit={onSubmitHandler} >
-      <label htmlFor="input-file"  >
-           <input
-            type="file"
-            id="input-file"
-            accept="image/*"
-            onChange={ImageUploads}
-            multiple
-            style={{display:'none'}}
-          ></input>
-          <div component="span">버튼</div>
-       
-      </label>
-           <TextField
-          type="text"
-          value={Content}
-          onChange={onContentHander}
-          multiline
-        />
-        <Button variant="outlined" onClick={onSubmitHandler}>
-          버튼
-        </Button>
+      <form onSubmit={onSubmitHandler}>
+        <input
+          type="file"
+          id="input-file"
+          accept="image/*"
+          onChange={ImageUploads}
+          multiple
+          style={{ display: "none" }}
+        ></input>
+        <label
+          htmlFor="input-file"
+          style={{ width: "500px", height: "500px", display: "inline-block" }}
+          ref={labelRef}
+        >
+          <div style={{height:'100%',position:'relative'}}>
+          <AddCircleOutlineIcon style={{ fontSize: 250, position:'absolute',top:'calc(50% - 250px/2)',left:'calc(50% - 250px/2)',opacity:'0.3' }}/>
+          </div>
+        </label>
+        {result()}
+        <div
+          className="rigthBox"
+          style={{
+            position: "absolute",
+            display: "inline-block",
+            width: "48.5%",
+            padding: "10px",
+          }}
+        >
+          <div style={{padding:'0 10px 0 10px'}}>
+            <Avatar
+              alt={userData?.name}
+              src={userData?.image}
+              style={{
+                display: "inline-block",
+                verticalAlign: "top",
+                width: "32px",
+                height: "32px",
+                verticalAlign: "middle",
+              }}
+            />
+            <Typography
+              variant="body1"
+              style={{ display: "inline-block", marginLeft: "10px" }}
+            >
+              <span
+                style={{
+                  fontSize: "15px",
+                  fontWeight: "300",
+                  display: "inline-block",
+                  marginRight: "5px",
+                  verticalAlign: "middle",
+                }}
+              >
+                {userData?.name}
+              </span>
+            </Typography>
+          </div>
+          <div style={{padding:'0 10px 0 10px', margin:'10px 0 '}}>
+          <TextField
+            type="text"
+            variant='outlined'
+            value={Content}
+            onChange={onContentHander}
+            sx={{width:'100%'}}
+            multiline={true}
+            inputProps={{style: {height: '350px'}}}
+            placeholder='문구를 입력해주세요.'
+            size='500'
+            row='500'
+          />
+          </div>
+          <div style={{padding:'0 10px 0 10px'}}>
+          <Button variant="outlined" onClick={onSubmitHandler} style={{width:'100%'}}>
+            작성
+          </Button>
+          </div>
+        </div>
       </form>
-
     </div>
   );
 }

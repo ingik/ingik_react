@@ -23,7 +23,7 @@ function RecommandLength(props) {
 
     return (
         <React.Fragment>
-            <div style={{display:'inline-block'}}> {Length}</div>
+            <div style={{display:'inline-block',verticalAlign:'middle'}}> {Length}</div>
         </React.Fragment>
     )
 

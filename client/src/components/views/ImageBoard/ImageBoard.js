@@ -82,7 +82,7 @@ function ImageBoard(props) {
 
   const none = {
     position: "absolute",
-    zIndex: 9999,
+    // zIndex: 100,
     color: "gray",
     opacity: 0.6,
     top: "calc(50% - 25px)",
@@ -93,7 +93,7 @@ function ImageBoard(props) {
 
   const display = {
     position: "absolute",
-    zIndex: 9999,
+    // zIndex: 100,
     color: "gray",
     opacity: 0.6,
     top: "calc(50% - 25px)",
@@ -158,8 +158,9 @@ function ImageBoard(props) {
         </div>
 
         <div className="buttonMenu">
-          <RecommandCmp boardId={UserData[0]?._id} recommandId={UserSelectData._id} getRec={setRecState}/>
-          <div style={{margin:'5px 0 5px', display:'inline-block'}}>좋아요</div><RecommandLength boardId={UserData[0]?._id} testRec={RecState}/>
+            <RecommandCmp boardId={UserData[0]?._id} recommandId={UserSelectData._id} getRec={setRecState}/>
+          <div style={{margin:'5px 0 5px', display:'inline-block',verticalAlign:'middle',margin:'5px'}}>좋아요</div>
+            <RecommandLength boardId={UserData[0]?._id} testRec={RecState}/>
         </div>
 
         <div className="commentCreate" style={{ width: "100%" }}>
@@ -200,10 +201,12 @@ function ImageBoard(props) {
       {/* </div> */}
 
       <div className="buttonMenu">
-        <RecommandCmp boardId={UserData[0]?._id} recommandId={UserSelectData?._id} />
-      </div>
-
+            <RecommandCmp boardId={UserData[0]?._id} recommandId={UserSelectData._id} getRec={setRecState}/>
+          <div style={{margin:'5px 0 5px', display:'inline-block',verticalAlign:'middle',margin:'5px'}}>좋아요</div>
+            <RecommandLength boardId={UserData[0]?._id} testRec={RecState}/>
+        </div>
       <div className="commentCreate" style={{ width: "100%" }}>
+        
         <form onSubmit={onSubmitHandler}>
           <TextField 
           value={Comment} 

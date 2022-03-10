@@ -13,6 +13,10 @@ import { useState } from 'react';
 import { IconButton, Modal } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ImageBoardUpload from '../ImageBoard/ImageBoardUpload';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import UploadIcon from '@mui/icons-material/Upload';
+import HomeIcon from '@mui/icons-material/Home';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 
 
 export default function SideAppBar(props) {
@@ -54,7 +58,7 @@ export default function SideAppBar(props) {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     bgcolor: 'background.paper',
-    width:'63em',
+    width:'1000px',
     height:'500px',
     boxShadow: 24,
     p: 4,
@@ -71,19 +75,19 @@ export default function SideAppBar(props) {
       <List>
           <ListItem button onClick={ onHome }>
             <ListItemIcon>
-              <InboxIcon/>
+              <HomeIcon/>
             </ListItemIcon>
             <ListItemText primary="Home" />
           </ListItem>
           <ListItem button onClick={ onBoard }>
             <ListItemIcon>
-              <InboxIcon/>
+              <FormatListBulletedIcon/>
             </ListItemIcon>
             <ListItemText primary="Board" />
           </ListItem>
           <ListItem button onClick={ onImageUpload }>
             <ListItemIcon>
-              <InboxIcon/>
+              <UploadIcon/>
             </ListItemIcon>
             <ListItemText primary="Upload" />
           </ListItem>
@@ -92,7 +96,13 @@ export default function SideAppBar(props) {
             <ListItemIcon>
                 <MailIcon/>
             </ListItemIcon>
-            <ListItemText primary="Open Chat" />
+            <ListItemText primary="Message" />
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+                <NotificationsIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Notice" />
           </ListItem>
       </List>
     </Box>
@@ -125,7 +135,7 @@ export default function SideAppBar(props) {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <ImageBoardUpload />
+            <ImageBoardUpload  handleClose={handleClose} />
           </Box>
         </Modal>
       </React.Fragment>
