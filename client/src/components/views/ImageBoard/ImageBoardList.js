@@ -16,7 +16,7 @@ function ImageBoardList(props) {
   const [ParamKey, setParamKey] = useState("")
 
   const [Length,setLength] = useState(0)
-  
+
   
   useEffect(() => {
 
@@ -30,27 +30,21 @@ function ImageBoardList(props) {
         result.data.map((list) => {
           console.log(list);
           list.image[0]._id = list._id;
-          // list.image[0].recommand = null
 
-          axios.get("/api/boards/recommandLength/" + list._id)
-            .then((response) => {
+          axios.all([axios.get("/api/boards/recommandLength/" + list._id),axios.get("/api/boards/commentLength/"+list._id)])
+          .then(axios.spread((response1,response2)=>{
 
-              if(response){
-
-                console.log(response.data);
-                console.log(response.data[0]?.recommand.length);
-                // list.image[0].length = response.data[0]?.recommand.length;
-                
-              list.image[0].recommand = response.data[0]?.recommand.length;
-              // setLength(response.data[0]?.recommand.length)
-
-              setLength(list.image[0]?.recommand)
-                console.log(list.image[0].recommand);
-                console.log(list.image[0]);
-              }
-            });
-            value.push(list.image[0]);
+            console.log(response1.data)
+            list.image[0].recommand = response1.data[0]?.recommand.length
+            console.log(response2.data)
+            list.image[0].comment = response2.data[0]?.commentList.length
+            
+            setLength(list.image[0]?.recommand);
+          }))
           
+          
+          value.push(list.image[0]);
+          // setPreviewList(...list.image[0])
 
 
         });
@@ -71,23 +65,16 @@ function ImageBoardList(props) {
   const onHoverHandler = (event) => {
 
     console.log('hover')
-    console.log(event.currentTarget)
-    // hoverStyletarget(event)
-    hoverStyleChildren(event)
+    // console.log(event.currentTarget)
+    // event.currentTarget.style=`${HoverStyle}`
+    event.currentTarget.children[0].style=`color:white; display:block; padding-top:50%;`
   }
 
-  const hoverStyletarget = (event) => {
-    event.currentTarget.style=`${HoverStyle}`
-  }
-
-  const hoverStyleChildren = (event) => {
-    event.target.children[0].style=`color:white; display:block; padding-top:50%;`
-  }
   
   const onLeaveHandler = (event) => {
     console.log('leave')
     // event.currentTarget.style=`${LeaveStyle}`
-    console.log(event.currentTarget)
+    // console.log(event.currentTarget)
     event.currentTarget.children[0].style=`display:none`
   }
 
@@ -125,9 +112,6 @@ const LeaveStyle = {
   textAlign: "center",
 }
 
-
-  
-
   return (
     <div style={{ paddingTop: "64px" }}>
       <div
@@ -145,8 +129,8 @@ const LeaveStyle = {
           cols={3}
         >
           {/* { PreviewListHandler() } */}
-          {PreviewList &&
-            PreviewList.map((item) => (
+          {
+          PreviewList && PreviewList.map((item) => (
               <ImageListItem key={item.img}>
                 <img
                   src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
@@ -167,6 +151,7 @@ const LeaveStyle = {
                     <FavoriteIcon sx={{ verticalAlign: "middle" }}/>
                     <span style={{verticalAlign:'middle',margin:'0 15px 0 5px'}}>{item.recommand}</span>
                     <CommentIcon sx={{ verticalAlign: "middle" }} />
+                    <span style={{verticalAlign:'middle',margin:'0 15px 0 5px'}}>{item.comment}</span>
                   </div>
                 </div>
               </ImageListItem>
@@ -182,6 +167,7 @@ const LeaveStyle = {
         <Box sx={style}>
           <ImageBoard paramKey={ParamKey} contentPosition={true}></ImageBoard>
         </Box>
+
       </Modal>
     </div>
   );

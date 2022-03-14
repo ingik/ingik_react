@@ -7,25 +7,19 @@ import { FixedSizeList } from 'react-window';
 
 function ImageBoardComment(props) {
 
-  const [Status,setStatus] = useState(0)
-
-  
+  console.log(props)
   const [ListComment, setListComment] = useState([])
+  
   useEffect(() => {
-    
-    setStatus(props.CommentStatus)
-    async function get() {
-      const result = await axios.get(
-        "/api/baords/imageBoard/comment/" + props.paramKey
-      );
-      if (result.data) {
-        setListComment(result.data);
+
+    axios.get("/api/baords/imageBoard/comment/" + props.paramKey).then(response => {
+      if(response.data) {
+        console.log(response.data)
+        setListComment(response.data);
       }
-    }
-
-    get();
+    }).catch()
+    
   },[props.CommentStatus])
-
       
       
   return (

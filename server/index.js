@@ -577,6 +577,15 @@ app.get('/api/boards/imageBoard/comment/user',(req,res) => {
   
 })
 
+//CommentLength 
+
+app.get('/api/boards/commentLength/:key',(req,res) => {
+  Comment.find({boardId:req.params.key},(err,comment) =>{
+    if (err) return res.status(500).send({ err: "commentLength failure"})
+    return res.status(200).send(comment)
+  })
+})
+
 
 
 

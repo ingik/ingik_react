@@ -28,6 +28,7 @@ function ImageBoard(props) {
   const [CommentStatus, setCommentStatus] = useState(0)
   const [Number,setNumber] = useState(0)
   const ImgRef = useRef()
+  const [CommentLength, setCommentLength] = useState(null)
 
 
   const onLeftMove = (event) => {
@@ -105,6 +106,8 @@ function ImageBoard(props) {
   const onSubmitHandler = (event) => {
     event.preventDefault();
 
+    setCommentStatus(CommentStatus + 1)
+
     let body = {
 
       boardId : UserData[0]._id,
@@ -115,7 +118,6 @@ function ImageBoard(props) {
 
     };
 
-    setCommentStatus(CommentStatus + 1)
 
     axios.post("/api/boards/imageBoardComment", body).then((response) => {
       setComment("");
@@ -132,7 +134,12 @@ function ImageBoard(props) {
     setComment(event.currentTarget.value);
   };
 
+
+  const memoCommentStatus = useMemo(()=> CommentStatus ,[CommentStatus])
+  
   const [RecState,setRecState] = useState(0)
+
+
 
   function ContentBox(){
     console.log()
@@ -153,7 +160,7 @@ function ImageBoard(props) {
             <div> {UserData[0]?.content}</div>
           </List>
           <List>
-              <ImageBoardComment paramKey={ props.paramKey } CommentStatus={ CommentStatus }/>
+              <ImageBoardComment paramKey={ props.paramKey } CommentStatus={ memoCommentStatus }/>
           </List>
         </div>
 

@@ -4,13 +4,13 @@ import React, { useEffect, useState } from 'react'
 function RecommandLength(props) {
 
     const [Length, setLength] = useState("")
-    const [RecommandState,setRecommandState] = useState(false)
+    // const [RecommandState,setRecommandState] = useState(false)
     console.log('RecommandLength')
     console.log(props)
     
 
     useEffect(()=>{
-        setRecommandState(props.RecommandState)
+        // setRecommandState(props.RecommandState)
 
         if(props.boardId){
         axios.get("/api/boards/recommandLength/" + props.boardId).then((response) => {
@@ -19,7 +19,7 @@ function RecommandLength(props) {
 
           });
         }
-    },[props,Length,RecommandState])
+    },[props,Length])
 
     return (
         <React.Fragment>

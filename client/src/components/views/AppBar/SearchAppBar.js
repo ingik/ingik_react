@@ -22,6 +22,10 @@ import { useEffect } from 'react';
 import { Autocomplete, Avatar, List, ListItem, ListItemAvatar, ListItemText, TextField } from '@mui/material';
 import { useRef } from 'react';
 import { useSelector } from 'react-redux';
+import UploadIcon from '@mui/icons-material/Upload';
+import HomeIcon from '@mui/icons-material/Home';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -174,7 +178,9 @@ function SearchAppBar(props) {
       >
         <Toolbar>
           {/* SidsAppBar Component */}
+          <Box sx={{ display: { xs: "flex", md: "none" } }}>
           <SideAppBar propsData={props} />
+          </Box>
           <Typography
             variant="h6"
             noWrap
@@ -264,6 +270,27 @@ function SearchAppBar(props) {
 
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
+          <IconButton
+              size="large"
+              aria-label="show 4 new mails"
+              color="inherit"
+            >
+              <FormatListBulletedIcon/>
+            </IconButton>
+            <IconButton
+              size="large"
+              aria-label="show 4 new mails"
+              color="inherit"
+            >
+                            <HomeIcon/>
+            </IconButton>
+            <IconButton
+              size="large"
+              aria-label="show 4 new mails"
+              color="inherit"
+            >
+              <UploadIcon/>
+            </IconButton>
             <IconButton
               size="large"
               aria-label="show 4 new mails"
@@ -282,10 +309,12 @@ function SearchAppBar(props) {
                 <NotificationsIcon />
               </Badge>
             </IconButton>
+            
+            
           </Box>
 
           {/* media */}
-          <Box sx={{ display: { xs: "flex", md: "none" } }}>
+          {/* <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-label="show more"
@@ -296,7 +325,7 @@ function SearchAppBar(props) {
             >
               <MoreIcon />
             </IconButton>
-          </Box>
+          </Box> */}
 
           <Profile Data={props} />
         </Toolbar>
