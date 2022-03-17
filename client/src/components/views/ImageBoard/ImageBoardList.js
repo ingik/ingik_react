@@ -17,6 +17,13 @@ function ImageBoardList(props) {
 
   const [Length,setLength] = useState(0)
 
+
+  //intersection observer
+  const viewport = useRef(null)
+  const target = useRef(null)
+
+  let number = 2
+
   
   useEffect(() => {
 
@@ -42,10 +49,7 @@ function ImageBoardList(props) {
             setLength(list.image[0]?.recommand);
           }))
           
-          
           value.push(list.image[0]);
-          // setPreviewList(...list.image[0])
-
 
         });
         console.log(value)
@@ -55,26 +59,65 @@ function ImageBoardList(props) {
     }
 
     get()
-
-
     
   },[])
+
+
+  const loadItems = () => {
+    console.log('loadItems')
+    axios.get('/api/boards/imageBoardList/'+ number).then(response => {
+      
+      setPreviewList((prevState) => {
+        return [...prevState, ...response.data]
+      })
+    })
+
+  }
+
+  useEffect(() => {
+
+    const options = {
+      root : viewport.current,
+      threshold: 0.5,
+    }
+
+    const handleintersection = (entries, observer) => {
+      console.log(entries)
+
+      entries.forEach((entry) => {
+        if(!entry.isIntersecting){
+          return ;
+        }
+
+        loadItems();
+        number++
+        observer.unobserve(entry.target)
+        observer.observe(target.current)
+      })
+    }
+
+    const io = new IntersectionObserver(handleintersection,options)
+
+    if(target.current){
+      io.observe(target.current)
+    }
+
+    //clean up
+    return () => io && io.disconnect();
+
+  },[viewport, target])
   
 
   
   const onHoverHandler = (event) => {
 
-    console.log('hover')
-    // console.log(event.currentTarget)
-    // event.currentTarget.style=`${HoverStyle}`
+    // console.log('hover')
     event.currentTarget.children[0].style=`color:white; display:block; padding-top:50%;`
   }
 
   
   const onLeaveHandler = (event) => {
-    console.log('leave')
-    // event.currentTarget.style=`${LeaveStyle}`
-    // console.log(event.currentTarget)
+    // console.log('leave')
     event.currentTarget.children[0].style=`display:none`
   }
 
@@ -123,20 +166,28 @@ const LeaveStyle = {
           // height: "100vh",
           marginTop: "5vh",
         }}
+
       >
         <ImageList
-          sx={{ width: "70%", height: "100%", listStyleType: "none" }}
+          sx={{ width: "70%", height: "100%", listStyleType: "none"}}
           cols={3}
+          ref={ viewport }
+
         >
-          {/* { PreviewListHandler() } */}
           {
-          PreviewList && PreviewList.map((item) => (
-              <ImageListItem key={item.img}>
+          PreviewList && PreviewList.map((item,index) => {
+            const lastEl = index === PreviewList.length - 1
+            console.log(lastEl)
+            return (
+              <ImageListItem 
+                key={index}
+                >
                 <img
                   src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
                   srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
                   alt={item.name}
                   loading="lazy"
+                  ref={lastEl ? target : null}
                 />
                 <div
                   style={LeaveStyle}
@@ -155,7 +206,9 @@ const LeaveStyle = {
                   </div>
                 </div>
               </ImageListItem>
-            ))}
+            )
+          }
+            )}
         </ImageList>
       </div>
       <Modal

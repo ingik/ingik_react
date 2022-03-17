@@ -454,7 +454,17 @@ app.get('/api/boards/imageBoardList', auth ,(req,res) => {
   ImageBoard.find((err,imageBoard) => {
     if(err) return res.status(500).send({error: 'database failure'})
     return res.status(200).json(imageBoard)
-  })
+  }).limit(9)
+
+})
+
+app.get('/api/boards/imageBoardList/:key',(req,res) => {
+
+  console.log(req.params.key)
+  ImageBoard.find((err,imageBoard) => {
+    if(err) return res.status(500).send({error: 'database failure'})
+    return res.status(200).json(imageBoard)
+  }).skip(req.params.key * 9).limit(9)
 
 })
 

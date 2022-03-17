@@ -170,22 +170,34 @@ function SearchAppBar(props) {
     setUserList([])
   }
 
+  const onHomeButtonHandler = () => {
+    props.history.push('/')
+  }
+
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" color="inherit"
-      style={{position:'fixed',backgroundColor:'',zIndex:'200',top:0}}
+      <AppBar
+        position="static"
+        color="inherit"
+        style={{
+          position: "fixed",
+          backgroundColor: "",
+          zIndex: "200",
+          top: 0,
+        }}
       >
         <Toolbar>
           {/* SidsAppBar Component */}
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
-          <SideAppBar propsData={props} />
+            <SideAppBar propsData={props} />
           </Box>
           <Typography
             variant="h6"
             noWrap
             component="div"
             sx={{ display: { xs: "none", sm: "block" } }}
+            onClick={onHomeButtonHandler}
           >
             SNAP STORY
           </Typography>
@@ -207,14 +219,13 @@ function SearchAppBar(props) {
                 backgroundColor: "white",
                 maxHeight: "25em",
                 overflowY: "auto",
-                width:'100%',
-                paddingBottom:0,
-                borderRadius:'5px'
+                width: "100%",
+                paddingBottom: 0,
+                borderRadius: "5px",
               }}
               anchorEl={anchorEl}
-            open={OnOff}
-            onClose={handleClose}
-              
+              open={OnOff}
+              onClose={handleClose}
             >
               {UserList.map((item) => {
                 return (
@@ -222,18 +233,18 @@ function SearchAppBar(props) {
                     key={item.name}
                     style={{ width: "100%" }}
                     onClick={() => {
-                      console.log(props)
-                      console.log(item._id)
-                      if(userData._id === item._id){
+                      console.log(props);
+                      console.log(item._id);
+                      if (userData._id === item._id) {
                         props.history.push("/profile");
-                        setOnOff(false)
-                        setUserList([])
-                        setSearchValue("")
+                        setOnOff(false);
+                        setUserList([]);
+                        setSearchValue("");
                       } else {
                         props.history.push("/profile/" + item._id);
-                        setOnOff(false)
-                        setUserList([])
-                        setSearchValue("")
+                        setOnOff(false);
+                        setUserList([]);
+                        setSearchValue("");
                       }
                     }}
                   >
@@ -267,29 +278,31 @@ function SearchAppBar(props) {
             </List>
           </Search>
 
-
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-          <IconButton
+            <IconButton
               size="large"
               aria-label="show 4 new mails"
               color="inherit"
+              onClick={()=>{props.history.push("/")}}
+
             >
-              <FormatListBulletedIcon/>
+              <FormatListBulletedIcon />
+            </IconButton>
+            <IconButton
+              size="large"
+              aria-label="show 4 new mails"
+              color="inherit"
+              onClick={()=>{props.history.push("/imageBoardCmp")}}
+            >
+              <HomeIcon />
             </IconButton>
             <IconButton
               size="large"
               aria-label="show 4 new mails"
               color="inherit"
             >
-                            <HomeIcon/>
-            </IconButton>
-            <IconButton
-              size="large"
-              aria-label="show 4 new mails"
-              color="inherit"
-            >
-              <UploadIcon/>
+              <UploadIcon />
             </IconButton>
             <IconButton
               size="large"
@@ -309,8 +322,6 @@ function SearchAppBar(props) {
                 <NotificationsIcon />
               </Badge>
             </IconButton>
-            
-            
           </Box>
 
           {/* media */}
