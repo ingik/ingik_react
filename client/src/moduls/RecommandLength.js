@@ -30,4 +30,4 @@ function RecommandLength(props) {
    
 }
 
-export default RecommandLength
+export default React.memo(RecommandLength)

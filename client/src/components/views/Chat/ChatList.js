@@ -1,19 +1,20 @@
 import { Box, Button, ListItem, ListItemButton, ListItemText } from '@mui/material'
-import React from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
 import { chatList } from '../../../_actions/chat_action'
-import { FixedSizeList as List } from "react-window";
+import ChatAddUser from './ChatAddUser'
 // import {FixedSizeList} from 'react-window'
 
 function ChatList(props) {
 
     const dispatch = useDispatch()
     const [Data,setData] = useState([])
+    const [ModalOpen, setModalOpen] = useState(false)
     
-    console.log('(ChatList)props : '+JSON.stringify(props.location.user))
+    // console.log('(ChatList)props : '+JSON.stringify(props.location.user))
 
 
     useEffect(() => {
@@ -27,44 +28,30 @@ function ChatList(props) {
         })
     }, [])
 
-    function List(){ 
-        Data.map((data) =>{
+    // modal
 
-        const url = data.roomName
-
-        
-        console.log(props.location.user)
-        const onRoad = () => props.history.push({
-            pathname : '/chat/',
-            search : '?roomName='+url,
-            user : props.location.user,
-        })
-
-        return (
-          <ListItem key={ data._id } component = "div" disablePadding>
-            <ListItemButton onClick={ onRoad }>
-              <ListItemText primary={ data.roomName }/>
-            </ListItemButton>
-          </ListItem>
-          );
-        })
+    const onModalOpen = () => {
+      setModalOpen(true)
     }
 
-    const  onClickHandler = () => {
-        props.history.push('./create')
+    const onModalClose = (data) => {
+      console.log('getFunc')
+      setModalOpen(data)
     }
 
     return (
-      <div>
+      <div style={{paddingTop:'64px'}}>
         <div>
           <Button
             variant="contained"
-            onClick={onClickHandler}
+            // onClick={onClickHandler}
+            onClick={ onModalOpen }
             sx={{ marginTop: "10px" }}
           >
             Room Create
           </Button>
         </div>
+        <ChatAddUser Open={ ModalOpen } onModalClose={ onModalClose }/>
         <Box
           sx={{
             width: "100%",
@@ -73,16 +60,27 @@ function ChatList(props) {
             bgcolor: "background.paper",
           }}
         >
-          {/* <List
-            height={400}
-            width={360}
-            itemSize={46}
-            itemCount={10}
-            overscanCount={5}
-          >
-            {Data}
-          </List> */}
-            {List()}
+            {
+              Data.map((data) =>{
+
+                const url = data.roomName
+                
+                console.log(props.location.user)
+                const onRoad = () => props.history.push({
+                    pathname : '/chat/',
+                    search : '?roomName='+url,
+                    user : props.location.user,
+                })
+        
+                return (
+                  <ListItem key={ data._id } component = "div" disablePadding>
+                    <ListItemButton onClick={ onRoad }>
+                      <ListItemText primary={ data.roomName }/>
+                    </ListItemButton>
+                  </ListItem>
+                  );
+                })
+            }
         </Box>
       </div>
     );

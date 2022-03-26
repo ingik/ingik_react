@@ -19,12 +19,13 @@ import { withRouter } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
 import { useEffect } from 'react';
-import { Autocomplete, Avatar, List, ListItem, ListItemAvatar, ListItemText, TextField } from '@mui/material';
+import { Autocomplete, Avatar, List, ListItem, ListItemAvatar, ListItemText, Modal, TextField } from '@mui/material';
 import { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import UploadIcon from '@mui/icons-material/Upload';
 import HomeIcon from '@mui/icons-material/Home';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import ImageBoardUpload from '../ImageBoard/ImageBoardUpload';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -136,7 +137,6 @@ function SearchAppBar(props) {
   // search list 
 
   const [anchorEl, setAnchorEl] = useState(null);
-  const searchInput = useRef()
   const [OnOff, setOnOff] = useState(false)
   const open = Boolean(anchorEl);
   const handleClose = () => {
@@ -170,9 +170,28 @@ function SearchAppBar(props) {
     setUserList([])
   }
 
+  //modal
+
+  const [ModalOpen, setModalOpen] = React.useState(false);
+  //  const handleOpen = () => setOpen(true);
+   const ModalhandleClose = () => setModalOpen(false);
+
   const onHomeButtonHandler = () => {
     props.history.push('/')
   }
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    bgcolor: 'background.paper',
+    width:'1000px',
+    height:'500px',
+    boxShadow: 24,
+    p: 4,
+    padding:'0'
+  };
 
 
   return (
@@ -201,6 +220,7 @@ function SearchAppBar(props) {
           >
             SNAP STORY
           </Typography>
+
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -284,8 +304,9 @@ function SearchAppBar(props) {
               size="large"
               aria-label="show 4 new mails"
               color="inherit"
-              onClick={()=>{props.history.push("/")}}
-
+              onClick={() => {
+                props.history.push("/");
+              }}
             >
               <FormatListBulletedIcon />
             </IconButton>
@@ -293,7 +314,9 @@ function SearchAppBar(props) {
               size="large"
               aria-label="show 4 new mails"
               color="inherit"
-              onClick={()=>{props.history.push("/imageBoardCmp")}}
+              onClick={() => {
+                props.history.push("/imageBoardCmp");
+              }}
             >
               <HomeIcon />
             </IconButton>
@@ -301,6 +324,7 @@ function SearchAppBar(props) {
               size="large"
               aria-label="show 4 new mails"
               color="inherit"
+              onClick={()=>{setModalOpen(true)}}
             >
               <UploadIcon />
             </IconButton>
@@ -308,6 +332,9 @@ function SearchAppBar(props) {
               size="large"
               aria-label="show 4 new mails"
               color="inherit"
+              onClick={()=>{
+                props.history.push("/chat/list")
+              }}
             >
               <Badge badgeContent={4} color="error">
                 <MailIcon />
@@ -318,7 +345,7 @@ function SearchAppBar(props) {
               aria-label="show 17 new notifications"
               color="inherit"
             >
-              <Badge badgeContent={17} color="error">
+              <Badge badgeContent={7} color="error">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
@@ -339,9 +366,20 @@ function SearchAppBar(props) {
           </Box> */}
 
           <Profile Data={props} />
+          
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
+      <Modal
+            open={ModalOpen}
+            onClose={ModalhandleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <ImageBoardUpload handleClose={handleClose} />
+            </Box>
+          </Modal>
     </Box>
   );
 }

@@ -130,7 +130,7 @@ function ChatDetail(props) {
   
 
     return (
-      <div>
+      <div style={{marginTop:'64px'}}>
         <div className="chat_wrap">
           <div className="header">CHAT</div>
           <div className="chat">

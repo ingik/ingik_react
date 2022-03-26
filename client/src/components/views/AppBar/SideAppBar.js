@@ -26,7 +26,7 @@ export default function SideAppBar(props) {
 
    //modal
    const [open, setOpen] = React.useState(false);
-   const handleOpen = () => setOpen(true);
+  //  const handleOpen = () => setOpen(true);
    const handleClose = () => setOpen(false);
 
   const toggleDrawer = (open) => (event) => {
@@ -128,6 +128,7 @@ export default function SideAppBar(props) {
         >
           {list()}
         </Drawer>
+
         <Modal
           open={open}
           onClose={handleClose}
@@ -138,6 +139,7 @@ export default function SideAppBar(props) {
             <ImageBoardUpload  handleClose={handleClose} />
           </Box>
         </Modal>
+
       </React.Fragment>
     </div>
   );

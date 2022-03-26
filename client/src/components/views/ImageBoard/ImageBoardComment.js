@@ -1,13 +1,12 @@
 import { Avatar, ListItem, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useMemo, useState } from 'react'
-import { FixedSizeList } from 'react-window';
 
 
 
 function ImageBoardComment(props) {
 
-  console.log(props)
+  console.log(props.CommentStatus)
   const [ListComment, setListComment] = useState([])
   
   useEffect(() => {
@@ -17,9 +16,9 @@ function ImageBoardComment(props) {
         console.log(response.data)
         setListComment(response.data);
       }
-    }).catch()
+    })
     
-  },[props.CommentStatus])
+  },[props])
       
       
   return (
@@ -27,7 +26,7 @@ function ImageBoardComment(props) {
     {
     ListComment.map((item,index) => {
       return (
-        <ListItem key={index}>
+        <ListItem key={index} style={{padding:'10px 0'}}>
           <Avatar
             alt={item.user.name}
             src={item.user.image}
@@ -42,7 +41,7 @@ function ImageBoardComment(props) {
               <span
                 style={{
                   fontSize: "15px",
-                  fontWeight: "600",
+                  fontWeight: "300",
                   display: "inline-block",
                   marginRight: "5px",
                 }}
@@ -60,4 +59,4 @@ function ImageBoardComment(props) {
   );
 }
 
-export default ImageBoardComment
+export default React.memo(ImageBoardComment)

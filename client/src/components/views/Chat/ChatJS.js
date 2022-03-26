@@ -30,20 +30,13 @@ export function connectionSocket(){
 }
 
 export function ChatSocket(data){
-
     // let [ReChat,setReChat] = useState("")
-
     socket.emit('send message',data)
     
 }
 
 export function ReceiveChatSocket(){
-
-    
-
      socket.on('all message',(data) => {console.log('frond Data : '+{chat:data.chat,socketId:data.socketId})})
-
-    
 }
 
 

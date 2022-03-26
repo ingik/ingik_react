@@ -31,6 +31,7 @@ function ImageBoard(props) {
   const [CommentLength, setCommentLength] = useState(null)
 
 
+
   const onLeftMove = (event) => {
 
     console.log(Number)
@@ -106,7 +107,12 @@ function ImageBoard(props) {
   const onSubmitHandler = (event) => {
     event.preventDefault();
 
-    setCommentStatus(CommentStatus + 1)
+    setCommentStatus((prevState) => { 
+
+      return prevState + 1
+    })
+
+    console.log('CommentStatus : '+ CommentStatus)
 
     let body = {
 
@@ -196,17 +202,9 @@ function ImageBoard(props) {
       <List sx={{display:'inline-block'}}>
         <ListItem>
         <ImageBoardUser userId={UserData[0]?.user}/>
-          <div style={{display:'inline-block'}}> {UserData[0]?.content}</div>
+          <div style={{display:'inline-block',marginLeft:'5px'}}> {UserData[0]?.content}</div>
           </ListItem>
       </List>
-
-      {/* <div className="ScrollbarStyle"> */}
-        
-        {/* <List>
-            <ImageBoardComment paramKey={ props.paramKey } CommentStatus={ CommentStatus }/>
-        </List> */}
-      {/* </div> */}
-
       <div className="buttonMenu">
             <RecommandCmp boardId={UserData[0]?._id} recommandId={UserSelectData._id} getRec={setRecState}/>
           <div style={{margin:'5px 0 5px', display:'inline-block',verticalAlign:'middle',margin:'5px'}}>좋아요</div>

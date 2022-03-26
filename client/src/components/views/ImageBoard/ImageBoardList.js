@@ -1,6 +1,6 @@
 import { ImageList, ImageListItem } from '@mui/material';
 import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState ,useMemo, useCallback, useLayoutEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -8,9 +8,13 @@ import ImageBoard from './ImageBoard'
 import CommentIcon from '@mui/icons-material/Comment';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
+import './ImageBoard.css'
+
+
 function ImageBoardList(props) {
 
   const [PreviewList,setPreviewList] = useState([])
+
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const [ParamKey, setParamKey] = useState("")
@@ -22,43 +26,44 @@ function ImageBoardList(props) {
   const viewport = useRef(null)
   const target = useRef(null)
 
-  let number = 2
+  let number = 1
 
   
   useEffect(() => {
 
-    async function get() {
-      const result = await axios.get("/api/boards/imageBoardList");
+    console.log('useEffect')
+
+    setTimeout(()=>{
+      console.log('setTime 3000')
+      target.current.style = `display:block`
+    },3000)
+
+      axios.get("/api/boards/imageBoardList").then(response => {
       const value = [];
 
-      console.log(result)
+      console.log(response.data)
 
-      if(result){
-        result.data.map((list) => {
+        response.data.map((list) => {
           console.log(list);
           list.image[0]._id = list._id;
 
           axios.all([axios.get("/api/boards/recommandLength/" + list._id),axios.get("/api/boards/commentLength/"+list._id)])
           .then(axios.spread((response1,response2)=>{
 
-            console.log(response1.data)
             list.image[0].recommand = response1.data[0]?.recommand.length
-            console.log(response2.data)
             list.image[0].comment = response2.data[0]?.commentList.length
             
-            setLength(list.image[0]?.recommand);
+            value.push(list.image[0]);
+            setPreviewList([...value])
+            
           }))
+          // value.push(list.image[0]);
           
-          value.push(list.image[0]);
-
         });
-        console.log(value)
-        setPreviewList(value);
-      }
-      
-    }
+        // setPreviewList(value)
 
-    get()
+    })
+
     
   },[])
 
@@ -66,19 +71,47 @@ function ImageBoardList(props) {
   const loadItems = () => {
     console.log('loadItems')
     axios.get('/api/boards/imageBoardList/'+ number).then(response => {
-      
+      console.log(response.data)
+
+      let value = []
+
+      if(response.data.length === 0) return console.log('no data')
+
+      response.data.map((list) => {
+        console.log(list);
+        list.image[0]._id = list._id;
+
+        axios.all([axios.get("/api/boards/recommandLength/" + list._id),axios.get("/api/boards/commentLength/"+list._id)])
+        .then(axios.spread((response1,response2)=>{
+
+          list.image[0].recommand = response1.data[0]?.recommand.length
+          list.image[0].comment = response2.data[0]?.commentList.length
+          
+          // value.push(list.image[0]);
+          // setPreviewList([...value])
+          
+        }))
+        value.push(list.image[0]);
+        
+      });
+
+
       setPreviewList((prevState) => {
-        return [...prevState, ...response.data]
+        return [...prevState, ...value]
       })
+
+
+
     })
 
   }
 
   useEffect(() => {
 
+    console.log('useLayoutEffect')
     const options = {
       root : viewport.current,
-      threshold: 0.5,
+      threshold: 0,
     }
 
     const handleintersection = (entries, observer) => {
@@ -88,11 +121,14 @@ function ImageBoardList(props) {
         if(!entry.isIntersecting){
           return ;
         }
+        observer.unobserve(entry.target)
 
         loadItems();
         number++
-        observer.unobserve(entry.target)
-        observer.observe(target.current)
+        setTimeout(()=>{
+          observer.observe(target.current)
+
+        },1000)
       })
     }
 
@@ -105,7 +141,10 @@ function ImageBoardList(props) {
     //clean up
     return () => io && io.disconnect();
 
-  },[viewport, target])
+  },[viewport, target.current])
+
+
+
   
 
   
@@ -156,38 +195,43 @@ const LeaveStyle = {
 }
 
   return (
-    <div style={{ paddingTop: "64px" }}>
+    <div style={{ paddingTop: "64px", height: "100%" }}>
       <div
         style={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           width: "100%",
-          // height: "100vh",
+          // height: "500px",
           marginTop: "5vh",
         }}
-
+        ref={viewport}
       >
         <ImageList
-          sx={{ width: "70%", height: "100%", listStyleType: "none"}}
+          className="ImageListScroll"
+          sx={{ width: "70%", height: "37em" }}
           cols={3}
-          ref={ viewport }
-
         >
-          {
-          PreviewList && PreviewList.map((item,index) => {
-            const lastEl = index === PreviewList.length - 1
-            console.log(lastEl)
+          {PreviewList.map((item, index) => {
+            let lastEl = false;
+
+            if (index === PreviewList.length - 1) {
+              lastEl = true;
+            }
+
+            console.log(lastEl);
             return (
-              <ImageListItem 
+              <ImageListItem
                 key={index}
-                >
+                // ref={lastEl ? target : null}
+                // ref={target}
+                sx={{ display: "inline-block" }}
+              >
                 <img
                   src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
                   srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
                   alt={item.name}
                   loading="lazy"
-                  ref={lastEl ? target : null}
                 />
                 <div
                   style={LeaveStyle}
@@ -199,16 +243,34 @@ const LeaveStyle = {
                   onMouseLeave={onLeaveHandler}
                 >
                   <div style={{ display: "none" }}>
-                    <FavoriteIcon sx={{ verticalAlign: "middle" }}/>
-                    <span style={{verticalAlign:'middle',margin:'0 15px 0 5px'}}>{item.recommand}</span>
+                    <FavoriteIcon sx={{ verticalAlign: "middle" }} />
+                    <span
+                      style={{
+                        verticalAlign: "middle",
+                        margin: "0 15px 0 5px",
+                      }}
+                    >
+                      {item.recommand}
+                    </span>
                     <CommentIcon sx={{ verticalAlign: "middle" }} />
-                    <span style={{verticalAlign:'middle',margin:'0 15px 0 5px'}}>{item.comment}</span>
+                    <span
+                      style={{
+                        verticalAlign: "middle",
+                        margin: "0 15px 0 5px",
+                      }}
+                    >
+                      {item.comment}
+                    </span>
                   </div>
                 </div>
               </ImageListItem>
-            )
-          }
-            )}
+            );
+          })}
+
+          <div
+            style={{ width: "100%", display: "none", height: "30px" }}
+            ref={target}
+          ></div>
         </ImageList>
       </div>
       <Modal
@@ -220,7 +282,6 @@ const LeaveStyle = {
         <Box sx={style}>
           <ImageBoard paramKey={ParamKey} contentPosition={true}></ImageBoard>
         </Box>
-
       </Modal>
     </div>
   );

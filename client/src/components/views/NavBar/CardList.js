@@ -38,7 +38,7 @@ function CardList() {
 
         const options = {
             root : viewport.current,
-            threshold:0.5,
+            threshold:1,
         }
 
         const handleintersection = (entries,observer) => {

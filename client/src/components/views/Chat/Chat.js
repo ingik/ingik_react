@@ -7,7 +7,7 @@ function Chat(props) {
     ChatJS.connectionSocket()
     
     return (
-      <div>
+      <div style={{marginTop:'64px'}}>
           <ChatComponent/>
       </div>
     );

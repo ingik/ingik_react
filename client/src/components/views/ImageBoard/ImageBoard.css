@@ -6,3 +6,7 @@
 .ScrollbarStyle::-webkit-scrollbar {
 	display:none;
 }
+
+.ImageListScroll::-webkit-scrollbar{
+    display:none;
+}

@@ -2,16 +2,30 @@ const express = require('express');
 const app = express()
 const port = 5000
 console.log("port connect");
+
+const mongoose = require('mongoose');
+
+//model
+const { User } = require("./models/User");
+const { Board } = require('./models/Board');
+const { Chat } = require('./models/Chat')
+const { Room } = require('./models/Room') 
+const { ImageBoard } = require('./models/ImageBoard')
+const { Comment } = require('./models/Comment')
+const { Follow } = require('./models/follow')
+const { Recommand } = require('./models/Recommand')
+const { Follower } = require('./models/Follower')
+const { DirectM } = require('./models/DirectMessage')
+
+
+//middleware
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser')
 const config = require("./config/key");
-const { User } = require("./models/User");
 const { auth } = require("./middleware/auth");
 const  upload  = require('./S3/upload');
 const S3BoardUpload = require('./S3/S3BoardUpload')
 const imageDelete = require('./S3/imageDelete')
-
-
 
 
 //application/x-www-form-urlencoded
@@ -22,17 +36,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser());
 
-
-const mongoose = require('mongoose');
-const { request } = require('express');
-const { Board } = require('./models/Board');
-const { Chat } = require('./models/Chat')
-const { Room } = require('./models/Room') 
-const { ImageBoard } = require('./models/ImageBoard')
-const { Comment } = require('./models/Comment')
-const { Follow } = require('./models/follow')
-const { Recommand } = require('./models/Recommand')
-const { Follower } = require('./models/Follower')
 
 
 mongoose.connect(config.mongoURI,{
@@ -49,6 +52,8 @@ moment.tz.setDefault("Asia/Seoul");
 console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
 
 let Time = moment().format('YYYY-MM-DD HH:mm:ss')
+
+
 
 
 //User Register
@@ -460,11 +465,12 @@ app.get('/api/boards/imageBoardList', auth ,(req,res) => {
 
 app.get('/api/boards/imageBoardList/:key',(req,res) => {
 
-  console.log(req.params.key)
+  let index = req.params.key * 9
+  console.log(index)
   ImageBoard.find((err,imageBoard) => {
     if(err) return res.status(500).send({error: 'database failure'})
     return res.status(200).json(imageBoard)
-  }).skip(req.params.key * 9).limit(9)
+  }).skip(index).limit(9)
 
 })
 
@@ -679,6 +685,34 @@ app.delete('/api/boards/detail/:key', auth ,(req,res) => {
 }) 
 
 
+//DM Create
+
+app.post('/api/DirectMessage/Create',(req,res) => {
+  
+
+  DirectM.find({$or:[{sendUserId: req.body.sendUserId},{receiveUserId: req.body.receiveUserId}]},(err,dm) => {
+    if(err) return res.status(500).send({error :'DM error'})
+    if(dm.length !== 0 ){
+      return res.status(200).send({success:'이미값이 있음'})
+    }
+    const DirectMessage = new DirectM(req.body)
+  
+    console.log(DirectMessage)
+    DirectMessage.save((err) => {
+      if(err) return res.status(500).send({success:false,err})
+      return res.status(200).send({ success:true })
+    })
+  })
+
+})
+
+//DM List
+
+app.get('/api/DirectMessage/List',(req,res) => {
+  
+})
+
+
 //Chat
 
 
@@ -706,6 +740,8 @@ const io = Server(server,{
 //   chatUser = req.user.name
 //   console.log('(server) : '+chatUser)
 // })
+
+
 
 //Chat Server
 const serverPort = 5555
@@ -796,6 +832,8 @@ app.post('/api/chat/refresh',(req,res) => {
 })
 
 
+
+
 //SendMessage
 
 app.post('/api/chat/detail/sendMessage',(req,res) => {
@@ -803,6 +841,8 @@ app.post('/api/chat/detail/sendMessage',(req,res) => {
   const chat = new Chat()
 
 })
+
+
 
 
 //port connect
@@ -814,6 +854,3 @@ server.listen(serverPort, () => {
   console.log(`chat_server listening on port lacalhost:${serverPort}!`)
 })
 
-
-
-//AWS s3
