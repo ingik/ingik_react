@@ -33,7 +33,7 @@ profile 최적화 필요 --- 완료
 
 <br>
 리스트들 가상리스트 추가 시급 <br>
-(react-window 가상리스트 라이브러리가 있지만 직접 구현 예정 Intersection Observer API )
+(react-window 쓰면 편하겠지만 직접 구현 예정 Intersection Observer API ) --- 완료
 
 <br><br>
 api호출 내부 api호출 루프를 돌려버리니 골치아픈일이 발생 마지막 루프에 res 처리를 해주거나 <br>async.series를 사용하니 간단하게 해결됬다.
