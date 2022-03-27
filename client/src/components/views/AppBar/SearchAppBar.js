@@ -247,7 +247,7 @@ function SearchAppBar(props) {
               open={OnOff}
               onClose={handleClose}
             >
-              {UserList.map((item) => {
+              {UserList && UserList.map((item) => {
                 return (
                   <ListItem
                     key={item.name}
@@ -384,4 +384,4 @@ function SearchAppBar(props) {
   );
 }
 
-export default withRouter(SearchAppBar)
+export default React.memo(withRouter(SearchAppBar))

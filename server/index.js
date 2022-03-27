@@ -690,7 +690,7 @@ app.delete('/api/boards/detail/:key', auth ,(req,res) => {
 app.post('/api/DirectMessage/Create',(req,res) => {
   
 
-  DirectM.find({$or:[{sendUserId: req.body.sendUserId},{receiveUserId: req.body.receiveUserId}]},(err,dm) => {
+  DirectM.find({$or:[{sendUserId: req.body.receiveUserId},{receiveUserId: req.body.receiveUserId}]},(err,dm) => {
     if(err) return res.status(500).send({error :'DM error'})
     if(dm.length !== 0 ){
       return res.status(200).send({success:'이미값이 있음'})
@@ -708,8 +708,14 @@ app.post('/api/DirectMessage/Create',(req,res) => {
 
 //DM List
 
-app.get('/api/DirectMessage/List',(req,res) => {
-  
+app.get('/api/DirectMessage/List/:key',(req,res) => {
+
+  console.log(req.params.key)
+  DirectM.find({$or:[{sendUserId: req.params.key},{receiveUserId: req.params.key}]},(err,list) => {
+    if(err) return res.status(500).send({success:false,err})
+    return res.status(200).send(list)
+  })
+
 })
 
 

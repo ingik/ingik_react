@@ -1,8 +1,9 @@
-import { Box, Button, ListItem, ListItemButton, ListItemText } from '@mui/material'
+import { Avatar, Box, Button, ListItem, ListItemButton, ListItemText, Typography } from '@mui/material'
+import axios from 'axios'
 import React, { useCallback, useMemo } from 'react'
 import { useState } from 'react'
 import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
 import { chatList } from '../../../_actions/chat_action'
 import ChatAddUser from './ChatAddUser'
@@ -10,23 +11,41 @@ import ChatAddUser from './ChatAddUser'
 
 function ChatList(props) {
 
-    const dispatch = useDispatch()
+    const userData = useSelector(state => state.user.userData)
+    
     const [Data,setData] = useState([])
     const [ModalOpen, setModalOpen] = useState(false)
     
-    // console.log('(ChatList)props : '+JSON.stringify(props.location.user))
-
-
+    
+    
     useEffect(() => {
-        dispatch(chatList()).then( response => {
-            if(response.payload){
-              console.log(response.payload)
-                setData(response.payload)
-            } else {
-                alert("Failed to chatList")
-            }
-        })
-    }, [])
+      console.log('useEffect')
+      if(userData){
+        console.log(userData)
+        axios.get("/api/DirectMessage/List/" + userData?._id).then((response) => {
+
+
+            response.data.map((list) => {
+              let ListId;
+              if(list.receiveUserId === userData._id){
+                ListId = list.sendUserId
+              }else{
+                ListId = list.receiveUserId
+              }
+
+              console.log(ListId)
+              axios.get('/api/users/findId/'+ListId).then(response => {
+                if(response.data){
+                  setData((prevState) => {return [...prevState, response.data]})
+                }
+              })
+            })
+
+            
+        });
+      }
+        
+    }, [userData])
 
     // modal
 
@@ -41,6 +60,7 @@ function ChatList(props) {
 
     return (
       <div style={{paddingTop:'64px'}}>
+
         <div>
           <Button
             variant="contained"
@@ -51,6 +71,7 @@ function ChatList(props) {
             Room Create
           </Button>
         </div>
+
         <ChatAddUser Open={ ModalOpen } onModalClose={ onModalClose }/>
         <Box
           sx={{
@@ -61,21 +82,33 @@ function ChatList(props) {
           }}
         >
             {
-              Data.map((data) =>{
-
-                const url = data.roomName
-                
-                console.log(props.location.user)
-                const onRoad = () => props.history.push({
-                    pathname : '/chat/',
-                    search : '?roomName='+url,
-                    user : props.location.user,
-                })
-        
+              Data && Data.map((data) =>{
+                // console.log(data)
                 return (
                   <ListItem key={ data._id } component = "div" disablePadding>
-                    <ListItemButton onClick={ onRoad }>
-                      <ListItemText primary={ data.roomName }/>
+                    <ListItemButton >
+                    <Avatar
+            alt={data.name}
+            src={data.image}
+            style={{
+              display: "inline-block",
+              verticalAlign: "top",
+              width: "32px",
+              height: "32px",
+            }}
+          />
+            <Typography variant="body1" style={{ display: "inline-block",marginLeft:'5px' }}>
+              <span
+                style={{
+                  fontSize: "15px",
+                  fontWeight: "300",
+                  display: "inline-block",
+                  marginRight: "5px",
+                }}
+              >
+                {data.name}
+              </span>
+            </Typography>
                     </ListItemButton>
                   </ListItem>
                   );
@@ -86,4 +119,4 @@ function ChatList(props) {
     );
 }
 
-export default withRouter(ChatList)
+export default React.memo(withRouter(ChatList))

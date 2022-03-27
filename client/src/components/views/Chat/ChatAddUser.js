@@ -158,9 +158,6 @@ function ChatAddUser(props) {
     
   }
 
-
-
-
  
 
 
@@ -221,6 +218,7 @@ function ChatAddUser(props) {
             </List>
             <Button
               onClick={ onChatListHandler }
+              disabled={!selectedValue ? true : false}
             >보내기</Button>
           </Search>
 

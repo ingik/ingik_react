@@ -54,7 +54,8 @@ function App() {
           <Route exact path="/boards/detail/:key/update" component={Auth(UpdateBoard,true)}/>
           <Route exact path="/chat" component={Auth(Chat,true)}/>
           <Route exact path="/chat/create" component={ CreateChat }/>
-          <Route exact path="/chat/list" component={Auth(ChatList,true)}/>
+          {/* <Route exact path="/chat/list" component={Auth(ChatList,true)}/> */}
+          <Route exact path="/chat/list" component={ChatList}/>
           <Route exact path="/profile" component={Auth(ProfileCmp,true)}/>
           <Route exact path="/imageBoard/:key" component={ImageBoard} />
           <Route exact path="/" component={Auth(ImageBoardList,true)} />

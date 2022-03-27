@@ -19,9 +19,6 @@ function ImageBoardList(props) {
   const handleClose = () => setOpen(false);
   const [ParamKey, setParamKey] = useState("")
 
-  const [Length,setLength] = useState(0)
-
-
   //intersection observer
   const viewport = useRef(null)
   const target = useRef(null)
@@ -34,9 +31,11 @@ function ImageBoardList(props) {
     console.log('useEffect')
 
     setTimeout(()=>{
-      console.log('setTime 3000')
-      target.current.style = `display:block`
-    },3000)
+      if(target.current){
+        console.log("setTime 3000");
+        target.current.style = `display:block`;
+      }
+    },2000)
 
       axios.get("/api/boards/imageBoardList").then(response => {
       const value = [];
