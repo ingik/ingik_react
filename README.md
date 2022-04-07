@@ -12,6 +12,9 @@ react를 너무 사용해보고 싶어서 토이프로젝트 느낌으로 제작
 
 # 수정이 필요한 부분 메모
 
+
+레이아웃 반응형으로 전부 수정중 -------- 04.07
+
 게시물이나 댓글에서 아바타이미지나 이름에 마우스를 올리면 간단한 유저 정보 및 팔로우 버튼 <br>
 게시물,팔로우,팔로워 수를 보여주도록 만들었는데 ImageBoardUser 에서 팝오버시 HoverProfile 컴포넌트를 렌더링하고 <br>
 HoverProfile 컴포넌트에선 FollowingCmp(팔로우 버튼),ImageBoardLength(게시물 수),FollowLength(팔로우 수),FollowerLength(팔로워 수) <br>
