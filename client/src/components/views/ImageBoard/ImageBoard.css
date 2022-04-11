@@ -7,6 +7,118 @@
 	display:none;
 }
 
+.ScrollbarStyleSmall {
+    overflow-y: scroll;
+    height: 14vh;
+}
+
+.ScrollbarStyleSmall::-webkit-scrollbar {
+    display:none;
+}
+
 .ImageListScroll::-webkit-scrollbar{
     display:none;
+}
+/* .mainUpRefSmall::-webkit-scrollbar{
+    display:none;
+} */
+
+
+.ListDiv::-webkit-scrollbar{
+    display:none;
+}
+
+.boardLabelSmall{
+    width: 90vw;
+    height: 45vh;
+    display: block;
+}
+
+.boardLabelLarge{
+    width: 42vw;
+    height: 66vh;
+    display: inline-block;
+}
+.rigthBox{
+    position: absolute;
+    display: inline-block;
+    width: 48%;
+    height: 96%;
+    padding: 10px;
+}
+.rigthBoxSmall{
+    position: relative;
+    padding: 0 10px;
+}
+
+.mainRef{
+    width: 42vw;
+    height: 66vh;
+    overflow-x: hidden;
+    display: inline-block;
+    position: relative;
+    background-color: black;
+}
+
+.mainRefSmall {
+    width: 90vw;
+    height: 45vh;
+    overflow-x: hidden;
+    display: inline-block;
+    position: relative;
+    background-color: black;
+}
+
+.mainUpRef{
+    width: 42vw;
+    height: 66vh;
+    overflow-x: hidden;
+    display: none;
+    position: relative;
+    background-color: black;
+}
+
+.mainUpRefSmall{
+    width: 90vw;
+    height: 45vh;
+    overflow-x: hidden;
+    display: none;
+    position: relative;
+    background-color: black;
+}
+
+.mainUpRefNone{
+    display: none;
+}
+
+.none {
+    position: absolute;
+    color: gray;
+    opacity: 0.6;
+    top:calc(50% - 25px);
+    left: calc(50% - 25px);
+    display: none;
+    font-size: 50px;
+}
+
+.display {
+    position: absolute;
+    color: gray;
+    opacity: 0.6;
+    top:calc(50% - 25px);
+    left: calc(50% - 25px);
+    display: inline;
+    font-size: 50px;
+}
+
+.UploadButtonBox {
+    padding: 0 10px 0 10px;
+}
+
+
+.UploadButton{
+    width: 100%;
+}
+.UploadButtonNone {
+    display: none;
 }

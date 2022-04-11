@@ -459,18 +459,18 @@ app.get('/api/boards/imageBoardList', auth ,(req,res) => {
   ImageBoard.find((err,imageBoard) => {
     if(err) return res.status(500).send({error: 'database failure'})
     return res.status(200).json(imageBoard)
-  }).limit(9)
+  }).limit(18)
 
 })
 
 app.get('/api/boards/imageBoardList/:key',(req,res) => {
 
-  let index = req.params.key * 9
+  let index = req.params.key * 18
   console.log(index)
   ImageBoard.find((err,imageBoard) => {
     if(err) return res.status(500).send({error: 'database failure'})
     return res.status(200).json(imageBoard)
-  }).skip(index).limit(9)
+  }).skip(index).limit(18)
 
 })
 
@@ -581,7 +581,7 @@ app.get('/api/baords/imageBoard/comment/:key',(req,res) => {
     })
     // }
 
-  })
+  }).sort({"_id":-1})
   
   
 })
@@ -690,23 +690,25 @@ app.delete('/api/boards/detail/:key', auth ,(req,res) => {
 app.post('/api/DirectMessage/Create',(req,res) => {
   
 
-  DirectM.find({$or:[{sendUserId: req.body.receiveUserId},{receiveUserId: req.body.receiveUserId}]},(err,dm) => {
+  // DirectM.find({$or:[{sendUserId: req.body.receiveUserId},{receiveUserId: req.body.receiveUserId}]},(err,dm) => {
+  DirectM.find({$or:[{sendUserId: req.body.receiveUserId,receiveUserId: req.body.sendUserId},
+    {sendUserId: req.body.sendUserId, receiveUserId: req.body.receiveUserId}]},(err,dm) => {
     if(err) return res.status(500).send({error :'DM error'})
     if(dm.length !== 0 ){
-      return res.status(200).send({success:'이미값이 있음'})
+      return res.status(200).send(dm)
     }
     const DirectMessage = new DirectM(req.body)
   
-    console.log(DirectMessage)
+    // console.log('DirectMessage : '+DirectMessage)
     DirectMessage.save((err) => {
       if(err) return res.status(500).send({success:false,err})
-      return res.status(200).send({ success:true })
+      return res.status(200).send({ success:'DM Create' })
     })
   })
 
 })
 
-//DM List
+//DMUserList
 
 app.get('/api/DirectMessage/List/:key',(req,res) => {
 
@@ -716,6 +718,25 @@ app.get('/api/DirectMessage/List/:key',(req,res) => {
     return res.status(200).send(list)
   })
 
+})
+
+//Chatting List
+
+app.get('/api/DirectMessage/chatList/',(req,res) => {
+  console.log(req.query)
+  DirectM.find({$or:[{sendUserId: req.query.user ,receiveUserId: req.query.other},
+    {sendUserId: req.query.other, receiveUserId: req.query.user}]},(err,dm) => {
+    if(err) return res.status(500).send({error :'DM error'})
+    return res.status(200).send(dm)
+  })
+})
+
+//Chatting Input 
+
+app.post('/api/DirectMessage/input/',(req,res) => {
+  
+  DirectM.findOneAndUpdate()
+  
 })
 
 
@@ -733,70 +754,59 @@ const io = Server(server,{
 }
 });
 
-//ChatDatile(Room init setting)
-
-// let chatUser
-// let roomName
-// console.log('(server)RoomName : '+roomName)
-// console.log('(server) : '+chatUser)
-
-// app.post('/api/chat/detail',auth,(req,res) => {
-//   roomName = req.body.roomName
-//   console.log('(server)RoomName : '+roomName)
-//   chatUser = req.user.name
-//   console.log('(server) : '+chatUser)
-// })
-
 
 
 //Chat Server
 const serverPort = 5555
 
-io.on('connection', (socket,roomName,chatUser) => {
+io.on('connection', (socket) => {
 
 
   io.to(socket.id).emit('my socket id',{socketId: socket.id});
   console.log("연결된 socketID : ", socket.id);
 
   socket.on('joinRoom',(roomName) => {
-
+    console.log('roomName : '+roomName)
     socket.join(roomName)
 
     io.to(roomName).emit('room Info',roomName)
 
-    socket.on('enter chatroom', () => {
-        console.log("누가 들어옴");
-        io.to(roomName).emit('client login', {type: "alert", chat: "누군가 들어왔다구", regDate:Time,socketId:socket.id});
+    socket.on('enter chatroom', (data) => {
+        console.log(data + " 님 입장");
+        io.to(roomName).emit('client login', {type:data+" 님 입장", regDate:Time,socketId:socket.id});
     })
 
     socket.on('send message',(data) => {
         console.log("(back)send message : "+ JSON.stringify(data))
-
-        const chat = new Chat()
-        chat.message = data.message
-        chat.roomName = data.roomName
-        chat.username = data.userName
-        chat.socketId = socket.id
-        chat.regData = Time
-        console.log('(server.socket)chat : '+chat)
-        chat.save()
-        io.to(roomName).emit('all message', chat)
+        DirectM.findOneAndUpdate(
+          { _id : data._id},
+          {
+          $push: {
+            chatList: {
+              chatSendId: data.chatSendId,
+              chatContent: data.chatContent,
+              SendDate: Time
+            },
+          },
+        },
+        (err, dm) => {
+          if (err) io.to(roomName).emit('all message', err)
+          io.to(roomName).emit('all message', data)
+          // return res.status(200).send(dm);
+        }
+      )
         
     })
 
     socket.on('disconnect', () => {
       console.log('누가 나감');
-      io.to(roomName).emit('disconnected', {type: "alert", chat: "누군가 나갔다구", regDate:Time});
+      io.to(roomName).emit('disconnected', {type:'퇴장'});
+      // socket.emit('disconnected', {type:'퇴장'});
     })
 
+    
   })
 })
-
-//disconnet 소켓아웃 leave는 룸아웃 연결은 계속 유지 시켜놓고 방 나가기를 leave로만 구현 해주면 실시간 채팅이 되지 않을까
-//chatDetail redux는 지금 당장 사용하지 않고있다.
-//refactoring 필요
-
-  
 
   
 

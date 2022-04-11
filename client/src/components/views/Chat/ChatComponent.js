@@ -11,7 +11,6 @@ function ChatComponent(props) {
     const [Message,setMessage] = useState("")
     const [MessageObject,setMessageObject] = useState([]);
 
-    const [otherMessage,setOtherMessage] = useState([]);
   
     const onSubmitHandler = (event) => {
 

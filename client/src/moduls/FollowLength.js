@@ -1,7 +1,5 @@
 import axios from 'axios'
 import React, {  useEffect, useState } from 'react'
-import {  useDispatch, useSelector } from 'react-redux'
-import { FOLLOW_LENGTH } from '../_actions/types'
 
 
 function FollowLength(props) {

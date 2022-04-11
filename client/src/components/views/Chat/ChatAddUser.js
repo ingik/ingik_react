@@ -8,6 +8,7 @@ import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import { useSelector } from "react-redux";
 
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 
 
@@ -16,7 +17,8 @@ const Modalstyle = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "700px",
+  width: "50vw",
+  minWidth:'316px',
   height:"500px",
   bgcolor: "white",
   border: "2px solid #000",
@@ -68,6 +70,9 @@ const Search = styled('div')(({ theme }) => ({
 
 function ChatAddUser(props) {
 
+  const mediaQuery = useMediaQuery('(min-width:600px)');
+
+  console.log(props)
   const userData = useSelector(state => state.user.userData)
 
     // search radio
@@ -100,6 +105,7 @@ function ChatAddUser(props) {
 
     setSearchValue(event.currentTarget.value)
     console.log(event.currentTarget.value)
+
     let body = {
       name : event.currentTarget.value 
     }
@@ -153,6 +159,9 @@ function ChatAddUser(props) {
 
     axios.post("/api/DirectMessage/Create",body).then(response =>{
       console.log(response.data)
+      setOpen(false)
+      props.onModalClose(false)
+      props.childFunc(selectedValue)
     })
 
     

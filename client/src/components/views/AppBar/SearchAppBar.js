@@ -7,25 +7,25 @@ import IconButton from '@mui/material/IconButton';
 import Typography from "@mui/material/Typography";
 import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import MoreIcon from '@mui/icons-material/MoreVert';
 import Profile from '../Profile/Profile';
 import SideAppBar from './SideAppBar';
+import ForumIcon from '@mui/icons-material/Forum';
 import { withRouter } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
-import { useEffect } from 'react';
-import { Autocomplete, Avatar, List, ListItem, ListItemAvatar, ListItemText, Modal, TextField } from '@mui/material';
-import { useRef } from 'react';
+import {  Avatar, List, ListItem, ListItemAvatar, ListItemText, Modal } from '@mui/material';
 import { useSelector } from 'react-redux';
 import UploadIcon from '@mui/icons-material/Upload';
 import HomeIcon from '@mui/icons-material/Home';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import ImageBoardUpload from '../ImageBoard/ImageBoardUpload';
+
+import './AppBar.css'
+
+
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -71,78 +71,34 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 
+
 function SearchAppBar(props) {
 
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+
+  
+  // const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [SearchValue, setSearchValue] = useState("");
-  const [UserList, setUserList] = useState([]);
+  const [UserList, setUserList] = useState(null);
 
   const userData = useSelector(state => state.user.userData)
   console.log(userData)
 
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
-
-  const mobileMenuId = 'primary-search-account-menu-mobile';
-
-//   메뉴미디어 쿼리
-  const renderMobileMenu = (
-    <Menu
-    sx={{ mt: '45px' }}
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-    </Menu>
-  );
+  const mediaQuery = useMediaQuery('(min-width:641px)');
 
 
   // search list 
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [OnOff, setOnOff] = useState(false)
-  const open = Boolean(anchorEl);
+  // const open = Boolean(anchorEl);
+
   const handleClose = () => {
+
+    console.log('handleClose')
     setAnchorEl(null);
-    setSearchValue("")
-    setUserList([])
+    setSearchValue("","")
+    setUserList(null)
+    setOnOff(false)
   };
 
 
@@ -150,14 +106,14 @@ function SearchAppBar(props) {
     event.preventDefault()
 
     setSearchValue(event.currentTarget.value)
-    console.log(event.currentTarget.value)
+    console.log(event.target.value)
     let body = {
       name : event.currentTarget.value 
     }
 
     
     
-    if(event.currentTarget.value !== ""){
+    if(event.currentTarget.value){
       axios.post('/api/users/list',body).then(response => {
         console.log(response.data)
         setUserList(response.data)
@@ -167,7 +123,9 @@ function SearchAppBar(props) {
       handleClose()
     }
     
-    setUserList([])
+    setUserList(null)
+
+ 
   }
 
   //modal
@@ -186,15 +144,50 @@ function SearchAppBar(props) {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     bgcolor: 'background.paper',
-    width:'1000px',
-    height:'500px',
+    width:'84vw',
+    height:'66vh',
     boxShadow: 24,
     p: 4,
     padding:'0'
   };
 
+  const mobileStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    bgcolor: 'background.paper',
+    width:'90vw',
+    height:'80vh',
+    boxShadow: 24,
+    p: 4,
+    padding:'0'
+  }
+
+  const searchUserList = {
+    position: "absolute",
+    zIndex: "99",
+    backgroundColor: "white",
+    maxHeight: "25em",
+    overflowY: "scroll",
+    width: "30vw",
+    paddingBottom: 0,
+    borderRadius: "5px",
+  }
+  const searchUserListSmall = {
+    position: "absolute",
+    zIndex: "99",
+    backgroundColor: "white",
+    maxHeight: "25em",
+    overflowY: "scroll",
+    width: "100%",
+    paddingBottom: 0,
+    borderRadius: "5px",
+  }
+
 
   return (
+    <React.Fragment>
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
         position="static"
@@ -233,16 +226,16 @@ function SearchAppBar(props) {
             />
 
             <List
-              style={{
-                position: "absolute",
-                zIndex: "99",
-                backgroundColor: "white",
-                maxHeight: "25em",
-                overflowY: "auto",
-                width: "100%",
-                paddingBottom: 0,
-                borderRadius: "5px",
-              }}
+              // className={
+              //   mediaQuery ?
+              //   `searchList` :
+              //   `searchListSmall`
+              // }
+              style={
+                mediaQuery ? 
+                searchUserList :
+                searchUserListSmall
+              }
               anchorEl={anchorEl}
               open={OnOff}
               onClose={handleClose}
@@ -251,7 +244,7 @@ function SearchAppBar(props) {
                 return (
                   <ListItem
                     key={item.name}
-                    style={{ width: "100%" }}
+                    // style={{ width: "100%" }}
                     onClick={() => {
                       console.log(props);
                       console.log(item._id);
@@ -277,11 +270,11 @@ function SearchAppBar(props) {
                         <React.Fragment>
                           <Typography
                             sx={{
-                              display: "inline",
+                              display: "inline-block",
                               whiteSpace: "nowrap",
                               overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              width: "200px",
+                              textOverflow: "clip",
+                              width: "20vw",
                             }}
                             component="span"
                             variant="body2"
@@ -312,7 +305,6 @@ function SearchAppBar(props) {
             </IconButton>
             <IconButton
               size="large"
-              aria-label="show 4 new mails"
               color="inherit"
               onClick={() => {
                 props.history.push("/imageBoardCmp");
@@ -322,7 +314,6 @@ function SearchAppBar(props) {
             </IconButton>
             <IconButton
               size="large"
-              aria-label="show 4 new mails"
               color="inherit"
               onClick={()=>{setModalOpen(true)}}
             >
@@ -330,14 +321,13 @@ function SearchAppBar(props) {
             </IconButton>
             <IconButton
               size="large"
-              aria-label="show 4 new mails"
               color="inherit"
               onClick={()=>{
                 props.history.push("/chat/list")
               }}
             >
-              <Badge badgeContent={4} color="error">
-                <MailIcon />
+              <Badge  color="error">
+                <ForumIcon />
               </Badge>
             </IconButton>
             <IconButton
@@ -345,42 +335,34 @@ function SearchAppBar(props) {
               aria-label="show 17 new notifications"
               color="inherit"
             >
-              <Badge badgeContent={7} color="error">
+              <Badge 
+                // badgeContent={7} 
+                color="error">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
           </Box>
 
-          {/* media */}
-          {/* <Box sx={{ display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </Box> */}
 
           <Profile Data={props} />
           
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}
+      {/* {renderMobileMenu} */}
       <Modal
             open={ModalOpen}
             onClose={ModalhandleClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-            <Box sx={style}>
+            <Box sx={mediaQuery ?
+                    style :
+                    mobileStyle}>
               <ImageBoardUpload handleClose={handleClose} />
             </Box>
           </Modal>
     </Box>
+    </React.Fragment>
   );
 }
 

@@ -1,6 +1,6 @@
 import { ImageList, ImageListItem } from '@mui/material';
 import axios from 'axios';
-import React, { useEffect, useRef, useState ,useMemo, useCallback, useLayoutEffect } from 'react';
+import React, { useEffect, useRef, useState  } from 'react';
 import { withRouter } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -8,10 +8,13 @@ import ImageBoard from './ImageBoard'
 import CommentIcon from '@mui/icons-material/Comment';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
+import useMediaQuery from '@mui/material/useMediaQuery';
 import './ImageBoard.css'
 
 
 function ImageBoardList(props) {
+
+  const mediaQuery = useMediaQuery('(min-width:641px)');
 
   const [PreviewList,setPreviewList] = useState([])
 
@@ -22,6 +25,8 @@ function ImageBoardList(props) {
   //intersection observer
   const viewport = useRef(null)
   const target = useRef(null)
+
+  const imageListRef = useRef(null)
 
   let number = 1
 
@@ -42,7 +47,8 @@ function ImageBoardList(props) {
 
       console.log(response.data)
 
-        response.data.map((list) => {
+      if(response.data){
+        response.data && response.data.map((list) => {
           console.log(list);
           list.image[0]._id = list._id;
 
@@ -60,8 +66,13 @@ function ImageBoardList(props) {
           
         });
         // setPreviewList(value)
+      }
 
     })
+
+    return () => {
+      setPreviewList([])
+    }
 
     
   },[])
@@ -86,18 +97,21 @@ function ImageBoardList(props) {
           list.image[0].recommand = response1.data[0]?.recommand.length
           list.image[0].comment = response2.data[0]?.commentList.length
           
-          // value.push(list.image[0]);
+          value.push(list.image[0]);
           // setPreviewList([...value])
+          setPreviewList((prevState) => {
+            return [...prevState, list.image[0]]
+          })
           
         }))
-        value.push(list.image[0]);
+        // value.push(list.image[0]);
         
       });
 
 
-      setPreviewList((prevState) => {
-        return [...prevState, ...value]
-      })
+      // setPreviewList((prevState) => {
+      //   return [...prevState, ...value]
+      // })
 
 
 
@@ -166,23 +180,55 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   bgcolor: 'background.paper',
-  width:'1000px',
-  height:'500px',
+  width:'84vw',
+  height:'66vh',
   boxShadow: 24,
   p: 4,
   padding:'0',
   
 };
 
-const HoverStyle = {
-  position: "absolute",
-  top: 0,
-  left: 0,
-  width: "100%",
-  height: "100%",
-  textAlign: "center",
-  backgroundColor: "red"
+const mobileStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  bgcolor: 'background.paper',
+  width:'90vw',
+  height:'80vh',
+  boxShadow: 24,
+  p: 4,
+  padding:'0'
 }
+
+const mediaSmall = {
+    width: "70%",
+    height: "38em"
+}
+
+const mediaLarge = {
+  width: "100%",
+  height: "40em",
+};
+
+const boxSmall = {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  width: "100%",
+  height:"100%",
+};
+
+const boxLarge = {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  width: "100%",
+  // marginTop: "5vh",
+  height:"100%"
+
+};
+
 
 const LeaveStyle = {
   position: "absolute",
@@ -194,22 +240,23 @@ const LeaveStyle = {
 }
 
   return (
-    <div style={{ paddingTop: "64px", height: "100%" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100%",
-          // height: "500px",
-          marginTop: "5vh",
-        }}
+    <div style={{ paddingTop: "64px", height: "calc(100vh - 66px)" }}>
+      <Box
+        style={
+          mediaQuery
+          ? boxLarge
+          : boxSmall
+        }
         ref={viewport}
       >
         <ImageList
           className="ImageListScroll"
-          sx={{ width: "70%", height: "37em" }}
+          sx={ mediaQuery 
+            ? mediaSmall
+            : mediaLarge
+          }
           cols={3}
+          ref={imageListRef}
         >
           {PreviewList.map((item, index) => {
             let lastEl = false;
@@ -222,8 +269,6 @@ const LeaveStyle = {
             return (
               <ImageListItem
                 key={index}
-                // ref={lastEl ? target : null}
-                // ref={target}
                 sx={{ display: "inline-block" }}
               >
                 <img
@@ -271,17 +316,21 @@ const LeaveStyle = {
             ref={target}
           ></div>
         </ImageList>
-      </div>
+      </Box>
+
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
+        <Box sx={mediaQuery ?
+                    style :
+                    mobileStyle  }>
           <ImageBoard paramKey={ParamKey} contentPosition={true}></ImageBoard>
         </Box>
       </Modal>
+      
     </div>
   );
 }

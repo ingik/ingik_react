@@ -4,25 +4,39 @@ import axios from 'axios';
 import { shallowEqual, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import  { TextField , Button , Avatar , Typography } from '@mui/material'
-import Modal from '@mui/material/Modal';
+
+import './ImageBoard.css'
+
 
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
+import useMediaQuery from '@mui/material/useMediaQuery';
+
+
 
 
 function ImageBoardUpload(props) {
   const userData = useSelector((state) => state.user.userData, shallowEqual);
+
+  //media
+  const mediaQuery = useMediaQuery('(min-width:641px)');
+  const heightQuery = useMediaQuery('(min-width:641px)and(min-heigth:500px)')
+
   
   //preview image
   const [ImageListValue, setImageListValue] = useState([]);
   const [ImageArr, setImageArr] = useState("");
   const [PreviewArr, setPreviewArr] = useState([]);
   const [Content, setContent] = useState("");
+  const [ImageActive, setImageActive] = useState(null)
+  
   const ImgRef = useRef()
+  ImgRef.current=[];
+
   const MainRef = useRef()
-  const labelRef = useRef()
+  const labelRef = useRef(null)
 
 
   const ImageUploads = (event) => {
@@ -37,16 +51,6 @@ function ImageBoardUpload(props) {
     }
     
     let ArrayArr = Array.from(event.target.files)
-
-    // let value = []
-    // ArrayArr.map((list) => {
-      // const reader = new FileReader();
-      // reader.readAsDataURL(list);
-      // reader.onload = function (event) {
-      //   value.push(event.target.result);
-      //   setImageListValue([...event.target.result])
-      // };
-    // });
 
     let fileURLs = [];
    
@@ -63,30 +67,21 @@ function ImageBoardUpload(props) {
       reader.readAsDataURL(file);
     }
 
+
     labelRef.current.style.display = "none"
-    MainRef.current.style.width = 500+"px";
-    ListRef.current.style.width = ArrayArr.length * 500 + "px";
+    MainRef.current.style.display = "inline-block"
+    ListRef.current.style.width = (ArrayArr.length+1) * MainRef.current.offsetWidth+"px";
+    setImageActive(true)
     console.log(ListRef.current.style.width)
   };
-
-  useEffect(()=>{
-    MainRef.current.style.width = 0+"px";
-  },[])
+  
 
   
 
-
-
   function result(){
     return <div
-    style={{
-      width: "500px",
-      margin: "auto",
-      overflowX: "hidden",
-      display: "inline-block",
-      position: "relative",
-    }}
-
+    // className={mediaQuery ? `mainUpRef` : (heightQuery ? `mainUpRefNone` : `mainUpRefSmall`)}
+    className={mediaQuery ? `mainUpRef` : `mainUpRefSmall`}
     ref={MainRef}
   >
     <div
@@ -127,44 +122,61 @@ function ImageBoardUpload(props) {
     {/* 리스트사이즈 가변적일 필요가 이씀 */}
 
     <div
+      className='ListDiv'
       style={{
         position: "relative",
         margin: "auto",
-        paddingBottom: "30px",
-        transform: `translateX(0)`,
       }}
       ref={ListRef}
     >
-      {ImageListValue && ImageListValue.map((image, index) => (
-        <div
-          style={{
-            height: "500px",
-            width: "500px",
-            float: "left",
-            display: "inline-block",
-          }}
-          key={index}
-        >
-          <div
-            style={{ position: "relative", width: "100%", height: "100%" }}
-          >
-            <Box
-              component="img"
-              sx={{
-                height: "500px",
-                width: "500px",
-                float: "left",
-                display: "table",
-              }}
-              alt={image.name}
-              src={image}
-              ref={ImgRef}
-            />
-          </div>
-        </div>
-      ))}
+      {
+        ImageListFunc()
+        }
     </div>
   </div>
+  }
+
+  const ImageListFunc = () => {
+
+
+    console.log(ImgRef)
+    return ImageListValue && ImageListValue.map((image, index) => {
+
+      return (<div
+              style={
+                mediaQuery ?
+              {
+                width: "42vw",
+                height: "66vh",
+                float: "left",
+                display: "table",
+                objectFit: "scale-down",
+                backgroundImage:`url(${image})`,
+                backgroundPosition:'center center',
+                backgroundRepeat:'no-repeat',
+                backgroundSize:'contain'
+              }
+              :
+              {
+                width: "90vw",
+                height: "45vh",
+                float: "left",
+                display: "table",
+                objectFit: "scale-down",
+                backgroundImage:`url(${image})`,
+                backgroundPosition:'center center',
+                backgroundRepeat:'no-repeat',
+                backgroundSize:'contain'
+              }
+            }
+              alt={image?.name}
+              src={image}
+            
+              ref={el => ImgRef.current[index] = el}
+            />
+           
+      );
+    })
   }
 
 
@@ -221,6 +233,8 @@ function ImageBoardUpload(props) {
 
         axios.post("/api/boards/imageBoardCreate", body).then((response) => {
           console.log(response.data);
+
+          props.history.push('/')
         });
       });
 
@@ -232,8 +246,32 @@ function ImageBoardUpload(props) {
   };
 
 
+  const [width, setWidth] = useState(0);
+
+const resizeWindow = () => {
+  setWidth(window.innerWidth);
+};
 
 
+
+  useEffect(() => {
+    window.addEventListener('resize', resizeWindow)
+    console.log(width)
+    if(ImgRef){
+      
+
+      console.log('window.innerWidth : '+window.innerWidth)
+      console.log('MainRef.current.clientWidth : '+MainRef.current.clientWidth)
+      console.log('MainRef.size : '+ MainRef.current.style.width )
+      console.log('ListRef.current.style.width : '+ListRef.current.style.width)
+      console.log('ListRef.current.cilentWidth : '+ListRef.current.clientWidth)
+
+      console.log(ImgRef.current)
+    }
+    return () => {
+    	window.removeEventListener('resize', resizeWindow)
+    }
+  },[width])
 
 
 
@@ -247,16 +285,30 @@ function ImageBoardUpload(props) {
 
 
 
-  const onLeftMove = (event) => {
+  const onLeftMove = () => {
 
+      
+    
     console.log(Number)
     if (Number <= 0) {
       return console.log("firstpage");
     }
-
     setNumber(Number - 1)
-    ListRef.current.style.transition = "300ms";
-    ListRef.current.style.transform = ListRef.current.style.transform + `translateX(${ImgRef.current.offsetWidth}px)`;
+    
+    async function Left(){
+      ImgRef.current[Number-1].style.display = "table"
+      ListRef.current.style.transition = "none";
+      ListRef.current.style.transform = ListRef.current.style.transform + `translateX(-${ImgRef.current[Number].offsetWidth}px)`;
+
+    }
+    
+    Left().then(() => {
+        ListRef.current.style.transition = "300ms";
+        ListRef.current.style.transform = ListRef.current.style.transform + `translateX(${ImgRef.current[Number-1].offsetWidth}px)`;
+    })
+   
+
+
     console.log(ListRef.current.style.transform)
     console.log("Left");
 
@@ -264,20 +316,40 @@ function ImageBoardUpload(props) {
   
   const onRightMove = () => {
     
-    console.log(Number)
-    console.log(ImageList.length);
-    console.log(ImgRef.current.offsetWidth)
+    console.log('startNum : ' +Number)
     
     if (Number >= ImageListValue.length - 1) {
       return console.log("lastpage");
     }
 
     setNumber(Number + 1)
+    console.log(window.innerWidth)
+    console.log('ListRef.style.width : '+ ListRef.current.style.width)
+    
+      ListRef.current.style.transition = "300ms";
+      ListRef.current.style.transform = ListRef.current.style.transform + `translateX(-${ImgRef.current[Number].clientWidth}px)`;
 
-    ListRef.current.style.transition = "300ms";
-    ListRef.current.style.transform = ListRef.current.style.transform + `translateX(-${ImgRef.current.offsetWidth}px)`;
+      setTimeout(() => {
+        
+        console.log('none')
+        ListRef.current.style.transition = "none";
+
+        // ListRef.current.style.width = ((ImageListValue.length-1) - Number) * MainRef.current.offsetWidth + "px";
+        ListRef.current.style.transform = ListRef.current.style.transform + `translateX(${ImgRef.current[Number].clientWidth}px)`;
+        ImgRef.current[Number].style.display = "none"
+      }, 300);
+
+
+    // ListRef.current.style.width = ImageListValue.length * ImgRef.current[Number].clientWidth + "px";
+
+
+    console.log('MainRef.style.width2 : '+ MainRef.current.style.width)
+    console.log('ListRef.style.width2 : '+ ListRef.current.style.width)
     console.log(ListRef.current.style.transform)
+    console.log(ImgRef.current[Number].style)
     console.log("right");
+
+
   };
 
   const none = {
@@ -302,6 +374,15 @@ function ImageBoardUpload(props) {
     fontSize: "50px",
   };
 
+  const uploadContentBox = {
+    height:"40vh"
+  }
+
+  const uploadContentBoxSmall = {
+    height:"17vh"
+  }
+
+
   return (
     <div>
       <form onSubmit={onSubmitHandler}>
@@ -315,24 +396,37 @@ function ImageBoardUpload(props) {
         ></input>
         <label
           htmlFor="input-file"
-          style={{ width: "500px", height: "500px", display: "inline-block" }}
+          className={
+            mediaQuery ?
+            `boardLabelLarge` :
+            `boardLabelSmall`
+          }
+          belLarge
+          //    }
           ref={labelRef}
         >
-          <div style={{height:'100%',position:'relative'}}>
-          <AddCircleOutlineIcon style={{ fontSize: 250, position:'absolute',top:'calc(50% - 250px/2)',left:'calc(50% - 250px/2)',opacity:'0.3' }}/>
+          <div style={{ height: "100%", position: "relative" }}>
+            <AddCircleOutlineIcon
+              style={{
+                fontSize: 250,
+                position: "absolute",
+                top: "calc(50% - 250px/2)",
+                left: "calc(50% - 250px/2)",
+                opacity: "0.3",
+              }}
+            />
           </div>
         </label>
         {result()}
         <div
-          className="rigthBox"
-          style={{
-            position: "absolute",
-            display: "inline-block",
-            width: "48.5%",
-            padding: "10px",
-          }}
+          className={
+            mediaQuery ?
+            `rigthBox` :
+            `rigthBoxSmall`
+          }
+        
         >
-          <div style={{padding:'0 10px 0 10px'}}>
+          <div style={{ padding: "0 10px 0 10px" }}>
             <Avatar
               alt={userData?.name}
               src={userData?.image}
@@ -361,24 +455,37 @@ function ImageBoardUpload(props) {
               </span>
             </Typography>
           </div>
-          <div style={{padding:'0 10px 0 10px', margin:'10px 0 '}}>
-          <TextField
-            type="text"
-            variant='outlined'
-            value={Content}
-            onChange={onContentHander}
-            sx={{width:'100%'}}
-            multiline={true}
-            inputProps={{style: {height: '350px'}}}
-            placeholder='문구를 입력해주세요.'
-            size='500'
-            row='500'
-          />
+          <div style={{ padding: "0 10px 0 10px", margin: "10px 0 " }}>
+            <TextField
+              type="text"
+              variant="outlined"
+              value={Content}
+              onChange={onContentHander}
+              sx={{ width: "100%" }}
+              multiline={true}
+              inputProps={{ style: mediaQuery ? uploadContentBox : uploadContentBoxSmall }}
+              placeholder={ImageActive ?  `내용을 입력해주세요` : `이미지를 추가해주세요`}
+              size="500"
+              row="500"
+              disabled={ImageActive ? false : true}
+            />
           </div>
-          <div style={{padding:'0 10px 0 10px'}}>
-          <Button variant="outlined" onClick={onSubmitHandler} style={{width:'100%'}}>
-            작성
-          </Button>
+          <div
+            className='UploadButtonBox'
+            
+          >
+            <Button
+              variant="outlined"
+              onClick={onSubmitHandler}
+
+              className={
+                heightQuery ?
+                `UploadButtonNone` :
+                `UploadButton`
+              } 
+            >
+              작성
+            </Button>
           </div>
         </div>
       </form>

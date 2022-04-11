@@ -1,15 +1,13 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import { useState } from 'react';
+import ForumIcon from '@mui/icons-material/Forum';
 import { IconButton, Modal } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ImageBoardUpload from '../ImageBoard/ImageBoardUpload';
@@ -18,10 +16,15 @@ import UploadIcon from '@mui/icons-material/Upload';
 import HomeIcon from '@mui/icons-material/Home';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 export default function SideAppBar(props) {
 
   const [OnSideBar, setOnSideBar] = useState(false)
+
+
+  //mediaQiery
+  const mediaQuery = useMediaQuery('(min-width:641px)');
 
 
    //modal
@@ -58,12 +61,25 @@ export default function SideAppBar(props) {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     bgcolor: 'background.paper',
-    width:'1000px',
-    height:'500px',
+    width:'84vw',
+    height:'66vh',
     boxShadow: 24,
     p: 4,
     padding:'0'
   };
+
+  const mobileStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    bgcolor: 'background.paper',
+    width:'90vw',
+    height:'80vh',
+    boxShadow: 24,
+    p: 4,
+    padding:'0'
+  }
 
   const list = () => (
     <Box
@@ -94,7 +110,7 @@ export default function SideAppBar(props) {
       <Divider />
           <ListItem button onClick={ onOpenChat }>
             <ListItemIcon>
-                <MailIcon/>
+                <ForumIcon/>
             </ListItemIcon>
             <ListItemText primary="Message" />
           </ListItem>
@@ -135,7 +151,10 @@ export default function SideAppBar(props) {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <Box sx={style}>
+          <Box sx={ mediaQuery ?
+                    style :
+                    mobileStyle  
+                  }>
             <ImageBoardUpload  handleClose={handleClose} />
           </Box>
         </Modal>

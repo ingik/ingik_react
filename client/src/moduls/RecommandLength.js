@@ -10,15 +10,21 @@ function RecommandLength(props) {
     
 
     useEffect(()=>{
-        // setRecommandState(props.RecommandState)
 
-        if(props.boardId){
-        axios.get("/api/boards/recommandLength/" + props.boardId).then((response) => {
-            console.log(response.data[0].recommand.length);
-            setLength(response.data[0].recommand.length)
-
-          });
+        let ComponentMounted = true;
+        if (props.boardId) {
+          axios
+            .get("/api/boards/recommandLength/" + props.boardId)
+            .then((response) => {
+              if (ComponentMounted) {
+                console.log(response.data[0].recommand.length);
+                setLength(response.data[0].recommand.length);
+              }
+            });
         }
+        
+
+        return () => ComponentMounted = false
     },[props,Length])
 
     return (

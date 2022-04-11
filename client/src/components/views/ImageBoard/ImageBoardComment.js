@@ -11,12 +11,15 @@ function ImageBoardComment(props) {
   
   useEffect(() => {
 
+    let CleanUpBoolean = true
     axios.get("/api/baords/imageBoard/comment/" + props.paramKey).then(response => {
-      if(response.data) {
+      if(CleanUpBoolean) {
         console.log(response.data)
         setListComment(response.data);
       }
     })
+
+    return () => CleanUpBoolean = false
     
   },[props])
       
@@ -24,9 +27,9 @@ function ImageBoardComment(props) {
   return (
     <div>
     {
-    ListComment.map((item,index) => {
+    ListComment && ListComment.map((item) => {
       return (
-        <ListItem key={index} style={{padding:'10px 0'}}>
+        <ListItem key={item._id} style={{padding:'10px 0'}}>
           <Avatar
             alt={item.user.name}
             src={item.user.image}

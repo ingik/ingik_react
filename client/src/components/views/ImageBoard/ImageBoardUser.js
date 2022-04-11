@@ -1,24 +1,29 @@
-import { Avatar, ListItem, Popover, Typography } from '@mui/material'
+import { Avatar, Popover, Typography } from '@mui/material'
 import axios from 'axios'
-import React, { useState,useEffect, useRef } from 'react'
+import React, { useState,useEffect } from 'react'
 import {  useHistory } from 'react-router-dom'
 import HoverProfile from '../Profile/HoverProfile'
 
 function ImageBoardUser(props) {
 
   const history = useHistory();
-
   const [UserData, setUserData] = useState({});
-  
 
-    console.log(props)
     useEffect(() => {
-        if(props.userId){
-          axios.get("/api/users/findId/" + props.userId).then((response) => {
+      let ComponentMounted = true;
+      if (props.userId) {
+        axios.get("/api/users/findId/" + props.userId).then((response) => {
+          if (ComponentMounted) {
             console.log(response.data);
-            setUserData(response.data)
-          });
-        }
+            setUserData(response.data);
+          }
+        });
+      }
+
+      return () => {
+        console.log("imageBoardUser CleanUp");
+        ComponentMounted = false;
+      };
     },[props.userId])
 
   const onClickHandler = () => {
@@ -115,4 +120,4 @@ function ImageBoardUser(props) {
   );
 }
 
-export default ImageBoardUser
+export default React.memo(ImageBoardUser)

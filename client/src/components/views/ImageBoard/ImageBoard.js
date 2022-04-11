@@ -1,85 +1,115 @@
 import  Box  from '@mui/material/Box';
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 
 import axios from 'axios';
-import { Avatar, Button, TextField, Typography,InputAdornment  } from '@mui/material';
+import { Button, TextField, Modal, Divider  } from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ImageBoardComment from './ImageBoardComment';
 import ImageBoardUser from './ImageBoardUser';
 import './ImageBoard.css'
 
-import { useSelector,shallowEqual } from 'react-redux'
+import { useSelector } from 'react-redux'
 import RecommandCmp from '../../../moduls/RecommandCmp';
 import RecommandLength from '../../../moduls/RecommandLength';
 
+import useMediaQuery from '@mui/material/useMediaQuery';
+
+
 function ImageBoard(props) {
+
+  //media
+  const mediaQuery = useMediaQuery("(min-width:641px)");
+
   const ListRef = useRef({ x: 0, y: 0 });
 
   const UserSelectData = useSelector((state) => state.user.userData);
-  console.log(UserSelectData)
+  console.log(UserSelectData);
   const [UserData, setUserData] = useState({});
   const [ImageDataList, setImageDataList] = useState([]);
   const [Comment, setComment] = useState("");
-  const [CommentStatus, setCommentStatus] = useState(0)
-  const [Number,setNumber] = useState(0)
-  const ImgRef = useRef()
-  const [CommentLength, setCommentLength] = useState(null)
+  const [CommentStatus, setCommentStatus] = useState(0);
+  const [Number, setNumber] = useState(0);
+  const [ListRefNum , setListRefNum] = useState(null)
 
+  const MainRef = useRef();
+  const ImgRef = useRef();
+  ImgRef.current = [];
+  // const [CommentLength, setCommentLength] = useState(null)
 
+  const [open, setOpen] = useState(false);
+  const handleClose = () => setOpen(false);
 
   const onLeftMove = (event) => {
-
-    console.log(Number)
+    console.log(Number);
     if (Number <= 0) {
       return console.log("firstpage");
     }
+    setNumber(Number - 1);
 
-    setNumber(Number - 1)
-    ListRef.current.style.transition = "300ms";
-    ListRef.current.style.transform = ListRef.current.style.transform + `translateX(${ImgRef.current.offsetWidth}px)`;
-    console.log(ListRef.current.style.transform)
-    console.log("Left");
+    async function Left() {
+      ImgRef.current[Number - 1].style.display = "table";
+      ListRef.current.style.transition = "none";
+      ListRef.current.style.transform =
+        ListRef.current.style.transform +
+        `translateX(-${ImgRef.current[Number].offsetWidth}px)`;
+    }
+
+    Left().then(() => {
+      ListRef.current.style.transition = "300ms";
+      ListRef.current.style.transform =
+        ListRef.current.style.transform +
+        `translateX(${ImgRef.current[Number - 1].offsetWidth}px)`;
+    });
   };
-  
+
   const onRightMove = () => {
-    
-    console.log(Number)
-    console.log(ImageDataList.length);
-    console.log(ImgRef.current.offsetWidth)
-    
+    console.log("startNum : " + Number);
+
     if (Number >= ImageDataList.length - 1) {
       return console.log("lastpage");
     }
 
-    setNumber(Number + 1)
+    setNumber(Number + 1);
+    console.log(window.innerWidth);
+    console.log("ListRef.style.width : " + ListRef.current.style.width);
 
     ListRef.current.style.transition = "300ms";
-    ListRef.current.style.transform = ListRef.current.style.transform + `translateX(-${ImgRef.current.offsetWidth}px)`;
-    console.log(ListRef.current.style.transform)
-    console.log("right");
+    ListRef.current.style.transform =
+    ListRef.current.style.transform + `translateX(-${ImgRef.current[Number].offsetWidth}px)`;
+
+    setTimeout(() => {
+      console.log("none");
+      ListRef.current.style.transition = "none";
+
+      // ListRef.current.style.width = ((ImageListValue.length-1) - Number) * MainRef.current.offsetWidth + "px";
+      ListRef.current.style.transform = ListRef.current.style.transform + `translateX(${ImgRef.current[Number].offsetWidth}px)`;
+      ImgRef.current[Number].style.display = "none";
+    }, 300);
   };
 
   useEffect(() => {
+    let CleanUpBoolean = true;
     axios.get("/api/boards/imageBoard/" + props.paramKey).then((response) => {
-      if (response.data) {
-        console.log(response.data)
+      if (CleanUpBoolean) {
+        console.log(response.data);
         setUserData(response.data);
         setImageDataList(response.data[0].image);
-      } else {
-        console.log("no imageBoardData");
       }
     });
+
+    return () => {
+      console.log("imageBoard CleanUp");
+      CleanUpBoolean = false;
+    };
   }, []);
-  
-  
+
   useEffect(() => {
-    console.log('ImageDataList')
-    ListRef.current.style.width = ImageDataList.length * 500 + "px";
+    console.log("ImageDataList");
+    // ListRef.current.style.width = ImageDataList.length * 500 + "px";
+    ListRef.current.style.width = (ImageDataList.length + 2) * MainRef.current.clientWidth  + "px";
   }, [ImageDataList]);
 
   const none = {
@@ -104,26 +134,35 @@ function ImageBoard(props) {
     fontSize: "50px",
   };
 
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    bgcolor: "background.paper",
+    width: "1000px",
+    height: "500px",
+    boxShadow: 24,
+    p: 4,
+    padding: "0",
+  };
+
   const onSubmitHandler = (event) => {
-    event.preventDefault();
+    // event.preventDefault();
 
-    setCommentStatus((prevState) => { 
+    setCommentStatus((prevState) => {
+      return prevState + 1;
+    });
 
-      return prevState + 1
-    })
-
-    console.log('CommentStatus : '+ CommentStatus)
+    console.log("CommentStatus : " + CommentStatus);
 
     let body = {
-
-      boardId : UserData[0]._id,
-      commentList : {
-        userId : UserSelectData._id,
-        content : Comment 
-      }
-
+      boardId: UserData[0]._id,
+      commentList: {
+        userId: UserSelectData._id,
+        content: Comment,
+      },
     };
-
 
     axios.post("/api/boards/imageBoardComment", body).then((response) => {
       setComment("");
@@ -140,107 +179,214 @@ function ImageBoard(props) {
     setComment(event.currentTarget.value);
   };
 
+  const memoCommentStatus = useMemo(() => CommentStatus, [CommentStatus]);
 
-  const memoCommentStatus = useMemo(()=> CommentStatus ,[CommentStatus])
-  
-  const [RecState,setRecState] = useState(0)
+  const [RecState, setRecState] = useState(0);
 
+  const onCheckEnter = (event) => {
+    event.preventDefault();
+    if (event.key === "Enter") {
+      onSubmitHandler();
+    }
+  };
 
+  const onModalHandler = (event) => {
+    setOpen(true);
+  };
 
-  function ContentBox(){
-    console.log()
+  function ContentBox() {
+    console.log();
 
-    if( props.contentPosition === true){
-      console.log("right")
-      console.log(UserData[0]?._id)
-    return <div
-        className="rigthBox"
-        style={{ position: "absolute", display: "inline-block",width:'48.5%',padding:'10px' }}
-      >
-        <List>
-          <ImageBoardUser userId={UserData[0]?.user}/>
-        </List>
-
-        <div className="ScrollbarStyle">
-          <List style={{padding :'8px 16px'}}>
-            <div> {UserData[0]?.content}</div>
-          </List>
+    if (props.contentPosition === true) {
+      console.log("right");
+      console.log(UserData[0]?._id);
+      return (
+        <div
+          className={mediaQuery ? `rigthBox` : `rigthBoxSmall`}
+        >
           <List>
-              <ImageBoardComment paramKey={ props.paramKey } CommentStatus={ memoCommentStatus }/>
+            <ImageBoardUser userId={UserData[0]?.user} />
+            <Divider />
           </List>
-        </div>
 
-        <div className="buttonMenu">
-            <RecommandCmp boardId={UserData[0]?._id} recommandId={UserSelectData._id} getRec={setRecState}/>
-          <div style={{margin:'5px 0 5px', display:'inline-block',verticalAlign:'middle',margin:'5px'}}>좋아요</div>
-            <RecommandLength boardId={UserData[0]?._id} testRec={RecState}/>
-        </div>
-
-        <div className="commentCreate" style={{ width: "100%" }}>
-          <form onSubmit={onSubmitHandler} style={{ width: "100%" }}>
-            <TextField 
-            value={Comment} 
-            onChange={onCommentHandler} 
-            style={{width:'100%',padding:'0'}}
-            variant='outlined'
-            InputProps={{
-              endAdornment: <Button onClick={onSubmitHandler} postion="end">작성</Button>
-            }}
+          <div className={
+            mediaQuery ? 
+            `ScrollbarStyle` :
+            `ScrollbarStyleSmall`
+          }>
+            <List style={{ padding: "8px 16px" }}>
+              <div> {UserData[0]?.content}</div>
+            </List>
+            <List>
+              <ImageBoardComment
+                paramKey={props.paramKey}
+                CommentStatus={memoCommentStatus}
+              />
+            </List> 
+          </div>
+          <Divider />
+          <div className="buttonMenu">
+            <RecommandCmp
+              boardId={UserData[0]?._id}
+              recommandId={UserSelectData._id}
+              getRec={setRecState}
+            />
+            <div
+              style={{
+                margin: "5px 0 5px",
+                display: "inline-block",
+                verticalAlign: "middle",
+                margin: "5px",
+              }}
             >
-            </TextField>
-          </form>
+              좋아요
+            </div>
+            <RecommandLength boardId={UserData[0]?._id} testRec={RecState} />
+          </div>
+
+          <div className="commentCreate" style={{ width: "100%" }}>
+            <form
+              onSubmit={onSubmitHandler}
+              style={{ width: "100%" }}
+              onKeyPress={onCheckEnter}
+            >
+              <TextField
+                value={Comment}
+                onChange={onCommentHandler}
+                style={{ width: "100%", padding: "0" }}
+                variant="outlined"
+                InputProps={{
+                  endAdornment: (
+                    <Button onClick={onSubmitHandler} postion="end">
+                      작성
+                    </Button>
+                  ),
+                }}
+              ></TextField>
+            </form>
+          </div>
         </div>
-      </div>
+      );
     }
 
-    if(props.contentPosition  === false){
-      console.log("bottom")
-      return <div
-      className="rigthBox"
-      style={{ width:'500px'}}
-    >
-      <List sx={{display:'inline-block'}}>
-        <ListItem>
-        <ImageBoardUser userId={UserData[0]?.user}/>
-          <div style={{display:'inline-block',marginLeft:'5px'}}> {UserData[0]?.content}</div>
-          </ListItem>
-      </List>
-      <div className="buttonMenu">
-            <RecommandCmp boardId={UserData[0]?._id} recommandId={UserSelectData._id} getRec={setRecState}/>
-          <div style={{margin:'5px 0 5px', display:'inline-block',verticalAlign:'middle',margin:'5px'}}>좋아요</div>
-            <RecommandLength boardId={UserData[0]?._id} testRec={RecState}/>
-        </div>
-      <div className="commentCreate" style={{ width: "100%" }}>
-        
-        <form onSubmit={onSubmitHandler}>
-          <TextField 
-          value={Comment} 
-          onChange={onCommentHandler} 
-          style={{width:'100%',padding:'0'}}
-          variant='outlined'
-          InputProps={{
-            endAdornment: <Button onClick={onSubmitHandler} postion="end">작성</Button>
-          }}
+    if (props.contentPosition === false) {
+      console.log("bottom");
+      return (
+        <div className="rigthBoxSmall" style={{ width: "500px" }}>
+          <List sx={{ display: "inline-block" }}>
+            <ListItem>
+              <ImageBoardUser userId={UserData[0]?.user} />
+              <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                {" "}
+                {UserData[0]?.content}
+              </div>
+            </ListItem>
+          </List>
+
+          <div onClick={onModalHandler}>더보기</div>
+          <Divider />
+          <div className="buttonMenu">
+            <RecommandCmp
+              boardId={UserData[0]?._id}
+              recommandId={UserSelectData._id}
+              getRec={setRecState}
+            />
+            <div
+              style={{
+                margin: "5px 0 5px",
+                display: "inline-block",
+                verticalAlign: "middle",
+                margin: "5px",
+              }}
+            >
+              좋아요
+            </div>
+            <RecommandLength boardId={UserData[0]?._id} testRec={RecState} />
+          </div>
+          <div className="commentCreate" style={{ width: "100%" }}>
+            <form onSubmit={onSubmitHandler}>
+              <TextField
+                value={Comment}
+                onChange={onCommentHandler}
+                style={{ width: "100%", padding: "0" }}
+                variant="outlined"
+                InputProps={{
+                  endAdornment: (
+                    <Button onClick={onSubmitHandler} postion="end">
+                      작성
+                    </Button>
+                  ),
+                }}
+              ></TextField>
+            </form>
+          </div>
+
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
           >
-          </TextField>
-        </form>
-      </div>
-    </div>
+            <Box sx={style}>
+              <ImageBoard
+                paramKey={props.paramKey}
+                contentPosition={true}
+              ></ImageBoard>
+            </Box>
+          </Modal>
+        </div>
+      );
     }
-
   }
 
+  const ImageListFunc = () => {
+    console.log(ImageDataList);
+    return (
+      ImageDataList &&
+      ImageDataList.map((image, index) => {
+        return (
+          <div
+          style={
+            mediaQuery ?
+          {
+            width: "42vw",
+            height: "66vh",
+            float: "left",
+            display: "table",
+            objectFit: "scale-down",
+            backgroundImage:`url(${image.img})`,
+            backgroundPosition:'center center',
+            backgroundRepeat:'no-repeat',
+            backgroundSize:'contain'
+          }
+          :
+          {
+            width: "90vw",
+            height: "45vh",
+            float: "left",
+            display: "table",
+            objectFit: "scale-down",
+            backgroundImage:`url(${image.img})`,
+            backgroundPosition:'center center',
+            backgroundRepeat:'no-repeat',
+            backgroundSize:'contain'
+          }
+        }
+            alt={image.key}
+            // src={image.img}
+
+            ref={(el) => (ImgRef.current[index] = el)}
+          />
+        );
+      })
+    );
+  };
 
   return (
     <div>
       <div
-        style={{
-          width: "500px",
-          margin: "auto",
-          overflowX: "hidden",
-          display: "inline-block",
-          position: "relative",
-        }}
+        className={mediaQuery ? `mainRef` : `mainRefSmall`}
+        ref={MainRef}
       >
         <div
           className="LeftButton"
@@ -250,7 +396,7 @@ function ImageBoard(props) {
             left: 0,
             width: "20%",
             height: "100%",
-            zIndex: 1000,
+            zIndex: 100,
           }}
           onClick={onLeftMove}
         >
@@ -268,7 +414,7 @@ function ImageBoard(props) {
             right: 0,
             width: "20%",
             height: "100%",
-            zIndex: 9999,
+            zIndex: 100,
           }}
           onClick={onRightMove}
         >
@@ -283,45 +429,16 @@ function ImageBoard(props) {
           style={{
             position: "relative",
             margin: "auto",
-            paddingBottom: "30px",
+            // paddingBottom: "30px",
             transform: `translateX(0)`,
           }}
           ref={ListRef}
         >
-          {ImageDataList?.map((image, index) => (
-            <div
-              style={{
-                height: "500px",
-                width: "500px",
-                float: "left",
-                display: "inline-block",
-              }}
-              key={index}
-            >
-              <div
-                style={{ position: "relative", width: "100%", height: "100%" }}
-              >
-                <Box
-                  component="img"
-                  sx={{
-                    height: "500px",
-                    width: "500px",
-                    float: "left",
-                    display: "table",
-                  }}
-                  alt={image.name}
-                  src={image.img}
-                  ref={ImgRef}
-                />
-              </div>
-            </div>
-          ))}
+          {ImageListFunc()}
         </div>
       </div>
 
-      
-      { ContentBox() }
-
+      {ContentBox()}
     </div>
   );
 }
