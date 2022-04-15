@@ -3,6 +3,7 @@
 /* .chat_wrap .header { font-size: 14px; padding: 15px 0; background: #000000; color: white; text-align: center;  } */
 
 .chat_header { display: flex; flex-direction: row; margin-bottom: 5px;}
+.chat_header_small {display:none}
 .chat_header_name {line-height: 40px; margin: 0 5px;}
 .chat_header_avatar 
  
@@ -38,7 +39,16 @@
     display: flex;
     flex-direction: column;
 }
+.chat_form_small {
+    height: 67vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
 .chat_form::-webkit-scrollbar{
+    display:none;
+}
+.chat_form_small::-webkit-scrollbar{
     display:none;
 }
 .chat_other {
@@ -61,3 +71,12 @@
     font-size: 12px;
 }
 .chat_other_avatar{ width: 30px; height: 30px;}
+
+.dm_component {
+    width: 70vh;
+    margin-top: 20px;
+}
+
+.dm_component_small{
+    height: calc(90vh - 56px);
+}

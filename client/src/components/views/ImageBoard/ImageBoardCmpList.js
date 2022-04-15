@@ -3,10 +3,15 @@ import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import ImageBoard from './ImageBoard';
 
+import './ImageBoard.css'
+import useMediaQuery from '@mui/material/useMediaQuery';
+
+
 function ImageBoardCmpList() {
 
 
   const [DataList, setDataList] = useState([])
+  const mediaQuery = useMediaQuery('(min-width:641px)');
 
 
   useEffect(() => {
@@ -44,11 +49,11 @@ function ImageBoardCmpList() {
     {DataList.map((item) => {
       return (
         <div key={item._id}
-          style={{
-            width:'500px',
-            marginLeft:'calc(50% - 250px)',
-            marginTop:'20px'
-          }}
+          className={
+            mediaQuery ?
+            `cmpBox` :
+            `cmpBoxSmall`
+          }
         >
         <ImageBoard paramKey={item._id} contentPosition={false} />
         </div>

@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import { io } from 'socket.io-client';
 import './Chat.css';
 
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 
 const localhost = 'http://localhost:5555';
@@ -25,6 +26,9 @@ function DMList(props) {
     const [ChatRoomId, setChatRoomId] = useState(null)
 
     const ScrollRef = useRef(null)
+
+    const mediaQuery = useMediaQuery('(min-width:600px)');
+
 
 
     useEffect(() => {
@@ -123,8 +127,8 @@ function DMList(props) {
       console.log(body)
       socket.emit('send message',body)
       
-      // setMessage("", "")
       setMessage("", "")
+      // setMessage("")
 
     }
 
@@ -149,7 +153,6 @@ function DMList(props) {
                 alt={OtherUser?.name}
                 src={OtherUser?.image}
                 className="chat_other_avatar"
-                // sizes='15px'
                 sx={{
                   width:"30px",
                   height:"30px",
@@ -166,9 +169,10 @@ function DMList(props) {
     }
 
     const onCheckEnter = (event) => {
-      event.preventDefault()
       if(event.key === 'Enter') {
+        event.preventDefault()
         onSubmitHandler()
+        // setMessage("","")
       }
     }
 
@@ -176,13 +180,18 @@ function DMList(props) {
 
   return (
     <div
-      style={{
-        width: "70vh",
-        marginTop:'20px'
-      }}
+      
+      className={mediaQuery ?
+        `dm_component` :
+        `dm_component_small`
+      }
     >
       <div className="chat_wrap">
-        <div className='chat_header'>
+        <div className={
+          mediaQuery ? 
+          `chat_header`:
+          `chat_header_small` 
+        }>
               <Avatar
                 alt={OtherUser?.name}
                 src={OtherUser?.image}
@@ -192,8 +201,11 @@ function DMList(props) {
         </div>
         <Divider />
         <div 
-          className="chat_form"
-          // ref={ScrollRef}
+          className={
+            mediaQuery ?
+            `chat_form` :
+            `chat_form_small`
+          }
         >
             { ChatList.map((list,index) => {
               return (
@@ -209,23 +221,22 @@ function DMList(props) {
         <div className="input-div">
           <form 
             className="input-form"
-            onKeyPress={ onCheckEnter }
-          
-          >
+            >
             <TextField
               variant="outlined"
               placeholder="Press Enter for send message."
               type="text"
-              // className="input-textarea"s
+              className="input-textarea"
               sx={{ width: "100%" }}
               multiline={true}
               inputProps={{ style: { height: "100px" } }}
               size="500"
               row="500"
               onChange={onMessageHandler}
-              value={Message || ''}
+              onKeyPress={ onCheckEnter }
+              value={ Message }
             />
-            <Button className="send_button" variant="contained" onSubmit={ onSubmitHandler }>
+            <Button className="send_button" variant="contained" onClick={ onSubmitHandler }>
               send
             </Button>
           </form>

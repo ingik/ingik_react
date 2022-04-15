@@ -22,7 +22,7 @@ function ImageBoardUpload(props) {
 
   //media
   const mediaQuery = useMediaQuery('(min-width:641px)');
-  const heightQuery = useMediaQuery('(min-width:641px)and(min-heigth:500px)')
+  const heightQuery = useMediaQuery('(min-heigth:500px)')
 
   
   //preview image
@@ -31,12 +31,15 @@ function ImageBoardUpload(props) {
   const [PreviewArr, setPreviewArr] = useState([]);
   const [Content, setContent] = useState("");
   const [ImageActive, setImageActive] = useState(null)
+  const [ButtonCheck, setButtonCheck] = useState(null)
+  const [HeightCheck, setHeightCheck] = useState(false)
   
   const ImgRef = useRef()
   ImgRef.current=[];
 
   const MainRef = useRef()
   const labelRef = useRef(null)
+  const TextRef = useRef(null)
 
 
   const ImageUploads = (event) => {
@@ -73,6 +76,7 @@ function ImageBoardUpload(props) {
     ListRef.current.style.width = (ArrayArr.length+1) * MainRef.current.offsetWidth+"px";
     setImageActive(true)
     console.log(ListRef.current.style.width)
+    console.log('check : '+HeightCheck)
   };
   
 
@@ -139,7 +143,6 @@ function ImageBoardUpload(props) {
   const ImageListFunc = () => {
 
 
-    console.log(ImgRef)
     return ImageListValue && ImageListValue.map((image, index) => {
 
       return (<div
@@ -242,36 +245,37 @@ function ImageBoardUpload(props) {
   };
 
   const onContentHander = (event) => {
+    console.log(event)
     setContent(event.target.value);
+    
   };
 
 
-  const [width, setWidth] = useState(0);
+  const [height, setheight] = useState(window.innerHeight);
 
 const resizeWindow = () => {
-  setWidth(window.innerWidth);
+  setheight(window.innerHeight);
 };
 
 
 
   useEffect(() => {
     window.addEventListener('resize', resizeWindow)
-    console.log(width)
-    if(ImgRef){
-      
 
-      console.log('window.innerWidth : '+window.innerWidth)
-      console.log('MainRef.current.clientWidth : '+MainRef.current.clientWidth)
-      console.log('MainRef.size : '+ MainRef.current.style.width )
-      console.log('ListRef.current.style.width : '+ListRef.current.style.width)
-      console.log('ListRef.current.cilentWidth : '+ListRef.current.clientWidth)
-
-      console.log(ImgRef.current)
+    console.log(height)
+    console.log(HeightCheck)
+    if(height < 500){
+      console.log(height)
+      setHeightCheck(true)
+    }else{
+      console.log(height)
+      setHeightCheck(false)
     }
+    
     return () => {
-    	window.removeEventListener('resize', resizeWindow)
+      window.removeEventListener('resize', resizeWindow)
     }
-  },[width])
+  },[height])
 
 
 
@@ -382,6 +386,25 @@ const resizeWindow = () => {
     height:"17vh"
   }
 
+  // const onCheckButton = () => {
+  //   if(ImageActive === true && ButtonCheck === true){
+  //   }else{
+  //     return <React.Fragment/>
+  //   }
+  // } 
+
+  const FocusOn = () => {
+    console.log(HeightCheck);
+      // if (HeightCheck === true) {
+        MainRef.current.style.display = `none`;
+      // }
+  };
+  
+
+  const FocusOut = () => {
+    MainRef.current.style.display = `inline-block`
+    // setButtonCheck(false)
+  }
 
   return (
     <div>
@@ -468,12 +491,23 @@ const resizeWindow = () => {
               size="500"
               row="500"
               disabled={ImageActive ? false : true}
+              ref={TextRef}
+              onFocus={() => mediaQuery ? null : (HeightCheck ? FocusOn() : null)}
+              onBlur={() => mediaQuery ? FocusOut() : FocusOut()}
             />
           </div>
           <div
             className='UploadButtonBox'
             
           >
+           
+           <Button
+            className='CheckButton'
+            variant='outlined'
+            sx={mediaQuery ? {display:'none'} : (ButtonCheck === true ? {display:'block', width:'100%'} : {display:'none'})}
+            >
+              확인하기
+            </Button>
             <Button
               variant="outlined"
               onClick={onSubmitHandler}

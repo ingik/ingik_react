@@ -111,7 +111,7 @@ function ImageBoardUser(props) {
         style={{
           display: "inline-block",
           verticalAlign: "top",
-          margin: "5px 0 0 15px",
+          margin: "0px 10px 0 10px",
         }}
       >
         {UserData?.name}

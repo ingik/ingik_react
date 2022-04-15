@@ -31,8 +31,8 @@ function ImageBoardComment(props) {
       return (
         <ListItem key={item._id} style={{padding:'10px 0'}}>
           <Avatar
-            alt={item.user.name}
-            src={item.user.image}
+            alt={item?.user.name}
+            src={item?.user.image}
             style={{
               display: "inline-block",
               verticalAlign: "top",
@@ -49,9 +49,9 @@ function ImageBoardComment(props) {
                   marginRight: "5px",
                 }}
               >
-                {item.user.name}
+                {item?.user.name}
               </span>
-              {item.content}
+              {item?.content}
             </Typography>
         </ListItem>
       );

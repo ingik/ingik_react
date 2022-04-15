@@ -75,7 +75,7 @@ export default function SideAppBar(props) {
     transform: 'translate(-50%, -50%)',
     bgcolor: 'background.paper',
     width:'90vw',
-    height:'80vh',
+    height:'82vh',
     boxShadow: 24,
     p: 4,
     padding:'0'

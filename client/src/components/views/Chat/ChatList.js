@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, ListItem, ListItemButton, Typography } from '@mui/material'
+import { Avatar, Box, Button, ListItem, ListItemButton, Typography, List } from '@mui/material'
 import axios from 'axios'
 import React, { useMemo } from 'react'
 import { useState } from 'react'
@@ -7,7 +7,12 @@ import { useSelector } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import ChatAddUser from './ChatAddUser'
 import DMList from './DMList'
+import Drawer from '@mui/material/Drawer';
 
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
+
+import './Chat.css'
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 function ChatList(props) {
@@ -19,10 +24,18 @@ function ChatList(props) {
     const [Data,setData] = useState([])
     const [ModalOpen, setModalOpen] = useState(false)
     const [SelectUser, setSelectUser] = useState(null)
+    const [OnSideBar, setOnSideBar] = useState(false)
 
     const [SelectUserId, setSelectUserId] = useState(null)
-    
-    
+    const [SelectUserName, setSelectUserName] = useState(null)
+    const [SelectUserImage, setSelectUserImage] = useState(null)
+
+    const toggleDrawer = (open) => (event) => {
+      if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+        return;
+      }
+      setOnSideBar(open)
+     };
     
     useEffect(() => {
       console.log('useEffect')
@@ -81,41 +94,99 @@ function ChatList(props) {
 
     const SelectUserIdMemo = useMemo(()=> SelectUserId,[SelectUserId])
 
+    const list = () => {
+      console.log('list')
+
+      return <Box
+        sx={{ width: '100vw', height:'100vh'  }}
+        role="presentation"
+        // onKeyDown={toggleDrawer(false)}
+        >
+        <Button 
+          onClick={toggleDrawer(false)}
+          variant='text'
+          sx={{margin:'10px'}}
+        >
+          <ArrowBackIcon sx={{display:'inline-block'}}/>
+        </Button>
+        <div style={{display:'inline-block'}}>
+          <Avatar
+                      alt={SelectUserName}
+                      src={SelectUserImage}
+                      style={{
+                        display: "inline-block",
+                        verticalAlign: "top",
+                        width: "32px",
+                        height: "32px",
+                        verticalAlign:"middle",
+                        marginRight:"10px"
+                      }}
+                    />
+                    <Typography
+                      variant="body1"
+                      style={{ display: "inline-block", marginLeft: "5px",verticalAlign:"middle" }}
+                    >
+                      <span
+                        style={{
+                          fontSize: "15px",
+                          fontWeight: "300",
+                          display: "inline-block",
+                          marginRight: "5px",
+                        }}
+                      >
+                        {SelectUserName}
+                      </span>
+                    </Typography>
+                    </div>
+        <DMList OtherUserId={SelectUserIdMemo} />
+      </Box>
+    }
+
+    
+  console.log(SelectUserIdMemo)
+
+  const toggleIdCheck = () => {
+    if(SelectUserIdMemo){
+      toggleDrawer(true)
+    }
+  }
 
 
-    return (
-      <div style={{ paddingTop: "64px" }}>
+  const Test = () => {
 
-        <div>
-          <ChatAddUser
-            Open={ModalOpen}
-            onModalClose={onModalClose}
-            childFunc={childFunc}
-          />
-        </div>
+    if(mediaQuery){
+      return <div style={{ paddingTop: "64px" }}>
+      <div>
+        <ChatAddUser
+          Open={ModalOpen}
+          onModalClose={onModalClose}
+          childFunc={childFunc}
+        />
+      </div>
 
-        <div style={{
-          display:'flex',
-          justifyContent:'center'
-          
-        }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
         <Box
           sx={{
-            width: '16rem',
+            width: "16rem",
             // height: 400,
             minWidth: 180,
             bgcolor: "background.paper",
           }}
         >
           <ListItem>
-          <Button
-            variant="contained"
-            // onClick={onClickHandler}
-            onClick={onModalOpen}
-            sx={{ marginTop: "10px" }}
-          >
-            ADD USER
-          </Button>
+            <Button
+              variant="contained"
+              // onClick={onClickHandler}
+              onClick={onModalOpen}
+              sx={{ marginTop: "10px" }}
+            >
+              ADD USER
+            </Button>
           </ListItem>
           {Data &&
             Data.map((data, index) => {
@@ -123,8 +194,10 @@ function ChatList(props) {
                 <ListItem key={index} component="div" disablePadding>
                   <ListItemButton
                     onClick={() => {
-                      setSelectUserId(data?._id)
-                    } }
+                      setSelectUserId(data?._id);
+                      setSelectUserImage(data.image)
+                        setSelectUserName(data.name)
+                    }}
                   >
                     <Avatar
                       alt={data?.name}
@@ -157,14 +230,283 @@ function ChatList(props) {
             })}
         </Box>
 
-        {
-            SelectUserIdMemo !== null
-              ? <DMList OtherUserId={SelectUserIdMemo} />
-              : <div style={{width: "70vh"}}></div>
-          }
-          </div>
+        {SelectUserIdMemo !== null ? (
+          <DMList OtherUserId={SelectUserIdMemo} />
+        ) : (
+          <div style={{ width: "70vh" }}></div>
+        )}
       </div>
-    );
+    </div>
+    }else{
+      return <div style={{ paddingTop: "64px" ,height:'80vh'}}>
+        <div>
+          <ChatAddUser
+            Open={ModalOpen}
+            onModalClose={onModalClose}
+            childFunc={childFunc}
+          />
+        </div>
+
+        <Drawer
+          anchor="left"
+          open={OnSideBar} //true false
+          onClose={toggleDrawer(false)}
+        >
+          {list()}
+
+        </Drawer>
+        <div
+          style={{
+            width: "100%",
+            height: "calc(100vh - 66px)",
+          }}
+        >
+          <Box
+            sx={{
+              width: 250,
+              // height: 400,
+              minWidth: 180,
+              bgcolor: "background.paper",
+            }}
+          >
+            <ListItem>
+              <Button
+                variant="contained"
+                onClick={onModalOpen}
+                sx={{ marginTop: "10px" }}
+              >
+                ADD USER
+              </Button>
+
+            </ListItem>
+            {Data &&
+              Data.map((data, index) => {
+                return (
+                  <ListItem key={index} component="div" disablePadding>
+                    <ListItemButton
+                      onClick={()=>{
+                        // toggleDrawer(true)
+                        // toggleIdCheck()
+                        setOnSideBar(true)
+                        setSelectUserId(data._id)
+                        setSelectUserImage(data.image)
+                        setSelectUserName(data.name)
+                      }}
+                    >
+                      <Avatar
+                        alt={data?.name}
+                        src={data?.image}
+                        style={{
+                          display: "inline-block",
+                          verticalAlign: "top",
+                          width: "32px",
+                          height: "32px",
+                        }}
+                      />
+                      <Typography
+                        variant="body1"
+                        style={{ display: "inline-block", marginLeft: "5px" }}
+                      >
+                        <span
+                          style={{
+                            fontSize: "15px",
+                            fontWeight: "300",
+                            display: "inline-block",
+                            marginRight: "5px",
+                          }}
+                        >
+                          {data?.name}
+                        </span>
+                      </Typography>
+                    </ListItemButton>
+                  </ListItem>
+                );
+              })}
+          </Box>
+        </div>
+        
+      </div>
+    }
+  }
+
+  return (
+    Test()
+  )
+
+    // return mediaQuery ? (
+    //   <div style={{ paddingTop: "64px" }}>
+    //     <div>
+    //       <ChatAddUser
+    //         Open={ModalOpen}
+    //         onModalClose={onModalClose}
+    //         childFunc={childFunc}
+    //       />
+    //     </div>
+
+    //     <div
+    //       style={{
+    //         display: "flex",
+    //         justifyContent: "center",
+    //       }}
+    //     >
+    //       <Box
+    //         sx={{
+    //           width: "16rem",
+    //           // height: 400,
+    //           minWidth: 180,
+    //           bgcolor: "background.paper",
+    //         }}
+    //       >
+    //         <ListItem>
+    //           <Button
+    //             variant="contained"
+    //             // onClick={onClickHandler}
+    //             onClick={onModalOpen}
+    //             sx={{ marginTop: "10px" }}
+    //           >
+    //             ADD USER
+    //           </Button>
+    //         </ListItem>
+    //         {Data &&
+    //           Data.map((data, index) => {
+    //             return (
+    //               <ListItem key={index} component="div" disablePadding>
+    //                 <ListItemButton
+    //                   onClick={() => {
+    //                     setSelectUserId(data?._id);
+    //                   }}
+    //                 >
+    //                   <Avatar
+    //                     alt={data?.name}
+    //                     src={data?.image}
+    //                     style={{
+    //                       display: "inline-block",
+    //                       verticalAlign: "top",
+    //                       width: "32px",
+    //                       height: "32px",
+    //                     }}
+    //                   />
+    //                   <Typography
+    //                     variant="body1"
+    //                     style={{ display: "inline-block", marginLeft: "5px" }}
+    //                   >
+    //                     <span
+    //                       style={{
+    //                         fontSize: "15px",
+    //                         fontWeight: "300",
+    //                         display: "inline-block",
+    //                         marginRight: "5px",
+    //                       }}
+    //                     >
+    //                       {data?.name}
+    //                     </span>
+    //                   </Typography>
+    //                 </ListItemButton>
+    //               </ListItem>
+    //             );
+    //           })}
+    //       </Box>
+
+    //       {SelectUserIdMemo !== null ? (
+    //         <DMList OtherUserId={SelectUserIdMemo} />
+    //       ) : (
+    //         <div style={{ width: "70vh" }}></div>
+    //       )}
+    //     </div>
+    //   </div>
+    // ) : (
+
+
+    //   //mobile
+    //   <React.Fragment>
+    //   <div style={{ paddingTop: "64px" }}>
+    //     <div>
+    //       <ChatAddUser
+    //         Open={ModalOpen}
+    //         onModalClose={onModalClose}
+    //         childFunc={childFunc}
+    //       />
+    //     </div>
+
+    //     <Drawer
+    //       anchor="left"
+    //       open={OnSideBar} //true false
+    //       onClose={toggleDrawer(false)}
+    //     >
+    //       {list()}
+
+    //     </Drawer>
+    //     <div
+    //       style={{
+    //         width: "100%",
+    //         height: "calc(100vh - 66px)",
+    //       }}
+    //     >
+    //       <Box
+    //         sx={{
+    //           width: 250,
+    //           // height: 400,
+    //           minWidth: 180,
+    //           bgcolor: "background.paper",
+    //         }}
+    //       >
+    //         <ListItem>
+    //           <Button
+    //             variant="contained"
+    //             // onClick={onClickHandler}
+    //             onClick={onModalOpen}
+    //             sx={{ marginTop: "10px" }}
+    //           >
+    //             ADD USER
+    //           </Button>
+
+    //         </ListItem>
+    //         {Data &&
+    //           Data.map((data, index) => {
+    //             return (
+    //               <ListItem key={index} component="div" disablePadding>
+    //                 <ListItemButton
+    //                   onClick={()=>{
+    //                     // toggleDrawer(true)
+    //                     toggleIdCheck()
+    //                     setSelectUserId(data._id)
+    //                   }}
+    //                 >
+    //                   <Avatar
+    //                     alt={data?.name}
+    //                     src={data?.image}
+    //                     style={{
+    //                       display: "inline-block",
+    //                       verticalAlign: "top",
+    //                       width: "32px",
+    //                       height: "32px",
+    //                     }}
+    //                   />
+    //                   <Typography
+    //                     variant="body1"
+    //                     style={{ display: "inline-block", marginLeft: "5px" }}
+    //                   >
+    //                     <span
+    //                       style={{
+    //                         fontSize: "15px",
+    //                         fontWeight: "300",
+    //                         display: "inline-block",
+    //                         marginRight: "5px",
+    //                       }}
+    //                     >
+    //                       {data?.name}
+    //                     </span>
+    //                   </Typography>
+    //                 </ListItemButton>
+    //               </ListItem>
+    //             );
+    //           })}
+    //       </Box>
+    //     </div>
+        
+    //   </div>
+    //   </React.Fragment>
+    // );
 }
 
 export default React.memo(withRouter(ChatList))

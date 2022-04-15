@@ -32,7 +32,6 @@ function ImageBoard(props) {
   const [Comment, setComment] = useState("");
   const [CommentStatus, setCommentStatus] = useState(0);
   const [Number, setNumber] = useState(0);
-  const [ListRefNum , setListRefNum] = useState(null)
 
   const MainRef = useRef();
   const ImgRef = useRef();
@@ -52,16 +51,12 @@ function ImageBoard(props) {
     async function Left() {
       ImgRef.current[Number - 1].style.display = "table";
       ListRef.current.style.transition = "none";
-      ListRef.current.style.transform =
-        ListRef.current.style.transform +
-        `translateX(-${ImgRef.current[Number].offsetWidth}px)`;
+      ListRef.current.style.transform = ListRef.current.style.transform + `translateX(-${ImgRef.current[Number].offsetWidth}px)`;
     }
 
     Left().then(() => {
       ListRef.current.style.transition = "300ms";
-      ListRef.current.style.transform =
-        ListRef.current.style.transform +
-        `translateX(${ImgRef.current[Number - 1].offsetWidth}px)`;
+      ListRef.current.style.transform = ListRef.current.style.transform + `translateX(${ImgRef.current[Number - 1].offsetWidth}px)`;
     });
   };
 
@@ -140,8 +135,8 @@ function ImageBoard(props) {
     left: "50%",
     transform: "translate(-50%, -50%)",
     bgcolor: "background.paper",
-    width: "1000px",
-    height: "500px",
+    width: "84vw",
+    height: "66vh",
     boxShadow: 24,
     p: 4,
     padding: "0",
@@ -164,6 +159,8 @@ function ImageBoard(props) {
       },
     };
 
+    ScrollRef.current.scrollIntoView(true);
+
     axios.post("/api/boards/imageBoardComment", body).then((response) => {
       setComment("");
 
@@ -183,6 +180,8 @@ function ImageBoard(props) {
 
   const [RecState, setRecState] = useState(0);
 
+  const ScrollRef = useRef(null)
+
   const onCheckEnter = (event) => {
     event.preventDefault();
     if (event.key === "Enter") {
@@ -193,6 +192,7 @@ function ImageBoard(props) {
   const onModalHandler = (event) => {
     setOpen(true);
   };
+
 
   function ContentBox() {
     console.log();
@@ -213,7 +213,9 @@ function ImageBoard(props) {
             mediaQuery ? 
             `ScrollbarStyle` :
             `ScrollbarStyleSmall`
-          }>
+          }
+          ref={ScrollRef}
+          >
             <List style={{ padding: "8px 16px" }}>
               <div> {UserData[0]?.content}</div>
             </List>
@@ -224,7 +226,7 @@ function ImageBoard(props) {
               />
             </List> 
           </div>
-          <Divider />
+          <Divider sx={{paddingTop:'5px'}}/>
           <div className="buttonMenu">
             <RecommandCmp
               boardId={UserData[0]?._id}
@@ -272,7 +274,7 @@ function ImageBoard(props) {
     if (props.contentPosition === false) {
       console.log("bottom");
       return (
-        <div className="rigthBoxSmall" style={{ width: "500px" }}>
+        <div className='bottomBoxSmall' >
           <List sx={{ display: "inline-block" }}>
             <ListItem>
               <ImageBoardUser userId={UserData[0]?.user} />
@@ -340,15 +342,38 @@ function ImageBoard(props) {
   }
 
   const ImageListFunc = () => {
-    console.log(ImageDataList);
     return (
       ImageDataList &&
       ImageDataList.map((image, index) => {
         return (
-          <div
+          <div key={index}
           style={
-            mediaQuery ?
+            props.contentPosition === false ?
+          (mediaQuery ? {
+            width: "42vw",
+            height: "66vh",
+            float: "left",
+            display: "table",
+            objectFit: "scale-down",
+            backgroundImage:`url(${image.img})`,
+            backgroundPosition:'center center',
+            backgroundRepeat:'no-repeat',
+            backgroundSize:'contain'
+          }
+          :
           {
+            width: "100vw",
+            height: "52vh",
+            float: "left",
+            display: "table",
+            objectFit: "scale-down",
+            backgroundImage:`url(${image.img})`,
+            backgroundPosition:'center center',
+            backgroundRepeat:'no-repeat',
+            backgroundSize:'contain'
+          })
+          :
+          (mediaQuery ? {
             width: "42vw",
             height: "66vh",
             float: "left",
@@ -370,7 +395,8 @@ function ImageBoard(props) {
             backgroundPosition:'center center',
             backgroundRepeat:'no-repeat',
             backgroundSize:'contain'
-          }
+          })
+          
         }
             alt={image.key}
             // src={image.img}
@@ -385,7 +411,9 @@ function ImageBoard(props) {
   return (
     <div>
       <div
-        className={mediaQuery ? `mainRef` : `mainRefSmall`}
+        className={props.contentPosition === false 
+          ? (mediaQuery ? `mainRef` : `mainRefSmallCenter`) 
+          : (mediaQuery ? `mainRef` : `mainRefSmall`)}
         ref={MainRef}
       >
         <div

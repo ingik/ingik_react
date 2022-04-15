@@ -16,9 +16,14 @@
     display:none;
 }
 
-.ImageListScroll::-webkit-scrollbar{
+.mediaSmall::-webkit-scrollbar{
     display:none;
 }
+.mediaLarge::-webkit-scrollbar{
+    display:none;
+}
+
+
 /* .mainUpRefSmall::-webkit-scrollbar{
     display:none;
 } */
@@ -48,7 +53,17 @@
 }
 .rigthBoxSmall{
     position: relative;
-    padding: 0 10px;
+    padding: 10px 10px;
+}
+
+.bottomBox{
+    position: relative;
+    width: 42vw;
+}
+.bottomBoxSmall{
+    position: relative;
+    width: 100%;
+    margin-bottom: 10px;
 }
 
 .mainRef{
@@ -83,6 +98,15 @@
     height: 45vh;
     overflow-x: hidden;
     display: none;
+    position: relative;
+    background-color: black;
+}
+
+.mainRefSmallCenter{
+    width: 100vw;
+    height: 52vh;
+    overflow-x: hidden;
+    display: inline-block;
     position: relative;
     background-color: black;
 }
@@ -122,3 +146,50 @@
 .UploadButtonNone {
     display: none;
 }
+
+.cmpBox{
+    width: 42vw;
+    margin-left: calc(50% - 21vw);
+    margin-top: 20px;
+}
+
+.cmpBoxSmall{
+    width: 100%;
+}
+
+.boxSmall{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.mediaSmall{
+    width: 70%;
+    height: 38em;
+}
+
+.mediaLarge{
+    width: 100%;
+    height: 40em;
+}
+
+.profileMediaSmall{
+    width: 70%;
+
+}
+.profileMediaLarge{
+    width: 100%;
+
+}
+
+.LeaveStyle{
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+

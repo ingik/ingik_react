@@ -459,18 +459,18 @@ app.get('/api/boards/imageBoardList', auth ,(req,res) => {
   ImageBoard.find((err,imageBoard) => {
     if(err) return res.status(500).send({error: 'database failure'})
     return res.status(200).json(imageBoard)
-  }).limit(18)
+  }).sort({_id:-1}).limit(15)
 
 })
 
 app.get('/api/boards/imageBoardList/:key',(req,res) => {
 
-  let index = req.params.key * 18
+  let index = req.params.key * 15
   console.log(index)
   ImageBoard.find((err,imageBoard) => {
     if(err) return res.status(500).send({error: 'database failure'})
     return res.status(200).json(imageBoard)
-  }).skip(index).limit(18)
+  }).sort({_id:-1}).skip(index).limit(15)
 
 })
 
@@ -490,6 +490,16 @@ app.get('/api/boards/imageBoard/profileList/:key',(req,res) => {
     return res.status(200).json(board)
   })
 
+})
+
+app.get('/api/boards/imageBoard/profileList/:key/:num',(req,res) => {
+
+  let index = req.params.num * 15
+  console.log(index)
+  ImageBoard.find({ 'user': req.params.key },(err,board) => {
+    if(err) return res.status(500).send({error: 'database failure'})
+    return res.status(200).json(board)
+  }).sort({_id:-1}).skip(index).limit(15)
 })
 
 
@@ -542,7 +552,6 @@ app.post('/api/boards/imageBoardComment',(req,res) => {
 const async = require('async');
 app.get('/api/baords/imageBoard/comment/:key',(req,res) => {
 
-  
   console.log('imageBoardCommentList')
   Comment.find({ 'boardId': req.params.key },(err,comment) => {
     if(err) return res.status(500).send({error: 'database failure'})
