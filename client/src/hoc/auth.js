@@ -21,7 +21,6 @@ export default function (SpecificComponent, option, adminRoute = null){
         
         useEffect(() => {
 
-
                 dispatch(auth()).then(response => {
                     // console.log('(auth)login props : '+ JSON.stringify(response.payload))
                     console.log('(auth)login status : '+ JSON.stringify(response.payload.isAuth))
@@ -32,7 +31,8 @@ export default function (SpecificComponent, option, adminRoute = null){
 
                     if(!response.payload.isAuth){
                         if(option){
-                            props.history.push('/login')
+                            // props.history.push('/login')
+                            props.history.push({pathname:'/login',isAuth:response.payload.isAuth})
                         }
 
                     }else{
@@ -43,9 +43,8 @@ export default function (SpecificComponent, option, adminRoute = null){
                             // props.history.push({auth:{pathname:'/',state: {user: response.payload.name}}})
                             // props.history.push({pathname:'/',user : response.payload.name})
                             
-                        }else{
-                            if(option === false)
-                                props.history.push('/')
+                        // }else{
+                            // if(option === false) props.history.push('/')
                         }
                     }
                 })

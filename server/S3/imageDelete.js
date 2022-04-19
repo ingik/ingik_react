@@ -6,12 +6,23 @@ aws.config.loadFromPath(__dirname +'/awsconfig.json');
 
 const s3 = new aws.S3();
 
+let serverLocation 
+
+if(process.NODE_ENV === 'production'){
+    
+} else if(process.NODE_ENV === 'qa') {
+    serverLocation = 'profileImage_QA/'
+} else {
+    serverLocation = 'profileImage/'
+}
+
+
 
 async function imageDelete(data) {
 
   try{
   const type = data.split('/')
-  let splitData = "profileImage/"+type[4];
+  let splitData = serverLocation + type[4];
   console.log('Delete File Key : ' + splitData)
 
   const params = {

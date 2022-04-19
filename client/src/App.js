@@ -39,6 +39,8 @@ function App() {
       <div>
         <hr />
        
+        <Route exact path="/login" component={Auth(LoginPage, false)}/>
+        <Route exact path="/register" component={Auth(RegisterPage, false)}/>
         <Route  exact 
                 path={  ['/','/boards/detail/:key', '/createboard','/boards',
                         '/boards/detail/:key/update','/chat','/chat/create',
@@ -46,8 +48,6 @@ function App() {
                 component={Auth(SearchAppBar, true)}/>
         <Switch>
           {/* <Route exact path="/" component={Auth(LandingPage, null)}/> */}
-          <Route exact path="/login" component={Auth(LoginPage, false)}/>
-          <Route exact path="/register" component={Auth(RegisterPage, false)}/>
           <Route exact path="/boards/detail/:key" component={Auth(Board,true)} />
           <Route exact path="/createboard" component={Auth(CreateBoard,true)}/>
           <Route exact path="/boards" component={Auth(BoardList , null)}/>

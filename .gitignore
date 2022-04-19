@@ -1,3 +1,5 @@
 node_modules
 awsconfig.json
 dev.js
+prod.js
+qa.js

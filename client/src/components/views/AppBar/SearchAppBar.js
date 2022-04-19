@@ -128,8 +128,6 @@ function SearchAppBar(props) {
  
   }
 
-  console.log(UserList)
-
   //modal
 
   const [ModalOpen, setModalOpen] = React.useState(false);

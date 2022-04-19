@@ -11,6 +11,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import useMediaQuery from '@mui/material/useMediaQuery';
 import './ImageBoard.css'
+import { useSelector } from 'react-redux';
 
 
 function ImageBoardList(props) {
@@ -26,51 +27,70 @@ function ImageBoardList(props) {
   const [loading, setloading] = useState(false)
 
   let DataLess = false
+
   //intersection observer
   const viewport = useRef(null)
-  const target = useRef(null)
+  const target = useRef()
   const imageListRef = useRef(null)
 
   let number = 1
 
+  let LoginUser = props.history
+  console.log(LoginUser)
+
+
   
   useEffect(() => {
+
+
+    //clean Up
+    let CleanUpBoolean = true;
 
     // 1)
     // 리사이징을 구현하지 않아서 두가지 방식으로 데이터를 가져옴 1) 한번에 2) 받는대로
     axios.get("/api/boards/imageBoardList").then(response => {
       const value = [];
-
       async function AsyncFunc(){
-
-        await response.data.reduce(async(previousPromise, list)=>{
-        await previousPromise
-          list.image[0]._id = list._id;
+        
+        console.log(response.data)
+        try {
+          
+          await response.data.reduce(async(previousPromise, list)=>{
+          await previousPromise
+            list.image[0]._id = list._id;
+    
+          const newElement = await axios
+            .all([
+              axios.get("/api/boards/recommandLength/" + list._id),
+              axios.get("/api/boards/commentLength/" + list._id),
+            ])
+            .then(
+              axios.spread((response1, response2) => {
+                
+                list.image[0].recommand = response1.data[0]?.recommand.length;
+                list.image[0].comment = response2.data[0]?.commentList.length;
   
-        const newElement = await axios
-          .all([
-            axios.get("/api/boards/recommandLength/" + list._id),
-            axios.get("/api/boards/commentLength/" + list._id),
-          ])
-          .then(
-            axios.spread((response1, response2) => {
+                return list.image[0];
+              })
+            );
+            
+            value.push(newElement)
+            
+          },Promise.resolve)
 
-              list.image[0].recommand = response1.data[0]?.recommand.length;
-              list.image[0].comment = response2.data[0]?.commentList.length;
+        } catch (error) {
 
-              return list.image[0];
-            })
-          );
+          setPreviewList(null)
 
-          value.push(newElement)
-
-        },Promise.resolve)
+        }
       }
-
+      
       AsyncFunc().then(() => {
-        setPreviewList(value)
-        setloading(true)
-        target.current.style.display="block"
+        if(CleanUpBoolean){
+          setPreviewList(value)
+          setloading(true)
+          target.current.style.display="block"
+        }
       })
 
     })
@@ -113,9 +133,13 @@ function ImageBoardList(props) {
 
 
     // })
+
+  
     
     return () => {
       setPreviewList([])
+      CleanUpBoolean = false;
+
     }
 
     
@@ -124,10 +148,8 @@ function ImageBoardList(props) {
 
   const loadItems = () => {
 
-    target.current.style.display="none"
 
     console.log('loadItems')
-
     //1)
     axios.get("/api/boards/imageBoardList/"+number).then(response => {
       const value = [];
@@ -167,8 +189,13 @@ function ImageBoardList(props) {
       AsyncFunc().then(() => {
         setPreviewList((prevState) => {return [...prevState , ...value]})
         // setloading(true)
-        target.current.style.display="block"
+        try {
+          target.current.style.display="block"
+        } catch (error) {
+          return target.current
+        }
       })
+      
 
     })
 
@@ -207,14 +234,19 @@ function ImageBoardList(props) {
 
   useEffect(() => {
 
+
     const options = {
       root : viewport.current,
       threshold: 0,
     }
 
+
     const handleintersection = (entries, observer) => {
+      target.current.style.display="none"
+
       console.log(entries)
 
+      
       entries.forEach((entry) => {
         if(!entry.isIntersecting){
           return ;
@@ -226,13 +258,17 @@ function ImageBoardList(props) {
           console.log(DataLess)
         loadItems();
         number++
-        setTimeout(() => {
-          observer.observe(target.current)
+        // setTimeout(() => {
+        observer.observe(target.current)
 
-        },1000)
-      }
+        // },1000)
+       }
+
       })
+
+
     }
+    
 
     const io = new IntersectionObserver(handleintersection,options)
 
@@ -241,8 +277,10 @@ function ImageBoardList(props) {
     }
     
     //clean up
-    return () => io && io.disconnect();
-  
+    return () => {
+      io && io.disconnect()
+    };
+    
   
   },[viewport,target.current])
 
@@ -254,16 +292,12 @@ function ImageBoardList(props) {
   const onHoverHandler = (event) => {
 
     event.stopPropagation()
-    console.log('hover')
-    console.log(event.currentTarget.children[1])
     event.currentTarget.children[1].style = 'display:blcok'
-    // event.currentTarget.children[0].style=`color:white; display:block; padding-top:50%;`
   }
 
   
   const onLeaveHandler = (event) => {
     event.stopPropagation()
-    console.log('leave')
     event.currentTarget.children[1].style=`display:none`
   }
 
@@ -295,7 +329,6 @@ const mobileStyle = {
   padding:'0'
 }
 
-console.log(loading)
 
 
   return (
@@ -321,22 +354,9 @@ console.log(loading)
             : `mediaLarge`
           }
           cols={3}
-          rowHeight='width'
           ref={imageListRef}
         >
           {PreviewList && PreviewList.map((item, index) => {
-            let lastEl = false;
-
-            if (index === 15) {
-              lastEl = true;
-              // setlastElState(lastEl)
-            }
-            // if (index === PreviewList.length - 1) {
-            //   lastEl = true;
-            //   // setlastElState(lastEl)
-            // }
-
-            // console.log('lastEl : '+lastEl);
             return (
               <ImageListItem
                 key={index}
@@ -345,7 +365,6 @@ console.log(loading)
                   width:'100%',
                   height:'100%'
                 }}
-                // ref={lastEl ? target : null}
                 onMouseEnter={onHoverHandler}
                 onMouseLeave={onLeaveHandler}
                 onClick={function () {
@@ -403,10 +422,13 @@ console.log(loading)
             );
           })}
 
-          <div
+          {
+            PreviewList &&
+            <div
             style={{ width: "100%", display: "none", height: "30px" }}
             ref={target}
           ></div>
+          }
         </ImageList>
       </Box>
 
@@ -427,4 +449,5 @@ console.log(loading)
   );
 }
 
+// export default withRouter(ImageBoardList);
 export default withRouter(ImageBoardList);

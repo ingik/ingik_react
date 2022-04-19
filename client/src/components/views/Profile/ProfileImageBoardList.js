@@ -7,6 +7,8 @@ import ImageBoard from '../ImageBoard/ImageBoard';
 import CommentIcon from '@mui/icons-material/Comment';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import './../ImageBoard/ImageBoard.css'
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 import useMediaQuery from '@mui/material/useMediaQuery';
 
@@ -23,6 +25,8 @@ function ProfileImageBoardList(props) {
   const viewport = useRef(null)
   const target = useRef(null)
   const imageListRef = useRef(null)
+
+  const [loading, setloading] = useState(false)
 
   let DataLess = false
 
@@ -65,7 +69,12 @@ function ProfileImageBoardList(props) {
 
       AsyncFunc().then(() => {
         setPreviewList(value)
-        target.current.style.display="block"
+        setloading(true)
+        try {
+          target.current.style.display="block"
+        } catch (error) {
+          return target.current
+        }
       })
 
     })
@@ -118,6 +127,8 @@ function ProfileImageBoardList(props) {
     }
 
     const handleintersection = (entries, observer) => {
+      target.current.style.display="none"
+
       console.log(entries)
 
       entries.forEach((entry) => {
@@ -131,10 +142,10 @@ function ProfileImageBoardList(props) {
           console.log(DataLess)
         loadItems();
         number++
-        setTimeout(() => {
-          observer.observe(target.current)
+        // setTimeout(() => {
+        observer.observe(target.current)
 
-        },1000)
+        // },1000)
       }
       })
     }
@@ -196,6 +207,17 @@ function ProfileImageBoardList(props) {
         className='boxSmall'
         ref={viewport}
       >
+        {
+          loading 
+          ? null 
+          : <CircularProgress
+              sx={{
+                position:'absolute',
+                top:'50%',
+                left:'50%'
+              }}
+            />
+        }
         <ImageList
           className={ mediaQuery 
             ? `profileMediaSmall`
@@ -205,19 +227,7 @@ function ProfileImageBoardList(props) {
           ref={imageListRef}
         >
           {PreviewList && PreviewList.map((item, index) => {
-            let lastEl = false;
-
-            console.log(index)
-            if (index === 15) {
-              lastEl = true;
-              // setlastElState(lastEl)
-            }
-            // if (index === PreviewList.length - 1) {
-            //   lastEl = true;
-            //   // setlastElState(lastEl)
-            // }
-
-            // console.log('lastEl : '+lastEl);
+           
             return (
               <ImageListItem
                 key={index}
