@@ -7,6 +7,7 @@ import ImageBoard from './ImageBoard'
 import CommentIcon from '@mui/icons-material/Comment';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import {withRouter} from 'react-router-dom'
+import CircularProgress from '@mui/material/CircularProgress';
 
 import useMediaQuery from '@mui/material/useMediaQuery';
 import './ImageBoard.css'
@@ -22,6 +23,8 @@ function ImageBoardList(props) {
   const handleClose = () => setOpen(false);
   const [ParamKey, setParamKey] = useState("")
 
+  const [loading, setloading] = useState(false)
+
   let DataLess = false
   //intersection observer
   const viewport = useRef(null)
@@ -33,8 +36,8 @@ function ImageBoardList(props) {
   
   useEffect(() => {
 
-
     // 1)
+    // 리사이징을 구현하지 않아서 두가지 방식으로 데이터를 가져옴 1) 한번에 2) 받는대로
     axios.get("/api/boards/imageBoardList").then(response => {
       const value = [];
 
@@ -66,6 +69,7 @@ function ImageBoardList(props) {
 
       AsyncFunc().then(() => {
         setPreviewList(value)
+        setloading(true)
         target.current.style.display="block"
       })
 
@@ -120,36 +124,84 @@ function ImageBoardList(props) {
 
   const loadItems = () => {
 
-    console.log('loadItems')
-    axios.get('/api/boards/imageBoardList/'+ number).then(response => {
-      console.log(response.data)
+    target.current.style.display="none"
 
-      let value = []
+    console.log('loadItems')
+
+    //1)
+    axios.get("/api/boards/imageBoardList/"+number).then(response => {
+      const value = [];
 
       if(response.data.length === 0) {
         DataLess = true
         alert("마지막 data 입니다.")
-        return console.log('no data')
+        return console.log('last data')
       }
 
-      response.data.map((list) => {
-        console.log(list);
-        list.image[0]._id = list._id;
+      async function AsyncFunc(){
 
-        axios.all([axios.get("/api/boards/recommandLength/" + list._id),axios.get("/api/boards/commentLength/"+list._id)])
-        .then(axios.spread((response1,response2)=>{
+        await response.data.reduce(async(previousPromise, list)=>{
+        await previousPromise
+          list.image[0]._id = list._id;
+  
+        const newElement = await axios
+          .all([
+            axios.get("/api/boards/recommandLength/" + list._id),
+            axios.get("/api/boards/commentLength/" + list._id),
+          ])
+          .then(
+            axios.spread((response1, response2) => {
 
-          list.image[0].recommand = response1.data[0]?.recommand.length
-          list.image[0].comment = response2.data[0]?.commentList.length
-          
-          value.push(list.image[0]);
-          // setPreviewList([...value])
-          setPreviewList((prevState) => {
-            return [...prevState, list.image[0]]
-          })
-        }))
-      });
+              list.image[0].recommand = response1.data[0]?.recommand.length;
+              list.image[0].comment = response2.data[0]?.commentList.length;
+
+              return list.image[0];
+            })
+          );
+
+          value.push(newElement)
+
+        },Promise.resolve)
+      }
+
+      AsyncFunc().then(() => {
+        setPreviewList((prevState) => {return [...prevState , ...value]})
+        // setloading(true)
+        target.current.style.display="block"
+      })
+
     })
+
+    //2)
+    // axios.get('/api/boards/imageBoardList/'+ number).then(response => {
+    //   console.log(response.data)
+
+    //   let value = []
+
+    //   if(response.data.length === 0) {
+    //     DataLess = true
+    //     alert("마지막 data 입니다.")
+    //     return console.log('no data')
+    //   }
+
+    //   response.data.map((list) => {
+    //     console.log(list);
+    //     list.image[0]._id = list._id;
+
+    //     axios.all([axios.get("/api/boards/recommandLength/" + list._id),axios.get("/api/boards/commentLength/"+list._id)])
+    //     .then(axios.spread((response1,response2)=>{
+
+    //       list.image[0].recommand = response1.data[0]?.recommand.length
+    //       list.image[0].comment = response2.data[0]?.commentList.length
+          
+    //       value.push(list.image[0]);
+    //       // setPreviewList([...value])
+    //       setPreviewList((prevState) => {
+    //         return [...prevState, list.image[0]]
+    //       })
+    //     }))
+    //   });
+    // })
 
   }
 
@@ -201,15 +253,18 @@ function ImageBoardList(props) {
   
   const onHoverHandler = (event) => {
 
+    event.stopPropagation()
     console.log('hover')
-    event.currentTarget.children[0].style=`color:white; display:block; padding-top:50%;`
+    console.log(event.currentTarget.children[1])
+    event.currentTarget.children[1].style = 'display:blcok'
+    // event.currentTarget.children[0].style=`color:white; display:block; padding-top:50%;`
   }
 
   
   const onLeaveHandler = (event) => {
-
+    event.stopPropagation()
     console.log('leave')
-    event.currentTarget.children[0].style=`display:none`
+    event.currentTarget.children[1].style=`display:none`
   }
 
   
@@ -240,6 +295,7 @@ const mobileStyle = {
   padding:'0'
 }
 
+console.log(loading)
 
 
   return (
@@ -248,18 +304,29 @@ const mobileStyle = {
         className='boxSmall'
         ref={viewport}
       >
+        {
+          loading 
+          ? null 
+          : <CircularProgress
+              sx={{
+                position:'absolute',
+                top:'50%',
+                left:'50%'
+              }}
+            />
+        }
         <ImageList
           className={ mediaQuery 
             ? `mediaSmall`
             : `mediaLarge`
           }
           cols={3}
+          rowHeight='width'
           ref={imageListRef}
         >
           {PreviewList && PreviewList.map((item, index) => {
             let lastEl = false;
 
-            console.log(index)
             if (index === 15) {
               lastEl = true;
               // setlastElState(lastEl)
@@ -273,36 +340,45 @@ const mobileStyle = {
             return (
               <ImageListItem
                 key={index}
-                sx={{ display: "inline-block" ,height:'100%',width:'100%'}}
+                sx={{
+                  margin: "auto",
+                  width:'100%',
+                  height:'100%'
+                }}
                 // ref={lastEl ? target : null}
+                onMouseEnter={onHoverHandler}
+                onMouseLeave={onLeaveHandler}
+                onClick={function () {
+                  setOpen(true);
+                  setParamKey(item._id);
+                }}
               >
                 <img
                   src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
                   srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
                   alt={item.name}
                   loading="lazy"
+                  
+                  style={{objectFit:'contain'}}
                 />
-                {/* <div
-                  style={{
-                    width:'100%',
-                    height:'100%',
-                    objectFit: "scale-down",
-                    backgroundImage:`url(${item.img})`,
-                    backgroundPosition:'center center',
-                    backgroundRepeat:'no-repeat',
-                    backgroundSize:'contain'}}
-                >
-                </div> */}
                 <div
-                  className='LeaveStyle'
-                  onClick={function () {
-                    setOpen(true);
-                    setParamKey(item._id);
-                  }}
-                  onMouseEnter={onHoverHandler}
-                  onMouseLeave={onLeaveHandler}
+                  className="LeaveStyle"
+                  style={{ display: "none" }}
+                  
                 >
-                  <div style={{ display: "none" }}>
+                  <div
+                    style={{
+                      display: "block",
+                      backgroundColor: "black",
+                      opacity:"0.4",
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    
+                  >
+                    
+                  </div>
+                  <div style={{position:'absolute',top:'calc(50% - 12px)',left:'calc(50% - 52.6px)',color:'white',zIndex:99}}>
                     <FavoriteIcon sx={{ verticalAlign: "middle" }} />
                     <span
                       style={{
@@ -321,7 +397,7 @@ const mobileStyle = {
                     >
                       {item.comment}
                     </span>
-                  </div>
+                    </div>
                 </div>
               </ImageListItem>
             );

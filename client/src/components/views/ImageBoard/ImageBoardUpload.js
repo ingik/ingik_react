@@ -238,6 +238,7 @@ function ImageBoardUpload(props) {
           console.log(response.data);
 
           props.history.push('/')
+          window.location.reload()
         });
       });
 
@@ -424,7 +425,7 @@ const resizeWindow = () => {
             `boardLabelLarge` :
             `boardLabelSmall`
           }
-          belLarge
+          // belLarge
           //    }
           ref={labelRef}
         >

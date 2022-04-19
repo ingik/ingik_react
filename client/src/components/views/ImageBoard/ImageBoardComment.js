@@ -27,9 +27,9 @@ function ImageBoardComment(props) {
   return (
     <div>
     {
-    ListComment && ListComment.map((item) => {
+    ListComment && ListComment.map((item,index) => {
       return (
-        <ListItem key={item._id} style={{padding:'10px 0'}}>
+        <ListItem key={index} style={{padding:'10px 0'}}>
           <Avatar
             alt={item?.user.name}
             src={item?.user.image}

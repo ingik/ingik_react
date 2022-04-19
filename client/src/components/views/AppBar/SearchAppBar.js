@@ -77,7 +77,7 @@ function SearchAppBar(props) {
 
   
   // const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
-  const [SearchValue, setSearchValue] = useState("");
+  const [SearchValue, setSearchValue] = useState(null);
   const [UserList, setUserList] = useState(null);
 
   const userData = useSelector(state => state.user.userData)
@@ -96,7 +96,7 @@ function SearchAppBar(props) {
 
     console.log('handleClose')
     setAnchorEl(null);
-    setSearchValue("","")
+    setSearchValue(null)
     setUserList(null)
     setOnOff(false)
   };
@@ -111,7 +111,8 @@ function SearchAppBar(props) {
       name : event.currentTarget.value 
     }
 
-    
+    console.log(event.currentTarget.value)
+    console.log(event.currentTarget.value.length)
     
     if(event.currentTarget.value){
       axios.post('/api/users/list',body).then(response => {
@@ -119,13 +120,11 @@ function SearchAppBar(props) {
         setUserList(response.data)
       })
       setAnchorEl(event.currentTarget)
-    } else {
+    } else if(event.currentTarget.value.length === 0) {
       handleClose()
       setOnOff(false)
     }
     
-    setUserList(null)
-
  
   }
 
@@ -243,7 +242,9 @@ function SearchAppBar(props) {
               open={OnOff}
               onClose={handleClose}
             >
-              {UserList && UserList.map((item) => {
+              {
+               SearchValue && SearchValue.length !== 0 ?
+              UserList && UserList.map((item) => {
                 return (
                   <ListItem
                     key={item.name}
@@ -290,7 +291,11 @@ function SearchAppBar(props) {
                     />
                   </ListItem>
                 );
-              })}
+              })
+              
+              : null
+            }
+
             </List>
           </Search>
 

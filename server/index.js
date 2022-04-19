@@ -562,8 +562,7 @@ app.get('/api/baords/imageBoard/comment/:key',(req,res) => {
     console.log(List)
     
     ListArray = []
-    List.map((item,index) => {
-      console.log('item : '+item)
+    List.slice(0).reverse().map((item,index) => {
       ListArray.push(ArrayFunc(item))
     })
 
@@ -585,12 +584,13 @@ app.get('/api/baords/imageBoard/comment/:key',(req,res) => {
     }
 
     async.series(ListArray, function(err, result){
+      console.log(result)
       if(err) return console.log('async error')
       res.send(result)
     })
     // }
 
-  }).sort({"_id":-1})
+  }).sort({"index":-1})
   
   
 })

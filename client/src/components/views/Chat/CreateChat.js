@@ -1,3 +1,4 @@
+//버리는 컴포넌트
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { createChat } from '../../../_actions/chat_action'

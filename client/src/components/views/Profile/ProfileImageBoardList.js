@@ -85,7 +85,7 @@ function ProfileImageBoardList(props) {
 
       if(response.data.length === 0) {
         DataLess = true
-        alert("마지막 data 입니다.")
+        // alert("마지막 data 입니다.")
         return console.log('no data')
       }
 
@@ -152,43 +152,43 @@ function ProfileImageBoardList(props) {
   },[viewport,target.current])
 
   const onHoverHandler = (event) => {
-
+    event.stopPropagation()
     console.log('hover')
-    event.currentTarget.children[0].style=`color:white; display:block; padding-top:50%;`
+    event.currentTarget.children[1].style = 'display:blcok'
   }
 
   
   const onLeaveHandler = (event) => {
-
+    event.stopPropagation()
     console.log('leave')
-    event.currentTarget.children[0].style=`display:none`
+    event.currentTarget.children[1].style=`display:none`
   }
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  bgcolor: 'background.paper',
-  width:'1000px',
-  height:'500px',
-  boxShadow: 24,
-  p: 4,
-  padding:'0'
-};
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    bgcolor: 'background.paper',
+    width:'84vw',
+    height:'66vh',
+    boxShadow: 24,
+    p: 4,
+    padding:'0'
+  };
 
-const mobileStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  bgcolor: 'background.paper',
-  width:'90vw',
-  height:'82vh',
-  boxShadow: 24,
-  p: 4,
-  padding:'0'
-}
+  const mobileStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    bgcolor: 'background.paper',
+    width:'90vw',
+    height:'82vh',
+    boxShadow: 24,
+    p: 4,
+    padding:'0'
+  }
     
   return (
     <div>
@@ -221,25 +221,44 @@ const mobileStyle = {
             return (
               <ImageListItem
                 key={index}
-                sx={{ display: "inline-block" ,height:'100%',width:'100%'}}
+                sx={{
+                  margin: "auto",
+                  width:'100%',
+                  height:'100%'
+                }}
                 // ref={lastEl ? target : null}
+                onMouseEnter={onHoverHandler}
+                onMouseLeave={onLeaveHandler}
               >
                 <img
                   src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
                   srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
                   alt={item.name}
                   loading="lazy"
+                  
+                  style={{objectFit:'contain'}}
                 />
                 <div
-                  className='LeaveStyle'
-                  onClick={function () {
-                    setOpen(true);
-                    setParamKey(item._id);
-                  }}
-                  onMouseEnter={onHoverHandler}
-                  onMouseLeave={onLeaveHandler}
+                  className="LeaveStyle"
+                  style={{ display: "none" }}
+                  
                 >
-                  <div style={{ display: "none" }}>
+                  <div
+                    style={{
+                      display: "block",
+                      backgroundColor: "black",
+                      opacity:"0.4",
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    onClick={function () {
+                      setOpen(true);
+                      setParamKey(item._id);
+                    }}
+                  >
+                    
+                  </div>
+                  <div style={{position:'absolute',top:'calc(50% - 12px)',left:'calc(50% - 52.6px)',color:'white',zIndex:99}}>
                     <FavoriteIcon sx={{ verticalAlign: "middle" }} />
                     <span
                       style={{
@@ -258,7 +277,7 @@ const mobileStyle = {
                     >
                       {item.comment}
                     </span>
-                  </div>
+                    </div>
                 </div>
               </ImageListItem>
             );

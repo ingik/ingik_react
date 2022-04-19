@@ -41,7 +41,8 @@ function ImageBoard(props) {
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
 
-  const onLeftMove = (event) => {
+  const onLeftMove = () => {
+
     console.log(Number);
     if (Number <= 0) {
       return console.log("firstpage");
@@ -53,8 +54,8 @@ function ImageBoard(props) {
       ListRef.current.style.transition = "none";
       ListRef.current.style.transform = ListRef.current.style.transform + `translateX(-${ImgRef.current[Number].offsetWidth}px)`;
     }
-
-    Left().then(() => {
+    
+    Left().then(async() => {
       ListRef.current.style.transition = "300ms";
       ListRef.current.style.transform = ListRef.current.style.transform + `translateX(${ImgRef.current[Number - 1].offsetWidth}px)`;
     });
@@ -72,17 +73,16 @@ function ImageBoard(props) {
     console.log("ListRef.style.width : " + ListRef.current.style.width);
 
     ListRef.current.style.transition = "300ms";
-    ListRef.current.style.transform =
-    ListRef.current.style.transform + `translateX(-${ImgRef.current[Number].offsetWidth}px)`;
-
+    ListRef.current.style.transform = ListRef.current.style.transform + `translateX(-${ImgRef.current[Number].offsetWidth}px)`;
+    
     setTimeout(() => {
       console.log("none");
       ListRef.current.style.transition = "none";
-
-      // ListRef.current.style.width = ((ImageListValue.length-1) - Number) * MainRef.current.offsetWidth + "px";
+      
       ListRef.current.style.transform = ListRef.current.style.transform + `translateX(${ImgRef.current[Number].offsetWidth}px)`;
       ImgRef.current[Number].style.display = "none";
     }, 300);
+
   };
 
   useEffect(() => {
@@ -159,7 +159,7 @@ function ImageBoard(props) {
       },
     };
 
-    ScrollRef.current.scrollIntoView(true);
+    if(props.contentPosition === true) ScrollRef.current.scrollIntoView(true);
 
     axios.post("/api/boards/imageBoardComment", body).then((response) => {
       setComment("");
