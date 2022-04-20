@@ -484,6 +484,8 @@ app.get('/api/boards/imageBoard/:key',(req,res) => {
 
 })
 
+//profileList
+
 app.get('/api/boards/imageBoard/profileList/:key',(req,res) => {
 
   ImageBoard.find({ 'user': req.params.key },(err,board) => {
@@ -501,6 +503,43 @@ app.get('/api/boards/imageBoard/profileList/:key/:num',(req,res) => {
     if(err) return res.status(500).send({error: 'database failure'})
     return res.status(200).json(board)
   }).sort({_id:-1}).skip(index).limit(15)
+})
+
+//imageBoardDelete
+app.delete('/api/boards/imageBoard/delete/:key/:auth',auth,(req,res)=>{
+
+
+  console.log(req.user._id)
+  console.log(req.params.auth)
+
+  if (req.user._id == req.params.auth) {
+    ImageBoard.findOneAndDelete({ _id: req.params.key }, (err, board) => {
+      console.log("Ib delete");
+      if (err)
+        return res.status(500).send({ error: "imageBoard delete failure" });
+      return res.status(200).json(board);
+    });
+
+    Comment.findOneAndDelete({ boardId: req.params.key }, (err, comment) => {
+      console.log("cm delete");
+      if (err)
+        return res
+          .status(500)
+          .send({ error: "imageboard delete Comment failure" });
+    });
+
+    Recommand.findOneAndDelete(
+      { boardId: req.params.key },
+      (err, recommand) => {
+        console.log("rc delete");
+        if (err)
+          return res
+            .status(500)
+            .send({ error: "imageBoard delete Recommand failure" });
+      }
+    );
+  }
+
 })
 
 

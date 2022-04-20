@@ -16,12 +16,18 @@ function ImageBoardUser(props) {
 
   const UserSelectData = useSelector((state) => state.user.userData);
 
+  console.log(props.boardId)
+  console.log(UserSelectData._id)
 
   const history = useHistory();
   const [UserData, setUserData] = useState({});
 
   const [DialogOpen, setDialogOpen] = React.useState(false);
 
+  const handleOpen = () => {
+    setDialogOpen(true);
+
+  }
   const handleClose = () => {
     setDialogOpen(false);
   };
@@ -71,7 +77,13 @@ function ImageBoardUser(props) {
   }
 
   const onDeleteButton = () => {
-    setDialogOpen(true);
+
+    axios.delete('/api/boards/imageBoard/delete/'+props.boardId+'/'+UserSelectData._id).then(response => {
+      console.log(response.data)
+      setDialogOpen(false)
+      window.location.reload()
+
+    })
 
   }
 
@@ -142,7 +154,7 @@ function ImageBoardUser(props) {
         props.userId === UserSelectData._id ?
         <Button 
           sx={{float:'right'}}
-          onClick={onDeleteButton}
+          onClick={handleOpen}
         >
           <DeleteForeverIcon />
         </Button>
@@ -164,7 +176,7 @@ function ImageBoardUser(props) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} variant>삭제</Button>
+          <Button onClick={onDeleteButton} variant>삭제</Button>
           <Button onClick={handleClose} autoFocus>
             닫기
           </Button>

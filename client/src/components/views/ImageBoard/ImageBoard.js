@@ -205,7 +205,7 @@ function ImageBoard(props) {
           className={mediaQuery ? `rigthBox` : `rigthBoxSmall`}
         >
           <List>
-            <ImageBoardUser userId={UserData[0]?.user} />
+            <ImageBoardUser userId={UserData[0]?.user} boardId={UserData[0]?._id}/>
             <Divider />
           </List>
 
@@ -277,7 +277,7 @@ function ImageBoard(props) {
         <div className='bottomBoxSmall' >
           <List sx={{ display: "inline-block" }}>
             <ListItem>
-              <ImageBoardUser userId={UserData[0]?.user} />
+              <ImageBoardUser userId={UserData[0]?.user} boardId={UserData[0]?._id} />
               <div style={{ display: "inline-block", marginLeft: "5px" }}>
                 {" "}
                 {UserData[0]?.content}
