@@ -36,9 +36,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser());
 
-
-process.ENV = "qa"
-
 mongoose.connect(config.mongoURI,{
     useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false
 }).then(() => console.log('MongoDB Connencted...'))
