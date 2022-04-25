@@ -792,15 +792,10 @@ app.post('/api/DirectMessage/input/',(req,res) => {
 const Server = require('socket.io');
 const { time } = require('console');
 
-const URL =
-  process.env.NODE_ENV 
-    ? 'http://3.36.133.116:5000'
-    : 'http://localhost:3000';
-
 const server = require('http').Server(app);
 const io = Server(server,{
   cors: {
-    origin: [URL],
+    origin: ["http://3.36.133.116:5000","http://localhost:3000","http://3.36.133.116:5555"],
     methods:["GET","POST"],
 }
 });
