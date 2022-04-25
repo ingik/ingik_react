@@ -10,8 +10,8 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 const localhost =
   process.env.NODE_ENV 
-    ? 'http://3.36.133.116:5000'
-    : 'http://localhost:5000';
+    ? 'http://3.36.133.116:5555'
+    : 'http://localhost:5555';
 
 
 
@@ -73,9 +73,7 @@ function DMList(props) {
       if(ChatRoomId){
       console.log('socket start')
 
-        socket = io.connect(localhost,{
-          cors: { origin: '*' }
-        })
+        socket = io.connect(localhost,{ transports: ['websocket'] })
         
         console.log('RoomId : '+ChatRoomId)
         socket.emit('joinRoom', ChatRoomId)
