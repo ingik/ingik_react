@@ -7,6 +7,8 @@ import axios from "axios";
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import { useSelector } from "react-redux";
+import './Chat.css';
+
 
 import useMediaQuery from '@mui/material/useMediaQuery';
 
@@ -37,7 +39,7 @@ const Search = styled('div')(({ theme }) => ({
     marginLeft: 0,
     width: '100%',
     [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
+      // marginLeft: theme.spacing(3),
       width: 'auto',
     },
   }));
@@ -179,7 +181,9 @@ function ChatAddUser(props) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={Modalstyle}>
-        <Search>
+        <Search 
+          sx={{margin:0}}
+        >
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>

@@ -22,7 +22,9 @@
 .mediaLarge::-webkit-scrollbar{
     display:none;
 }
-
+.CmpList::-webkit-scrollbar{
+    display: none;
+}
 
 /* .mainUpRefSmall::-webkit-scrollbar{
     display:none;
