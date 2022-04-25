@@ -142,6 +142,19 @@ function ImageBoard(props) {
     padding: "0",
   };
 
+  const mobileStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    bgcolor: 'background.paper',
+    width:'90vw',
+    height:'82vh',
+    boxShadow: 24,
+    p: 4,
+    padding:'0'
+  }
+
   const onSubmitHandler = (event) => {
     // event.preventDefault();
 
@@ -329,7 +342,9 @@ function ImageBoard(props) {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-            <Box sx={style}>
+            <Box sx={mediaQuery ?
+                    style :
+                    mobileStyle  }>
               <ImageBoard
                 paramKey={props.paramKey}
                 contentPosition={true}

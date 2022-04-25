@@ -10,9 +10,9 @@ let serverLocation
 if(process.NODE_ENV === 'production'){
     
 } else if(process.NODE_ENV === 'qa') {
-    serverLocation = 'ingikbucket/boardImage_QA'
+    serverLocation = 'ingikbucket/boardImage_QA/'
 } else {
-    serverLocation = 'ingikbucket/boardImage'
+    serverLocation = 'ingikbucket/boardImage/'
 }
 
 
