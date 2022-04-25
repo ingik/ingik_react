@@ -795,7 +795,7 @@ const { time } = require('console');
 const server = require('http').Server(app);
 const io = Server(server,{
   cors: {
-    origin: ["http://3.36.133.116:5000","http://localhost:3000","http://3.36.133.116:5555"],
+    origin: "*",
     methods:["GET","POST"],
 }
 });
