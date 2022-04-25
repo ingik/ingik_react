@@ -10,8 +10,8 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 const localhost =
   process.env.NODE_ENV 
-    ? 'http://3.36.133.116:5555'
-    : 'http://localhost:5555';
+    ? 'http://3.36.133.116:5000'
+    : 'http://localhost:5000';
 
 
 
