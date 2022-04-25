@@ -6,10 +6,14 @@ import { io } from 'socket.io-client';
 import './Chat.css';
 
 import useMediaQuery from '@mui/material/useMediaQuery';
+
+
 const localhost =
   process.env.NODE_ENV 
     ? 'http://3.36.133.116:5555'
     : 'http://localhost:5555';
+
+
 
 let socket
 
@@ -69,7 +73,9 @@ function DMList(props) {
       if(ChatRoomId){
       console.log('socket start')
 
-        socket = io.connect(localhost)
+        socket = io.connect(localhost,{
+          cors: { origin: '*' }
+        })
         
         console.log('RoomId : '+ChatRoomId)
         socket.emit('joinRoom', ChatRoomId)
