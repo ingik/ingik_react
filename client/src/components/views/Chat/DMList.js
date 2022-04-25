@@ -73,9 +73,7 @@ function DMList(props) {
       if(ChatRoomId){
       console.log('socket start')
 
-        socket = io.connect(localhost,{
-          cors: { origin: '*' }
-        })
+        socket = io.connect(localhost)
         
         console.log('RoomId : '+ChatRoomId)
         socket.emit('joinRoom', ChatRoomId)
