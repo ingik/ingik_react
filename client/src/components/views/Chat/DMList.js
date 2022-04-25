@@ -13,7 +13,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 //     ? 'http://3.36.133.116:5555'
 //     : 'http://localhost:5555';
 
-const localhost = "http://localhost:5555"
+const localhost = "http://localhost:5000"
 
 let socket
 
