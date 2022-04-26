@@ -156,7 +156,6 @@ function ImageBoardList(props) {
 
       if(response.data.length === 0) {
         DataLess = true
-        alert("마지막 data 입니다.")
         return console.log('last data')
       }
 

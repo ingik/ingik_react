@@ -33,6 +33,7 @@ function ImageBoardUpload(props) {
   const [ImageActive, setImageActive] = useState(null)
   const [ButtonCheck, setButtonCheck] = useState(null)
   const [HeightCheck, setHeightCheck] = useState(false)
+  const [MoblieKeyboard, setMobileKeyboard] = useState(false)
   
   const ImgRef = useRef()
   ImgRef.current=[];
@@ -386,6 +387,9 @@ const resizeWindow = () => {
   const uploadContentBoxSmall = {
     height:"17vh"
   }
+  const uploadContentBoxSmallMobile = {
+    height:"42vh"
+  }
 
   // const onCheckButton = () => {
   //   if(ImageActive === true && ButtonCheck === true){
@@ -405,6 +409,18 @@ const resizeWindow = () => {
   const FocusOut = () => {
     MainRef.current.style.display = `inline-block`
     // setButtonCheck(false)
+  }
+
+  const onCommentFocus = () => {
+    MainRef.current.style.display = 'none'
+    setMobileKeyboard(true)
+    // uploadContentBoxSmall.height = '40vh'
+  }
+  
+  const onCommentBlur = () => {
+    MainRef.current.style.display = 'inline-block'
+    setMobileKeyboard(false)
+    // uploadContentBoxSmall.height = '17vh'
   }
 
   return (
@@ -487,14 +503,17 @@ const resizeWindow = () => {
               onChange={onContentHander}
               sx={{ width: "100%" }}
               multiline={true}
-              inputProps={{ style: mediaQuery ? uploadContentBox : uploadContentBoxSmall }}
+              inputProps={{ style: mediaQuery ? uploadContentBox : (MoblieKeyboard ? uploadContentBoxSmallMobile : uploadContentBoxSmall) }}
               placeholder={ImageActive ?  `내용을 입력해주세요` : `이미지를 추가해주세요`}
               size="500"
               row="500"
               disabled={ImageActive ? false : true}
               ref={TextRef}
-              onFocus={() => mediaQuery ? null : (HeightCheck ? FocusOn() : null)}
-              onBlur={() => mediaQuery ? FocusOut() : FocusOut()}
+              
+              onFocus={mediaQuery ? null : onCommentFocus}
+              onBlur={mediaQuery ? null : onCommentBlur}
+              // onFocus={() => mediaQuery ? null : (HeightCheck ? FocusOn() : null)}
+              // onBlur={() => mediaQuery ? FocusOut() : FocusOut()}
             />
           </div>
           <div

@@ -22,6 +22,8 @@ function ProfileImageBoardList(props) {
   const handleClose = () => setOpen(false);
   const [ParamKey, setParamKey] = useState("")
 
+  const [NullData,setNullData] = useState(false)
+
   const viewport = useRef(null)
   const target = useRef(null)
   const imageListRef = useRef(null)
@@ -68,6 +70,11 @@ function ProfileImageBoardList(props) {
       }
 
       AsyncFunc().then(() => {
+        console.log(value)
+        if(value.length === 0) {
+          console.log('nullData')
+          setNullData(true)
+        }
         setPreviewList(value)
         setloading(true)
         try {
@@ -218,6 +225,7 @@ function ProfileImageBoardList(props) {
               }}
             />
         }
+        
         <ImageList
           className={ mediaQuery 
             ? `profileMediaSmall`
@@ -299,6 +307,11 @@ function ProfileImageBoardList(props) {
           ></div>
         </ImageList>
       </Box>
+        {
+          NullData 
+          ? <div style={{textAlign:'centor' , marginTop:'25vh'}}>데이터가 없습니다.</div>
+          : null
+        }
 
       <Modal
         open={open}

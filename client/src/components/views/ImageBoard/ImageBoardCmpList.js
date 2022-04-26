@@ -45,7 +45,10 @@ function ImageBoardCmpList() {
 
     
   return (
-  <div style={{paddingTop:'64px'}}>
+  <div
+    className='CmpList'
+    style={{paddingTop:'64px'}}
+    >
     {DataList.map((item) => {
       return (
         <div key={item._id}

@@ -16,6 +16,11 @@ function RegisterPage(props) {
     const [UnEmail, setUnEmail] = useState(false)
     const [UnName, setUnName] = useState(false)
 
+    const [BoolPassword,setBoolPassword] = useState(false)
+    const [NotPassword,setNotPassword] = useState(false)
+    const [NotEmail,setNotEmail] = useState(false)
+    const [NotConfirmPassword,setNotConfirmPassword] = useState(false)
+
     const [Email, setEmail] = useState("")
     const [EmailAlert,setEamilAlert] = useState("")
     const [EmailAlertError,setEmailAlertError] = useState(true)
@@ -77,7 +82,8 @@ function RegisterPage(props) {
 
             console.log('emailRegex')
             setPassword(event.currentTarget.value)
-            setPasswordAlert("Password format is incorrect.")
+            // setPasswordAlert("Password format is incorrect.")
+            setPasswordAlert("영문, 숫자 및 특수문자 혼용 8글자 이상")
             setPasswordAlertError(false)
 
         }else{
@@ -100,7 +106,7 @@ function RegisterPage(props) {
         }else if(event.currentTarget.value !== Password){
 
             setConfirmPassword(event.currentTarget.value)
-            setConfirmPasswordAlert("Password is incorrect")
+            setConfirmPasswordAlert("Confirm Password is incorrect")
             setConfirmPasswordAlertError(false)
         }else {
 
@@ -113,33 +119,38 @@ function RegisterPage(props) {
     
     const onSubmitHandler = (event) => {
         event.preventDefault();
-        if(!Name && !Email && !Password && !ConfirmPassword){
-          
-          setUnSubmit(true)
+        if (!Name && !Email && !Password && !ConfirmPassword) {
+          setUnSubmit(true);
         } else {
           if (Password !== ConfirmPassword) {
-            return alert("비밀번호가 맞지 않습니다.");
+            return setBoolPassword(true)
+          } else if (!EmailAlertError) {
+            return setNotEmail(true)
+          } else if (!PasswordAlertError){
+            return setNotPassword(true)
+          }else if (!ConfirmPasswordAlertError){
+            return setNotConfirmPassword(true)
+          }else {
+            let body = {
+              name: Name,
+              email: Email,
+              password: Password,
+            };
+
+            // axios.post('/api/users/findEmail')
+
+            dispatch(registUser(body)).then((response) => {
+              console.log(response);
+              if (response.payload.success === true) {
+                console.log("(Register)dispatch");
+                props.history.push("/login");
+              } else if (response.payload.emailcheck === false) {
+                setUnEmail(true);
+              } else if (response.payload.namecheck === false) {
+                setUnName(true);
+              }
+            });
           }
-
-          let body = {
-            name: Name,
-            email: Email,
-            password: Password,
-          };
-
-          // axios.post('/api/users/findEmail')
-
-          dispatch(registUser(body)).then((response) => {
-            console.log(response);
-            if (response.payload.success === true) {
-              console.log("(Register)dispatch");
-              props.history.push("/login");
-            } else if(response.payload.emailcheck === false) {
-              setUnEmail(true)
-            } else if(response.payload.namecheck === false){
-              setUnName(true)
-            }
-          });
         }
     
     }
@@ -151,6 +162,9 @@ function RegisterPage(props) {
 
     const onNameCheck = () => {
 
+      if(!Name){
+        setUsable(true)
+      }else{
       let body = {
         username : Name
       }
@@ -162,6 +176,7 @@ function RegisterPage(props) {
           setUnUsable(true)
         }
       })
+    }
 
     }
 
@@ -172,6 +187,11 @@ function RegisterPage(props) {
       setUnSubmit(false)
       setUnEmail(false)
       setUnName(false)
+
+      setBoolPassword(false)
+      setNotPassword(false)
+      setNotEmail(false)
+      setNotConfirmPassword(false)
     };
 
     return (
@@ -331,6 +351,66 @@ function RegisterPage(props) {
               sx={{ width: "100%" }}
             >
               중복 된 이름입니다.
+            </Alert>
+          </Snackbar>
+
+          <Snackbar
+            open={BoolPassword}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            // anchorOrigin={{ horizontal, vertical }}
+          >
+            <Alert
+              onClose={handleClose}
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              비밀번호가 서로 맞지 않습니다.
+            </Alert>
+          </Snackbar>
+
+          <Snackbar
+            open={NotEmail}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            // anchorOrigin={{ horizontal, vertical }}
+          >
+            <Alert
+              onClose={handleClose}
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              이메일이 맞지 않습니다.
+            </Alert>
+          </Snackbar>
+
+          <Snackbar
+            open={NotPassword}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            // anchorOrigin={{ horizontal, vertical }}
+          >
+            <Alert
+              onClose={handleClose}
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              비밀번호가 맞지 않습니다.
+            </Alert>
+          </Snackbar>
+
+          <Snackbar
+            open={NotConfirmPassword}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            // anchorOrigin={{ horizontal, vertical }}
+          >
+            <Alert
+              onClose={handleClose}
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              확인비밀번호가 맞지 않습니다.
             </Alert>
           </Snackbar>
         </form>

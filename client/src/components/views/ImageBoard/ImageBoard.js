@@ -156,8 +156,10 @@ function ImageBoard(props) {
   }
 
   const onSubmitHandler = (event) => {
-    // event.preventDefault();
+    
+    event.preventDefault();
 
+    if(Comment.length !== 0){
     setCommentStatus((prevState) => {
       return prevState + 1;
     });
@@ -183,9 +185,17 @@ function ImageBoard(props) {
         console.log("Comment Data null");
       }
     });
+  } else{
+    console.log('no Value')
+    return false
+  }
+
+
   };
 
   const onCommentHandler = (event) => {
+    event.preventDefault();
+
     setComment(event.currentTarget.value);
   };
 
@@ -195,17 +205,30 @@ function ImageBoard(props) {
 
   const ScrollRef = useRef(null)
 
-  const onCheckEnter = (event) => {
-    event.preventDefault();
-    if (event.key === "Enter") {
-      onSubmitHandler();
-    }
-  };
+  // const onCheckEnter = (event) => {
+  //   // event.preventDefault();
+  //   if(!event.target.value){
+  //     return ;
+  //   }
+
+  //   if (event.key === "Enter") {
+  //     onSubmitHandler();
+  //   }
+  // };
 
   const onModalHandler = (event) => {
     setOpen(true);
   };
 
+  const onCommentFocus = () => {
+    MainRef.current.style.display = 'none'
+    ScrollRef.current.style.height = '46vh'
+  }
+  
+  const onCommentBlur = () => {
+    MainRef.current.style.display = 'inline-block'
+    ScrollRef.current.style.height = '14vh'
+  }
 
   function ContentBox() {
     console.log();
@@ -263,16 +286,20 @@ function ImageBoard(props) {
             <form
               onSubmit={onSubmitHandler}
               style={{ width: "100%" }}
-              onKeyPress={onCheckEnter}
+              // onKeyPress={onCheckEnter}
             >
               <TextField
                 value={Comment}
                 onChange={onCommentHandler}
                 style={{ width: "100%", padding: "0" }}
                 variant="outlined"
+                onFocus={mediaQuery ? null : onCommentFocus}
+                onBlur={mediaQuery ? null : onCommentBlur}
                 InputProps={{
                   endAdornment: (
-                    <Button onClick={onSubmitHandler} postion="end">
+                    <Button onClick={onSubmitHandler} postion="end"
+                      disabled={Comment ? false : true}
+                    >
                       작성
                     </Button>
                   ),
@@ -298,9 +325,11 @@ function ImageBoard(props) {
             </ListItem>
           </List>
 
-          <div onClick={onModalHandler}>더보기</div>
+
+          <div style={{margin:'8px 16px'}}>
+          <div onClick={onModalHandler} style={{margin:'5px 0'}}>댓글보기..</div>
           <Divider />
-          <div className="buttonMenu">
+          <div className="buttonMenu" style={{margin:'5px 0'}}>
             <RecommandCmp
               boardId={UserData[0]?._id}
               recommandId={UserSelectData._id}
@@ -334,6 +363,7 @@ function ImageBoard(props) {
                 }}
               ></TextField>
             </form>
+          </div>
           </div>
 
           <Modal
