@@ -20,12 +20,27 @@ const Modalstyle = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: "50vw",
-  minWidth:'330px',
-  height:"80vh",
+  minWidth:'350px',
+  height:"60vh",
   bgcolor: "white",
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
+};
+
+const ModalstyleSmall = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "50vw",
+  minWidth:'350px',
+  height:"60vh",
+  bgcolor: "white",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+  padding:'4px'
 };
 
 const Search = styled('div')(({ theme }) => ({
@@ -180,7 +195,7 @@ function ChatAddUser(props) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={Modalstyle}>
+        <Box sx={mediaQuery ? Modalstyle : ModalstyleSmall }>
         <Search 
           sx={{margin:0}}
         >
