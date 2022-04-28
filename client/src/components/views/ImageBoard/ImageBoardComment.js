@@ -1,4 +1,4 @@
-import { Avatar, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ListItem, Typography } from '@mui/material';
+import { Avatar, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ListItem, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 
@@ -16,6 +16,8 @@ function ImageBoardComment(props) {
     userId:"",
     content:""
   })
+  const [loading, setloading] = useState(false)
+  const [Value,setValue] = useState(0)
 
   const userData = useSelector(state => state.user.userData )
   
@@ -31,7 +33,7 @@ function ImageBoardComment(props) {
 
     return () => CleanUpBoolean = false
     
-  },[props])
+  },[props,Value])
 
   const onEnter = (event) => {
     if(event.target.children[2]){
@@ -61,12 +63,25 @@ function ImageBoardComment(props) {
     console.log(DeleteData)
     axios.delete('/api/boards/imageBoard/comment/delete/'+DeleteData.boardId+'/'+DeleteData.userId+'/'+DeleteData.content).then((response) => {
       console.log(response.data)
+      setDialogOpen(false);
+      setValue(Value => ++Value)
     })
   }
   
       
   return (
     <div>
+      {
+          loading 
+          ? null 
+          : <CircularProgress
+              sx={{
+                position:'absolute',
+                top:'50%',
+                left:'50%'
+              }}
+            />
+        }
       {ListComment &&
         ListComment.map((item, index) => {
           return (
