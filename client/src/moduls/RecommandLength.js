@@ -4,24 +4,20 @@ import React, { useEffect, useState } from 'react'
 function RecommandLength(props) {
 
     const [Length, setLength] = useState("")
-    // const [RecommandState,setRecommandState] = useState(false)
     console.log('RecommandLength')
-    console.log(props)
     
 
     useEffect(()=>{
 
         let ComponentMounted = true;
-        if (props.boardId) {
           axios
             .get("/api/boards/recommandLength/" + props.boardId)
             .then((response) => {
               if (ComponentMounted) {
-                console.log(response.data[0].recommand.length);
-                setLength(response.data[0].recommand.length);
+                console.log(response.data[0]?.recommand.length);
+                setLength(response.data[0]?.recommand.length);
               }
             });
-        }
         
 
         return () => ComponentMounted = false
@@ -36,4 +32,4 @@ function RecommandLength(props) {
    
 }
 
-export default React.memo(RecommandLength)
+export default RecommandLength

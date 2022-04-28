@@ -119,9 +119,9 @@ function RegisterPage(props) {
     
     const onSubmitHandler = (event) => {
         event.preventDefault();
-        if (!Name && !Email && !Password && !ConfirmPassword) {
-          setUnSubmit(true);
-        } else {
+
+        if (Name && Email && Password && ConfirmPassword) {
+
           if (Password !== ConfirmPassword) {
             return setBoolPassword(true)
           } else if (!EmailAlertError) {
@@ -131,13 +131,12 @@ function RegisterPage(props) {
           }else if (!ConfirmPasswordAlertError){
             return setNotConfirmPassword(true)
           }else {
+
             let body = {
               name: Name,
               email: Email,
               password: Password,
             };
-
-            // axios.post('/api/users/findEmail')
 
             dispatch(registUser(body)).then((response) => {
               console.log(response);
@@ -151,6 +150,11 @@ function RegisterPage(props) {
               }
             });
           }
+          
+        } else {
+          
+          setUnSubmit(true);
+
         }
     
     }

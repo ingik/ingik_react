@@ -354,6 +354,8 @@ const mobileStyle = {
           }
           cols={3}
           ref={imageListRef}
+          // rowHeight="250"
+          variant='quilted'
         >
           {PreviewList && PreviewList.map((item, index) => {
             return (
@@ -376,9 +378,22 @@ const mobileStyle = {
                   srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
                   alt={item.name}
                   loading="lazy"
-                  
                   style={{objectFit:'contain'}}
                 />
+                {/* <div
+                  style={{
+                    objectFit: "scale-down",
+                    backgroundImage:`url(${item.img})`,
+                    backgroundPosition:'center center',
+                    backgroundRepeat:'no-repeat',
+                    backgroundSize:'contain',
+                    width:'100%',
+                    height:'100%'
+
+                  }}
+                >
+                  
+                </div> */}
                 <div
                   className="LeaveStyle"
                   style={{ display: "none" }}

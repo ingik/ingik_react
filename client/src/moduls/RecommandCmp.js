@@ -1,20 +1,19 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Recommand from './Recommand'
 import UnRecommand from './UnRecommand'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import RecommandLength from './RecommandLength';
+import RecommandLength from './RecommandLength'
 
 function RecommandCmp(props) {
 
     const [RecommandDisplay, setRecommandDisplay] = useState(false)
-    
-    console.log(props)
+    const [RecommandUpdate, setRecommandUpdate] = useState(null)
     
     useEffect(() => {
         
-      console.log('Recommand')
+      console.log('RecommandCmp')
 
         let body = {
           boardId: props.boardId,
@@ -35,16 +34,24 @@ function RecommandCmp(props) {
     
         })
     
-      },[props.recommandId,props.boardId,RecommandDisplay])
+      },[props])
     
     const onRecommandHandler = () => {
-        setRecommandDisplay(Recommand(props.boardId, props.recommandId)) 
-        props.getRec(1)
+      console.log('click')
+      async function update(){
+        await setRecommandDisplay(Recommand(props.boardId, props.recommandId)) 
+        setRecommandUpdate(true)
+      } 
+      update()
     }
     
     const onUnRecommandHanler = () => {
-        setRecommandDisplay(UnRecommand(props.boardId, props.recommandId)) 
-        props.getRec(2)
+        console.log('Unclick')
+        async function update(){
+          await setRecommandDisplay(UnRecommand(props.boardId, props.recommandId)) 
+          setRecommandUpdate(false)
+        }
+        update()
     }
 
     const RecommandFunc = () => {
@@ -58,8 +65,10 @@ function RecommandCmp(props) {
   return (
     <React.Fragment>
         { RecommandFunc() }
+        <div style={{verticalAlign:'middle',display:'inline-block', margin:'0 3px 0 5px'}}>좋아요</div>
+        <RecommandLength boardId={props.boardId} RecDisplay={RecommandUpdate}/>
     </React.Fragment>
   )
 }
 
-export default RecommandCmp
+export default React.memo(RecommandCmp)

@@ -309,7 +309,7 @@ function ProfileImageBoardList(props) {
       </Box>
         {
           NullData 
-          ? <div style={{textAlign:'centor' , marginTop:'25vh'}}>데이터가 없습니다.</div>
+          ? <div style={{textAlign:'center' , marginTop:'25vh'}}>데이터가 없습니다.</div>
           : null
         }
 

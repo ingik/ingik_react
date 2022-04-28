@@ -3,7 +3,7 @@ import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import CloseIcon from '@mui/icons-material/Close';
 import React, { useState } from 'react';
-import { Avatar, Fab, TextField } from '@mui/material';
+import { Alert, Avatar, Fab, Snackbar, TextField } from '@mui/material';
 import { useEffect } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import axios from 'axios';
@@ -15,10 +15,16 @@ export default function ProfileUpdate(props) {
   const [OnSideBar, setOnSideBar] = useState(false)
   const dispatch = useDispatch()
 
+  const [Id, setId] = useState("")
   const [Name, setName] = useState("")
   const [Email, setEmail] = useState("")
   const [Intro, setIntro] = useState("")
   const [Image, setImage] = useState("")
+
+  const [UnSubmit, setUnSubmit] = useState(false)
+  const [UnEmail, setUnEmail] = useState(false)
+  const [UnName, setUnName] = useState(false)
+
   const [ProfileImage, setProfileImage] = useState({})
 
   const [PreImage, setPreImage] = useState("")
@@ -33,6 +39,7 @@ export default function ProfileUpdate(props) {
   useEffect(() => {
     // console.log('(useEffect) : '+JSON.stringify(props.user))
     if(props.user){
+      setId(props.user._id)
       setName(props.user.name)
       setEmail(props.user.email)
       if(props.user.intro) setIntro(props.user?.intro)
@@ -41,6 +48,7 @@ export default function ProfileUpdate(props) {
         setPreImage(props.user?.image)
       }
     }
+
   }, [props])
 
 
@@ -90,7 +98,8 @@ export default function ProfileUpdate(props) {
 
 
     const Data = new FormData();
-    Data.append("stringData", Name)
+    // Data.append("stringData", Name)
+    Data.append("stringData", Id)
     Data.append("stringImage",PreImage)
     Data.append("imageData", ProfileImage);
 
@@ -112,18 +121,34 @@ export default function ProfileUpdate(props) {
             name: Name,
             email: Email,
             intro: Intro,
+            nameBefore: props.user.name,
+            emailBefore: props.user.email,
+            introBefore: props.user.intro,
+            imageBefore: props.user.image,
             updateImage: response.data.location,
           };
-        
-          console.log("body : " + JSON.stringify(body));
-          
-          dispatch(authUpdate(body)).then( response => {
-            if(response.payload){
-              console.log("complete update")
-            }
-          })
 
-            setOnSideBar(false);
+          if (Name && Email) {
+            console.log("body : " + JSON.stringify(body));
+
+            dispatch(authUpdate(body)).then((response) => {
+              if (response.payload.success === true) {
+                console.log("complete update");
+                setOnSideBar(false);
+              } else if (response.payload.emailcheck === false) {
+                console.log('email error')
+                setUnEmail(true);
+              } else if (response.payload.namecheck === false) {
+                console.log('name error')
+                setUnName(true);
+              }
+            });
+
+          } else {
+          
+            setUnSubmit(true);
+  
+          }
       });
 
   };
@@ -132,8 +157,22 @@ export default function ProfileUpdate(props) {
   const onClose = () => {
     toggleDrawer(false)
     setOnSideBar(false)
-    setImage(props.user.image)
+    setId(props.user._id)
+      setName(props.user.name)
+      setEmail(props.user.email)
+      if(props.user.intro) setIntro(props.user?.intro)
+      if(props.user.image) {
+        setImage(props.user?.image)
+        setPreImage(props.user?.image)
+      }
   }
+
+  const handleClose = () => {
+      
+    setUnSubmit(false)
+    setUnEmail(false)
+    setUnName(false)
+  };
 
 
 
@@ -273,6 +312,53 @@ export default function ProfileUpdate(props) {
             onClose={toggleDrawer(false)}
           >
             {list()}
+
+            <Snackbar
+            open={UnSubmit}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            // anchorOrigin={{ horizontal, vertical }}
+          >
+            <Alert
+              onClose={handleClose}
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              전부 입력 해주세요.
+            </Alert>
+            </Snackbar>
+
+
+            <Snackbar
+            open={UnEmail}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            // anchorOrigin={{ horizontal, vertical }}
+          >
+            <Alert
+              onClose={handleClose}
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              중복 된 이메일입니다.
+            </Alert>
+          </Snackbar>
+
+          <Snackbar
+            open={UnName}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            // anchorOrigin={{ horizontal, vertical }}
+          >
+            <Alert
+              onClose={handleClose}
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              중복 된 이름입니다.
+            </Alert>
+          </Snackbar>
+
           </Drawer>
         </React.Fragment>
   );

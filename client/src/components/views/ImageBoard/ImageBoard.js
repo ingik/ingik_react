@@ -200,21 +200,8 @@ function ImageBoard(props) {
   };
 
   const memoCommentStatus = useMemo(() => CommentStatus, [CommentStatus]);
-
-  const [RecState, setRecState] = useState(0);
-
   const ScrollRef = useRef(null)
 
-  // const onCheckEnter = (event) => {
-  //   // event.preventDefault();
-  //   if(!event.target.value){
-  //     return ;
-  //   }
-
-  //   if (event.key === "Enter") {
-  //     onSubmitHandler();
-  //   }
-  // };
 
   const onModalHandler = (event) => {
     setOpen(true);
@@ -267,26 +254,14 @@ function ImageBoard(props) {
             <RecommandCmp
               boardId={UserData[0]?._id}
               recommandId={UserSelectData._id}
-              getRec={setRecState}
             />
-            <div
-              style={{
-                margin: "5px 0 5px",
-                display: "inline-block",
-                verticalAlign: "middle",
-                margin: "5px",
-              }}
-            >
-              좋아요
-            </div>
-            <RecommandLength boardId={UserData[0]?._id} testRec={RecState} />
+            
           </div>
 
           <div className="commentCreate" style={{ width: "100%" }}>
             <form
               onSubmit={onSubmitHandler}
               style={{ width: "100%" }}
-              // onKeyPress={onCheckEnter}
             >
               <TextField
                 value={Comment}
@@ -294,7 +269,7 @@ function ImageBoard(props) {
                 style={{ width: "100%", padding: "0" }}
                 variant="outlined"
                 onFocus={mediaQuery ? null : onCommentFocus}
-                onBlur={mediaQuery ? null : onCommentBlur}
+                onFocusOut={mediaQuery ? null : onCommentBlur}
                 InputProps={{
                   endAdornment: (
                     <Button onClick={onSubmitHandler} postion="end"
@@ -333,19 +308,7 @@ function ImageBoard(props) {
             <RecommandCmp
               boardId={UserData[0]?._id}
               recommandId={UserSelectData._id}
-              getRec={setRecState}
             />
-            <div
-              style={{
-                margin: "5px 0 5px",
-                display: "inline-block",
-                verticalAlign: "middle",
-                margin: "5px",
-              }}
-            >
-              좋아요
-            </div>
-            <RecommandLength boardId={UserData[0]?._id} testRec={RecState} />
           </div>
           <div className="commentCreate" style={{ width: "100%" }}>
             <form onSubmit={onSubmitHandler}>

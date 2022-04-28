@@ -511,9 +511,7 @@ const resizeWindow = () => {
               ref={TextRef}
               
               onFocus={mediaQuery ? null : onCommentFocus}
-              onBlur={mediaQuery ? null : onCommentBlur}
-              // onFocus={() => mediaQuery ? null : (HeightCheck ? FocusOn() : null)}
-              // onBlur={() => mediaQuery ? FocusOut() : FocusOut()}
+              onFocusOut={mediaQuery ? null : onCommentBlur}
             />
           </div>
           <div

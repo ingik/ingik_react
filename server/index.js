@@ -215,13 +215,120 @@ app.post('/api/users/profileUpdate', auth , (req,res) => {
   let imageUrl = req.body.updateImage
   user.image = imageUrl
 
-  User.findOneAndUpdate({_id : req.user._id ,name : req.user.name},
-    {$set: { 'name':user.name , 'email':user.email,'intro':user.intro, 'image':user.image }},
-  (err,user) => {
+  console.log(req.body)
 
-    if(err) return res.status(500).send({ error: 'profileUpdate failure'})
-    return res.status(200).json(user)
-  })
+  if(req.body.emailBefore !== req.body.email && req.body.nameBefore === req.body.name ){
+
+    User.findOne({email : req.body.email },(err,userEmail) => {
+      if(err) return res.json({ check:false, err })
+      if(!userEmail) {
+        User.findOneAndUpdate({_id : req.user._id ,name : req.user.name},
+          {$set: {'email':user.email,'intro':user.intro }},
+        (err,user) => {
+      
+          if(err) return res.status(500).send({ error: 'profileUpdate failure'})
+          return res.status(200).json({success:true})
+        })
+      }
+      if(userEmail) return res.json({emailcheck:false})
+    })
+
+  } else if( req.body.emailBefore === req.body.email && req.body.nameBefore !== req.body.name ){
+
+    User.findOne({ name: req.body.name }, (err, userName) => {
+      if (!userName) {
+
+        if(req.body.image !== req.body.imageBefore){
+
+          User.findOneAndUpdate({_id : req.user._id},
+            {$set: { 'image':user.image }},
+          (err,user) => {
+        
+            if(err) return res.status(500).send({ error: 'profileUpdate failure'})
+          })
+    
+        }
+        
+        User.findOneAndUpdate({_id : req.user._id ,name : req.user.name},
+          {$set: { 'name':user.name ,'intro':user.intro}},
+        (err,user) => {
+      
+          if(err) return res.status(500).send({ error: 'profileUpdate failure'})
+          return res.status(200).json({success:true})
+        })
+      }
+      if(err) return res.json({ check:false, err })
+      if(userName) return res.json({ namecheck: false });
+      
+    });
+
+  } else if(req.body.emailBefore !== req.body.email && req.body.nameBefore !== req.body.name){
+
+    User.findOne({email : req.body.email },(err,userEmail) => {
+      if(!userEmail) {
+
+        User.findOne({name : req.body.name },(err,userName) => {
+          if(!userName) {
+
+            if(req.body.image !== req.body.imageBefore){
+
+              User.findOneAndUpdate({_id : req.user._id},
+                {$set: { 'image':user.image }},
+              (err,user) => {
+            
+                if(err) return res.status(500).send({ error: 'profileUpdate failure'})
+              })
+        
+            }
+
+            User.findOneAndUpdate({_id : req.user._id ,name : req.user.name},
+              {$set: { 'name':user.name , 'email':user.email,'intro':user.intro }},
+            (err,user) => {
+          
+              if(err) return res.status(500).send({ error: 'profileUpdate failure'})
+              return res.status(200).json({success:true})
+            })
+
+          }
+          if(err) return res.json({ check:false, err })
+          if(userName) return res.json({namecheck:false})
+        })
+
+      }
+      if(err) return res.json({ check:false, err })
+      if(userEmail) return res.json({emailcheck:false})
+    })
+
+  } else {
+
+    if(req.body.image !== req.body.imageBefore){
+
+      User.findOneAndUpdate({_id : req.user._id},
+        {$set: { 'image':user.image }},
+      (err,user) => {
+    
+        if(err) return res.status(500).send({ error: 'profileUpdate failure'})
+      })
+
+    }
+
+    User.findOneAndUpdate({_id : req.user._id ,name : req.user.name},
+      {$set: { 'name':user.name , 'email':user.email,'intro':user.intro }},
+    (err,user) => {
+  
+      if(err) return res.status(500).send({ error: 'profileUpdate failure'})
+      return res.status(200).json({success:true})
+    })
+
+    
+
+  }
+
+  
+
+
+  
+
 
 })
 
@@ -632,9 +739,29 @@ app.get('/api/baords/imageBoard/comment/:key',(req,res) => {
   
 })
 
-//imageBoardCommentUser
+//imageBoardCommentDelelte
 
-app.get('/api/boards/imageBoard/comment/user',(req,res) => {
+app.delete('/api/boards/imageBoard/comment/delete/:boardId/:userId/:content',(req,res) => {
+
+  console.log(req.params.boardId)
+  console.log(req.params.userId)
+  console.log(req.params.content)
+
+  Comment.updateOne(
+    { boardId: req.params.boardId},
+    {
+      $pull: {
+        commentList: {
+          userId: req.params.userId,
+          content: req.params.content,
+        },
+      },
+    },
+    (err, comment) => {
+      if (err) return res.status(500).send({ error: "database failure" });
+      return res.status(200).send(comment);
+    }
+  );
   
   
 })
@@ -793,6 +920,13 @@ const Server = require('socket.io');
 const { time } = require('console');
 
 const server = require('http').Server(app);
+// const io = Server(server,{
+//   cors: {
+//     origin: "*",
+//     methods:["GET","POST"],
+// }
+// });
+
 const io = Server(server,{
   cors: {
     origin: "*",
