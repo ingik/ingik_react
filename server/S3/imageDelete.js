@@ -17,7 +17,7 @@ if(process.NODE_ENV === 'production'){
 } else if(process.NODE_ENV === 'qa') {
     serverLocation = 'profileImage_QA/'
 } else {
-    serverLocation = 'profileImage/'
+    serverLocation = 'profileImage_QA/'
 }
 
 
