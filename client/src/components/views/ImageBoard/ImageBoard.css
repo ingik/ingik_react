@@ -169,12 +169,12 @@
 
 .mediaSmall{
     width: 70%;
-    height: 38em;
+    /* height: 38em; */
 }
 
 .mediaLarge{
     width: 100%;
-    height: 40em;
+    /* height: 40em; */
 }
 
 .profileMediaSmall{
