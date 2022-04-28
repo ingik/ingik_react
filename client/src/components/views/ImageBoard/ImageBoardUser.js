@@ -153,11 +153,12 @@ function ImageBoardUser(props) {
       {
         props.userId === UserSelectData._id ?
         <Button 
-          sx={{float:'right'}}
+          sx={{float:'right',marginLeft: "auto"}}
           onClick={handleOpen}
         >
           <DeleteForeverIcon />
         </Button>
+        
         : null
       }
 

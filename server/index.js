@@ -223,6 +223,18 @@ app.post('/api/users/profileUpdate', auth , (req,res) => {
     User.findOne({email : req.body.email },(err,userEmail) => {
       if(err) return res.json({ check:false, err })
       if(!userEmail) {
+
+        if(req.body.image !== req.body.imageBefore){
+
+          User.findOneAndUpdate({_id : req.user._id},
+            {$set: { 'image':user.image }},
+          (err,user) => {
+        
+            if(err) return res.status(500).send({ error: 'profileUpdate failure'})
+          })
+    
+        }
+
         User.findOneAndUpdate({_id : req.user._id ,name : req.user.name},
           {$set: {'email':user.email,'intro':user.intro }},
         (err,user) => {
@@ -257,6 +269,7 @@ app.post('/api/users/profileUpdate', auth , (req,res) => {
           if(err) return res.status(500).send({ error: 'profileUpdate failure'})
           return res.status(200).json({success:true})
         })
+
       }
       if(err) return res.json({ check:false, err })
       if(userName) return res.json({ namecheck: false });
@@ -321,7 +334,6 @@ app.post('/api/users/profileUpdate', auth , (req,res) => {
       return res.status(200).json({success:true})
     })
 
-    
 
   }
 

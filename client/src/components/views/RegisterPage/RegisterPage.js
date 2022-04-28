@@ -136,6 +136,7 @@ function RegisterPage(props) {
               name: Name,
               email: Email,
               password: Password,
+              image:""
             };
 
             dispatch(registUser(body)).then((response) => {

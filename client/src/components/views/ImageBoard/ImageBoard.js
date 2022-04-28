@@ -290,14 +290,14 @@ function ImageBoard(props) {
       console.log("bottom");
       return (
         <div className='bottomBoxSmall' >
-          <List sx={{ display: "inline-block" }}>
-            <ListItem>
+          <List sx={{ display: "inline-block" ,width:'100%'}}>
+            <ListItem >
               <ImageBoardUser userId={UserData[0]?.user} boardId={UserData[0]?._id} />
-              <div style={{ display: "inline-block", marginLeft: "5px" }}>
+            </ListItem>
+              <div style={{ display: "block", marginLeft: "5px" }}>
                 {" "}
                 {UserData[0]?.content}
               </div>
-            </ListItem>
           </List>
 
 
