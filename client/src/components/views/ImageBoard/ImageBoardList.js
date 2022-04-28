@@ -354,8 +354,6 @@ const mobileStyle = {
           }
           cols={3}
           ref={imageListRef}
-          // rowHeight="250"
-          variant='quilted'
         >
           {PreviewList && PreviewList.map((item, index) => {
             return (
