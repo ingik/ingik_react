@@ -20,7 +20,6 @@ const { DirectM } = require('./models/DirectMessage')
 
 //middleware
 const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser')
 const config = require("./config/key");
 const { auth } = require("./middleware/auth");
 const  upload  = require('./S3/upload');
@@ -34,7 +33,7 @@ app.use(express.urlencoded({extended: true}));
 //application/json
 app.use(express.json());
 app.use(cookieParser());
-app.use(bodyParser());
+
 
 mongoose.connect(config.mongoURI,{
     useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false
