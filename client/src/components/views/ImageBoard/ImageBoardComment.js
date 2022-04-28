@@ -71,7 +71,7 @@ function ImageBoardComment(props) {
       
   return (
     <div>
-      {
+      {/* {
           loading 
           ? null 
           : <CircularProgress
@@ -81,7 +81,7 @@ function ImageBoardComment(props) {
                 left:'50%'
               }}
             />
-        }
+        } */}
       {ListComment &&
         ListComment.map((item, index) => {
           return (
