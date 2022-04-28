@@ -12,12 +12,12 @@ const s3 = new aws.S3({
 
 let serverLocation 
 
-if(process.NODE_ENV === 'production'){
+if(process.env.NODE_ENV === 'production'){
     
-} else if(process.NODE_ENV === 'qa') {
+} else if(process.env.NODE_ENV === 'qa') {
     serverLocation = 'profileImage_QA/'
 } else {
-    serverLocation = 'profileImage_QA/'
+    serverLocation = 'profileImage/'
 }
 
 

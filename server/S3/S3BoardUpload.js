@@ -7,9 +7,10 @@ require("dotenv").config();
 
 let serverLocation 
 
-if(process.NODE_ENV === 'production'){
+
+if(process.env.NODE_ENV === 'production'){
     
-} else if(process.NODE_ENV === 'qa') {
+} else if(process.env.NODE_ENV === 'qa') {
     serverLocation = 'ingikbucket/boardImage_QA/'
 } else {
     serverLocation = 'ingikbucket/boardImage/'

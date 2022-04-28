@@ -361,8 +361,8 @@ const mobileStyle = {
                 key={index}
                 sx={{
                   margin: "auto",
-                  width:'100%',
-                  height:'100%'
+                  // width:'100%',
+                  // height:'100%'
                 }}
                 onMouseEnter={onHoverHandler}
                 onMouseLeave={onLeaveHandler}
@@ -378,20 +378,7 @@ const mobileStyle = {
                   loading="lazy"
                   style={{objectFit:'contain'}}
                 />
-                {/* <div
-                  style={{
-                    objectFit: "scale-down",
-                    backgroundImage:`url(${item.img})`,
-                    backgroundPosition:'center center',
-                    backgroundRepeat:'no-repeat',
-                    backgroundSize:'contain',
-                    width:'100%',
-                    height:'100%'
-
-                  }}
-                >
-                  
-                </div> */}
+              
                 <div
                   className="LeaveStyle"
                   style={{ display: "none" }}

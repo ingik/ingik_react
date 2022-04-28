@@ -33,10 +33,7 @@ import CardList from './components/views/NavBar/CardList';
 
 
 function App() {
-  if (process.env.NODE_ENV === "qa") {
-    console.log = function(){};
-    console.warn = function(){};
-  }
+
 
   return (
     <Router>
