@@ -12,7 +12,7 @@
 <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white"/>
 
 react를 너무 사용해보고 싶어서 토이프로젝트 느낌으로 제작하게 되었다.<br>
-
+클론코딩이냐고 물어보시는 분들이 있으신데 노드 리액트 crud 방법만 보고 그냥 머리속에서 구상하고 작성한겁니다. <br>
 # http://3.36.133.116/
 
 비밀번호는 암호화 후 db에 저장됩니다. <br>
