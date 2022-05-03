@@ -20,6 +20,16 @@ react를 너무 사용해보고 싶어서 토이프로젝트 느낌으로 제작
 인증 필요없습니다.<br>
 모든 데이터는 30일 후 삭제됩니다.
 
+# 기술스택
+
+언어 : JS <br>
+프레임워크 : React Hook<br>
+라이브러리 : JWT.io , Socket.io , Material UI<br>
+서버 : node.js(express), NGINX<br>
+데이터베이스 : mongoDB<br>
+클라우드 서비스 : AWS S3, AWS EC2<br>
+자원관리 : PM2<br>
+
 # 수정이 필요한 부분 메모
 
 테스팅중입니다. QA로 이관
