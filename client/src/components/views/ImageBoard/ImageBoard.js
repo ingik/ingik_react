@@ -159,36 +159,35 @@ function ImageBoard(props) {
     
     event.preventDefault();
 
-    if(Comment.length !== 0){
-    setCommentStatus((prevState) => {
-      return prevState + 1;
-    });
+    if (Comment.trim().length !== 0) {
+      setCommentStatus((prevState) => ++prevState);
 
-    console.log("CommentStatus : " + CommentStatus);
+      console.log("CommentStatus : " + CommentStatus);
 
-    let body = {
-      boardId: UserData[0]._id,
-      commentList: {
-        userId: UserSelectData._id,
-        content: Comment,
-      },
-    };
+      let body = {
+        boardId: UserData[0]._id,
+        commentList: {
+          userId: UserSelectData._id,
+          content: Comment,
+        },
+      };
 
-    if(props.contentPosition === true) ScrollRef.current.scrollIntoView(true);
+      if (props.contentPosition === true)
+        ScrollRef.current.scrollIntoView(true);
 
-    axios.post("/api/boards/imageBoardComment", body).then((response) => {
-      setComment("");
+      axios.post("/api/boards/imageBoardComment", body).then((response) => {
+        setComment("");
 
-      if (response.data) {
-        console.log(response.data);
-      } else {
-        console.log("Comment Data null");
-      }
-    });
-  } else{
-    console.log('no Value')
-    return false
-  }
+        if (response.data) {
+          console.log(response.data);
+        } else {
+          console.log("Comment Data null");
+        }
+      });
+    } else {
+      console.log("no Value");
+      return false;
+    }
 
 
   };
@@ -269,11 +268,11 @@ function ImageBoard(props) {
                 style={{ width: "100%", padding: "0" }}
                 variant="outlined"
                 onFocus={mediaQuery ? null : onCommentFocus}
-                onFocusOut={mediaQuery ? null : onCommentBlur}
+                onBlur={mediaQuery ? null : onCommentBlur}
                 InputProps={{
                   endAdornment: (
                     <Button onClick={onSubmitHandler} postion="end"
-                      disabled={Comment ? false : true}
+                      disabled={Comment.trim() ? false : true}
                     >
                       작성
                     </Button>

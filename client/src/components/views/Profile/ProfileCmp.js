@@ -1,4 +1,4 @@
-import { Avatar } from '@mui/material'
+import { Avatar, Box, Modal } from '@mui/material'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useSelector,shallowEqual, useDispatch } from 'react-redux'
 import { withRouter } from 'react-router-dom'
@@ -8,16 +8,32 @@ import ProfileImageBoardList from './ProfileImageBoardList'
 import ImageBoardLength from '../../../moduls/ImageBoardLength'
 import FollowLength from '../../../moduls/FollowLength'
 import FollowerLength from '../../../moduls/FollowerLength'
+import FollowList from './FollowList'
+import FollowerList from './FollowerList'
 
 function ProfileCmp(props) {
 
 
   const userData = useSelector(state => state.user.userData,shallowEqual)
-  
+  const [ModalOpen,setModalOpen] = useState(false)
+  const [FollowerModalOpen,setFollowerModalOpen] = useState(false)
   const dispatch = useDispatch()
   dispatch(auth())
 
   //profile 최적화 필요
+
+  const FollowHandler = () => {
+    setModalOpen(true)
+  }
+
+  const FollowerHandler = () => {
+    setFollowerModalOpen(true)
+  }
+  
+  const onModalClose = (data) => {
+    setModalOpen(data)
+    setFollowerModalOpen(data)
+  }
    
     return (
       <div style={{paddingTop:'64px'}}>
@@ -55,11 +71,11 @@ function ProfileCmp(props) {
                 <div style={{fontSize:'13px',fontWeight:'bold'}}>게시물</div>
                 <div style={{textAlign:'center'}}><ImageBoardLength UserId={userData?._id}/></div>
               </div>
-              <div>
+              <div onClick={FollowHandler} style={{cursor:'pointer'}}>
                 <div style={{fontSize:'13px',fontWeight:'bold'}}>팔로워</div>
                 <div style={{textAlign:'center'}}><FollowLength followerId={userData?._id}/></div>
               </div>
-              <div>
+              <div onClick={FollowerHandler} style={{cursor:'pointer'}}>
                 <div style={{fontSize:'13px',fontWeight:'bold'}}>팔로우</div>
                 <div style={{textAlign:'center'}}><FollowerLength UserId={userData?._id}/></div>
               </div>
@@ -87,7 +103,18 @@ function ProfileCmp(props) {
         <div>
          <ProfileImageBoardList ParamsUserId = {userData?._id}/>
         </div>
-        
+
+        <FollowList
+          Open={ModalOpen}
+          onModalClose={onModalClose}
+          userId={userData?._id}
+        />
+
+        <FollowerList
+          Open={FollowerModalOpen}
+          onModalClose={onModalClose}
+          userId={userData?._id}
+        />
       </div>
     );
 }

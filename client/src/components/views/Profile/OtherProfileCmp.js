@@ -6,6 +6,8 @@ import FollowerLength from '../../../moduls/FollowerLength'
 import FollowingCmp from '../../../moduls/FollowingCmp'
 import FollowLength, { FollowContext } from '../../../moduls/FollowLength'
 import ImageBoardLength from '../../../moduls/ImageBoardLength'
+import FollowerList from './FollowerList'
+import FollowList from './FollowList'
 import ProfileImageBoardList from './ProfileImageBoardList'
 
 function OtherProfileCmp(props) {
@@ -16,6 +18,9 @@ function OtherProfileCmp(props) {
     const userData = useSelector(state => state.user.userData)
     const [UserData, setUserData] = useState({})
     const [CallData,setCallData] = useState(0)
+
+    const [ModalOpen,setModalOpen] = useState(false)
+    const [FollowerModalOpen,setFollowerModalOpen] = useState(false)
 
 
     useEffect(() => {
@@ -30,6 +35,18 @@ function OtherProfileCmp(props) {
       setCallData(data)
     }
 
+    const FollowHandler = () => {
+      setModalOpen(true)
+    }
+  
+    const FollowerHandler = () => {
+      setFollowerModalOpen(true)
+    }
+    
+    const onModalClose = (data) => {
+      setModalOpen(data)
+      setFollowerModalOpen(data)
+    }
     
  
 
@@ -73,11 +90,11 @@ function OtherProfileCmp(props) {
                 <div style={{fontSize:'13px',fontWeight:'bold'}}>게시물</div>
                 <div style={{textAlign:'center'}}><ImageBoardLength UserId={UserData?._id} /></div>
               </div>
-              <div>
+              <div onClick={FollowHandler} style={{cursor:'pointer'}}>
                 <div style={{fontSize:'13px',fontWeight:'bold'}}>팔로워</div>
                 <div style={{textAlign:'center'}}><FollowLength followerId={UserData?._id} CallData={CallData}/></div>
               </div>
-              <div>
+              <div onClick={FollowerHandler} style={{cursor:'pointer'}}>
                 <div style={{fontSize:'13px',fontWeight:'bold'}}>팔로우</div>
                 <div style={{textAlign:'center'}}><FollowerLength UserId={UserData?._id}/></div>
               </div>
@@ -105,6 +122,18 @@ function OtherProfileCmp(props) {
       <div>
         <ProfileImageBoardList ParamsUserId={props.match.params.key} />
       </div>
+
+      <FollowList
+          Open={ModalOpen}
+          onModalClose={onModalClose}
+          userId={UserData?._id}
+        />
+
+        <FollowerList
+          Open={FollowerModalOpen}
+          onModalClose={onModalClose}
+          userId={UserData?._id}
+        />
     </div>
   );
 }

@@ -1,11 +1,12 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 function RecommandLength(props) {
 
     const [Length, setLength] = useState("")
     console.log('RecommandLength')
     
+    const memoLength = useCallback(data => setLength(data),[Length])
 
     useEffect(()=>{
 
@@ -15,7 +16,8 @@ function RecommandLength(props) {
             .then((response) => {
               if (ComponentMounted) {
                 console.log(response.data[0]?.recommand.length);
-                setLength(response.data[0]?.recommand.length);
+                // setLength(Length => Length = response.data[0]?.recommand.length);
+                memoLength(Length => Length = response.data[0]?.recommand.length);
               }
             });
         

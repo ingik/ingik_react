@@ -177,7 +177,7 @@ app.get('/api/users/logout', auth , (req, res) => {
   })
 })
 
-//User Find
+//User Find(Name)
 
 app.post('/api/users/find',(req,res) => {
   console.log('userCHeck'+JSON.stringify(req.body))
@@ -186,6 +186,8 @@ app.post('/api/users/find',(req,res) => {
     return res.json(user)
   })
 })
+
+//User Find(_id)
 
 app.get('/api/users/findId/:key',(req,res) => {
   console.log(req.params.key)
@@ -452,7 +454,25 @@ app.get('/api/users/followLength/:key',(req,res) => {
 
 app.get('/api/users/followerLength/:key',(req,res) => {
   Follower.find({UserId:req.params.key},(err,follower) => {
+    if(err) return res.status(500).send({ error: "followerLength failure"})
+    return res.status(200).send(follower)
+  })
+})
+
+//FollowList
+
+app.get('/api/users/followList/:key',(req,res) => {
+  Follow.findOne({followerId:req.params.key},(err,follow) => {
     if(err) return res.status(500).send({ error: "followLength failure"})
+    return res.status(200).send(follow)
+  })
+})
+
+//FollwerList
+
+app.get('/api/users/followerList/:key',(req,res) => {
+  Follower.findOne({UserId:req.params.key},(err,follower) => {
+    if(err) return res.status(500).send({ error: "followerLength failure"})
     return res.status(200).send(follower)
   })
 })
@@ -577,7 +597,7 @@ app.get('/api/boards/imageBoardList', auth ,(req,res) => {
   ImageBoard.find((err,imageBoard) => {
     if(err) return res.status(500).send({error: 'database failure'})
     return res.status(200).json(imageBoard)
-  }).sort({_id:-1}).limit(15)
+  }).sort({_id:-1}).limit(21)
 
 })
 
@@ -588,7 +608,7 @@ app.get('/api/boards/imageBoardList/:key',(req,res) => {
   ImageBoard.find((err,imageBoard) => {
     if(err) return res.status(500).send({error: 'database failure'})
     return res.status(200).json(imageBoard)
-  }).sort({_id:-1}).skip(index).limit(15)
+  }).sort({_id:-1}).skip(index).limit(21)
 
 })
 
@@ -608,12 +628,13 @@ app.get('/api/boards/imageBoard/profileList/:key',(req,res) => {
   ImageBoard.find({ 'user': req.params.key },(err,board) => {
     if(err) return res.status(500).send({error: 'database failure'})
     return res.status(200).json(board)
-  })
+  }).sort({_id:-1}).limit(15)
 
 })
 
 app.get('/api/boards/imageBoard/profileList/:key/:num',(req,res) => {
 
+  
   let index = req.params.num * 15
   console.log(index)
   ImageBoard.find({ 'user': req.params.key },(err,board) => {
@@ -710,13 +731,11 @@ const async = require('async');
 app.get('/api/baords/imageBoard/comment/:key',(req,res) => {
 
   console.log('imageBoardCommentList')
-  Comment.find({ 'boardId': req.params.key },(err,comment) => {
+  Comment.find({ 'boardId': req.params.key },{boardId:0,_id:0,__v:0},(err,comment) => {
     if(err) return res.status(500).send({error: 'database failure'})
     
-    console.log(comment[0].commentList)
-    // if(!comment){
     List = comment[0].commentList
-    console.log(List)
+    console.log('comment : '+comment)
     
     ListArray = []
     List.slice(0).reverse().map((item,index) => {
@@ -747,9 +766,21 @@ app.get('/api/baords/imageBoard/comment/:key',(req,res) => {
     })
     // }
 
-  }).sort({"index":-1})
+  }).sort({"index":-1}).limit(5)
   
   
+})
+
+
+//test
+
+app.get('/api/baords/imageBoard/comment/test/:key/',(req,res) => {
+
+  Comment.find({ 'boardId': req.params.key},(err,comment) => {
+    if (err) return res.status(500).send({ err: "test failure"})
+    return res.status(200).send(comment)
+  }).limit(5)
+
 })
 
 //imageBoardCommentDelelte

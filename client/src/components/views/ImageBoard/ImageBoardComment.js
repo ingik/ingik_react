@@ -1,16 +1,21 @@
-import { Avatar, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ListItem, Typography } from '@mui/material';
+import { Avatar, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ListItem, Popover, Typography } from '@mui/material';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import HoverProfile from '../Profile/HoverProfile';
 
 
 
 function ImageBoardComment(props) {
 
   console.log(props)
-  const [ListComment, setListComment] = useState([])
+
+  const history = useHistory();
+
+  const [ListComment, setListComment] = useState(null)
   const [DeleteData, setDeleteData] = useState({
     boardId:"",
     userId:"",
@@ -19,11 +24,23 @@ function ImageBoardComment(props) {
   const [loading, setloading] = useState(false)
   const [Value,setValue] = useState(0)
 
+  let number = 0
+
+  const [HoverUser,setHoverUser] = useState(null)
+
   const userData = useSelector(state => state.user.userData )
   
   useEffect(() => {
 
     let CleanUpBoolean = true
+
+    // axios.get("/api/baords/imageBoard/comment/" + props.paramKey).then(response => {
+    //   if(CleanUpBoolean) {
+    //     console.log(response.data)
+    //     setListComment(response.data);
+    //   }
+    // })
+    
     axios.get("/api/baords/imageBoard/comment/" + props.paramKey).then(response => {
       if(CleanUpBoolean) {
         console.log(response.data)
@@ -34,6 +51,12 @@ function ImageBoardComment(props) {
     return () => CleanUpBoolean = false
     
   },[props,Value])
+
+  useEffect(()=>{
+    axios.get('/api/baords/imageBoard/comment/test/' + props.paramKey).then(response => {
+      console.log(response.data)
+    })
+  },[])
 
   const onEnter = (event) => {
     if(event.target.children[2]){
@@ -67,29 +90,71 @@ function ImageBoardComment(props) {
       setValue(Value => ++Value)
     })
   }
+
+  const onClickHandler = (userId) => {
+    history.push("/profile/"+userId)
+    window.location.reload()
+
+  }
+
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const [ChildModal, setChildModal] = useState(false) 
+  const [ParentModal, setParentModal] = useState(false)
+
+  const [NoModal, setNoModal] = useState(false)
+
   
+  console.log('CHILD : '+ChildModal)
+  console.log('PARENT : '+ParentModal)
+  console.log('NoModal : '+NoModal)
+
+  const porperEnter = () => {
+    console.log('child enter')
+    setChildModal(true)
+  }
+
+  const porperLeave = () => {
+    console.log('child leave')
+    setChildModal(false)
+  }
       
   return (
     <div>
-      {/* {
-          loading 
-          ? null 
-          : <CircularProgress
-              sx={{
-                position:'absolute',
-                top:'50%',
-                left:'50%'
-              }}
-            />
-        } */}
-      {ListComment &&
+      <Popover
+        id="mouse-over-popover"
+        style={{
+          pointerEvents: "none",
+        }}
+        open={!ChildModal && !ParentModal ? false : true}
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        transitionDuration={{ appear: 2000, enter: 500 }}
+        disableAutoFocus
+        disableEnforceFocus
+        onMouseEnter={porperEnter}
+        onMouseLeave={porperLeave}
+      >
+        <HoverProfile UserData={HoverUser} />
+      </Popover>
+
+      {
+        ListComment ? 
         ListComment.map((item, index) => {
           return (
             <ListItem
               key={index}
               style={{ padding: "10px 0" }}
               onMouseEnter={onEnter}
-              onMouseLeave={onLeave}
+              onMouseOut={onLeave}
             >
               <Avatar
                 alt={item?.user.name}
@@ -100,10 +165,20 @@ function ImageBoardComment(props) {
                   width: "32px",
                   height: "32px",
                 }}
+                onClick={() => onClickHandler(item?.user._id)}
+                onMouseEnter={(event) => {
+                  setAnchorEl(event.currentTarget);
+                  setHoverUser(item?.user);
+                  setParentModal(true);
+                }}
+                onMouseLeave={() => {
+                  setParentModal(false);
+                }}
               />
               <Typography
                 variant="body1"
                 style={{ display: "inline-block", marginLeft: "5px" }}
+                onClick={() => onClickHandler(item?.user._id)}
               >
                 <span
                   style={{
@@ -111,6 +186,14 @@ function ImageBoardComment(props) {
                     fontWeight: "300",
                     display: "inline-block",
                     marginRight: "5px",
+                  }}
+                  onMouseEnter={(event) => {
+                    setAnchorEl(event.currentTarget);
+                    setHoverUser(item?.user);
+                    setParentModal(true);
+                  }}
+                  onMouseLeave={() => {
+                    setParentModal(false);
                   }}
                 >
                   {item?.user.name}
@@ -124,15 +207,28 @@ function ImageBoardComment(props) {
                     handleOpen();
                     setDeleteData({
                       boardId: props.paramKey,
-                      userId:item.user._id,
-                      content:item.content
-                    })
+                      userId: item.user._id,
+                      content: item.content,
+                    });
                   }}
                 />
               ) : null}
             </ListItem>
           );
-        })}
+        })
+        :
+        <CircularProgress
+            sx={{
+              position:'absolute',
+              top:'calc(50% - 10px)',
+              left:'calc(50% - 10px)',
+              marginTop:'25%'
+            }}
+
+            size={20}
+          />
+      
+      }
 
       <Dialog
         open={DialogOpen}

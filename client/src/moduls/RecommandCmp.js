@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import Recommand from './Recommand'
 import UnRecommand from './UnRecommand'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -10,6 +10,9 @@ function RecommandCmp(props) {
 
     const [RecommandDisplay, setRecommandDisplay] = useState(false)
     const [RecommandUpdate, setRecommandUpdate] = useState(null)
+
+    const memoRecommandUpdate = useCallback((data) => setRecommandUpdate(data),[RecommandUpdate])
+    const memoRecommandDisplay = useCallback((data) => setRecommandDisplay(data),[RecommandDisplay])
     
     useEffect(() => {
         
@@ -27,9 +30,11 @@ function RecommandCmp(props) {
           console.log(response.data)
     
           if(!response.data){
-            setRecommandDisplay(false)
+            memoRecommandDisplay(false)
+            // setRecommandDisplay(false)
           }else{
-            setRecommandDisplay(true)
+            memoRecommandDisplay(true)
+            // setRecommandDisplay(true)
           }
     
         })
@@ -40,7 +45,8 @@ function RecommandCmp(props) {
       console.log('click')
       async function update(){
         await setRecommandDisplay(Recommand(props.boardId, props.recommandId)) 
-        setRecommandUpdate(true)
+        // setRecommandUpdate(true)
+        memoRecommandUpdate(true)
       } 
       update()
     }
@@ -49,7 +55,8 @@ function RecommandCmp(props) {
         console.log('Unclick')
         async function update(){
           await setRecommandDisplay(UnRecommand(props.boardId, props.recommandId)) 
-          setRecommandUpdate(false)
+          // setRecommandUpdate(false)
+          memoRecommandUpdate(false)
         }
         update()
     }

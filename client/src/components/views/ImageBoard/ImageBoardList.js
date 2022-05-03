@@ -48,52 +48,44 @@ function ImageBoardList(props) {
 
     // 1)
     // 리사이징을 구현하지 않아서 두가지 방식으로 데이터를 가져옴 1) 한번에 2) 받는대로
-    axios.get("/api/boards/imageBoardList").then(response => {
+    axios.get("/api/boards/imageBoardList").then((response) => {
       const value = [];
-      async function AsyncFunc(){
-        
-        console.log(response.data)
+      async function AsyncFunc() {
+        console.log(response.data);
         try {
-          
-          await response.data.reduce(async(previousPromise, list)=>{
-          await previousPromise
+          await response.data.reduce(async (previousPromise, list) => {
+            await previousPromise;
             list.image[0]._id = list._id;
-    
-          const newElement = await axios
-            .all([
-              axios.get("/api/boards/recommandLength/" + list._id),
-              axios.get("/api/boards/commentLength/" + list._id),
-            ])
-            .then(
-              axios.spread((response1, response2) => {
-                
-                list.image[0].recommand = response1.data[0]?.recommand.length;
-                list.image[0].comment = response2.data[0]?.commentList.length;
-  
-                return list.image[0];
-              })
-            );
-            
-            value.push(newElement)
-            
-          },Promise.resolve)
 
+            const newElement = await axios
+              .all([
+                axios.get("/api/boards/recommandLength/" + list._id),
+                axios.get("/api/boards/commentLength/" + list._id),
+              ])
+              .then(
+                axios.spread((response1, response2) => {
+                  list.image[0].recommand = response1.data[0]?.recommand.length;
+                  list.image[0].comment = response2.data[0]?.commentList.length;
+
+                  return list.image[0];
+                })
+              );
+
+            value.push(newElement);
+          }, Promise.resolve);
         } catch (error) {
-
-          setPreviewList(null)
-
+          setPreviewList(null);
         }
       }
-      
-      AsyncFunc().then(() => {
-        if(CleanUpBoolean){
-          setPreviewList(value)
-          setloading(true)
-          target.current.style.display="block"
-        }
-      })
 
-    })
+      AsyncFunc().then(() => {
+        if (CleanUpBoolean) {
+          setPreviewList(value);
+          setloading(true);
+          target.current.style.display = "block";
+        }
+      });
+    });
 
     //2)
 
@@ -352,6 +344,7 @@ const mobileStyle = {
             ? `mediaSmall`
             : `mediaLarge`
           }
+          variant={'masonry'}
           cols={3}
           ref={imageListRef}
         >

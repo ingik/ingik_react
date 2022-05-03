@@ -17,7 +17,7 @@ function ProfileImageBoardList(props) {
   const mediaQuery = useMediaQuery('(min-width:641px)');
 
   
-  const [PreviewList,setPreviewList] = useState([])
+  const [PreviewList,setPreviewList] = useState(null)
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const [ParamKey, setParamKey] = useState("")
@@ -70,18 +70,14 @@ function ProfileImageBoardList(props) {
       }
 
       AsyncFunc().then(() => {
-        console.log(value)
-        if(value.length === 0) {
-          console.log('nullData')
-          setNullData(true)
-        }
+
         setPreviewList(value)
-        setloading(true)
         try {
           target.current.style.display="block"
         } catch (error) {
           return target.current
         }
+
       })
 
     })
@@ -210,108 +206,104 @@ function ProfileImageBoardList(props) {
     
   return (
     <div>
-    <Box
-        className='boxSmall'
-        ref={viewport}
-      >
-        {
-          loading 
-          ? null 
-          : <CircularProgress
-              sx={{
-                position:'absolute',
-                top:'50%',
-                left:'50%'
-              }}
-            />
-        }
-        
-        <ImageList
-          className={ mediaQuery 
-            ? `profileMediaSmall`
-            : `profileMediaLarge`
-          }
-          cols={3}
-          ref={imageListRef}
-        >
-          {PreviewList && PreviewList.map((item, index) => {
-           
-            return (
-              <ImageListItem
-                key={index}
-                sx={{
-                  margin: "auto",
-                  width:'100%',
-                  height:'100%'
-                }}
-                // ref={lastEl ? target : null}
-                onMouseEnter={onHoverHandler}
-                onMouseLeave={onLeaveHandler}
-              >
-                <img
-                  src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
-                  srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                  alt={item.name}
-                  loading="lazy"
-                  
-                  style={{objectFit:'contain'}}
-                />
-                <div
-                  className="LeaveStyle"
-                  style={{ display: "none" }}
-                  
-                >
-                  <div
-                    style={{
-                      display: "block",
-                      backgroundColor: "black",
-                      opacity:"0.4",
+      <Box className="boxSmall" ref={viewport}>
+        {PreviewList ? (
+          <ImageList
+            className={mediaQuery ? `profileMediaSmall` : `profileMediaLarge`}
+            cols={3}
+            ref={imageListRef}
+          >
+            {PreviewList &&
+              PreviewList.map((item, index) => {
+                return (
+                  <ImageListItem
+                    key={index}
+                    sx={{
+                      margin: "auto",
                       width: "100%",
                       height: "100%",
                     }}
-                    onClick={function () {
-                      setOpen(true);
-                      setParamKey(item._id);
-                    }}
+                    // ref={lastEl ? target : null}
+                    onMouseEnter={onHoverHandler}
+                    onMouseLeave={onLeaveHandler}
                   >
-                    
-                  </div>
-                  <div style={{position:'absolute',top:'calc(50% - 12px)',left:'calc(50% - 52.6px)',color:'white',zIndex:99}}>
-                    <FavoriteIcon sx={{ verticalAlign: "middle" }} />
-                    <span
-                      style={{
-                        verticalAlign: "middle",
-                        margin: "0 15px 0 5px",
-                      }}
-                    >
-                      {item.recommand}
-                    </span>
-                    <CommentIcon sx={{ verticalAlign: "middle" }} />
-                    <span
-                      style={{
-                        verticalAlign: "middle",
-                        margin: "0 15px 0 5px",
-                      }}
-                    >
-                      {item.comment}
-                    </span>
+                    <img
+                      src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
+                      srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                      alt={item.name}
+                      loading="lazy"
+                      style={{ objectFit: "contain" }}
+                    />
+                    <div className="LeaveStyle" style={{ display: "none" }}>
+                      <div
+                        style={{
+                          display: "block",
+                          backgroundColor: "black",
+                          opacity: "0.4",
+                          width: "100%",
+                          height: "100%",
+                        }}
+                        onClick={function () {
+                          setOpen(true);
+                          setParamKey(item._id);
+                        }}
+                      ></div>
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "calc(50% - 12px)",
+                          left: "calc(50% - 52.6px)",
+                          color: "white",
+                          zIndex: 99,
+                        }}
+                      >
+                        <FavoriteIcon sx={{ verticalAlign: "middle" }} />
+                        <span
+                          style={{
+                            verticalAlign: "middle",
+                            margin: "0 15px 0 5px",
+                          }}
+                        >
+                          {item.recommand}
+                        </span>
+                        <CommentIcon sx={{ verticalAlign: "middle" }} />
+                        <span
+                          style={{
+                            verticalAlign: "middle",
+                            margin: "0 15px 0 5px",
+                          }}
+                        >
+                          {item.comment}
+                        </span>
+                      </div>
                     </div>
-                </div>
-              </ImageListItem>
-            );
-          })}
+                  </ImageListItem>
+                );
+              })}
 
-          <div
-            style={{ width: "100%", display: "none", height: "30px" }}
-            ref={target}
-          ></div>
-        </ImageList>
+            <div
+              style={{ width: "100%", display: "none", height: "30px" }}
+              ref={target}
+            ></div>
+          </ImageList>
+        ) : (
+          <CircularProgress
+            sx={{
+              position: "absolute",
+              top: "calc(50% - 20px)",
+              left: "calc(50% -20px)",
+            }}
+          />
+        )}
       </Box>
-        {
-          NullData 
-          ? <div style={{textAlign:'center' , marginTop:'25vh'}}>데이터가 없습니다.</div>
-          : null
-        }
+      
+      {PreviewList ? (
+        PreviewList.length === 0 ? (
+          <div style={{ textAlign: "center", marginTop: "25vh" }}>
+            데이터가 없습니다.
+          </div>
+        ) : null
+      ) : null}
 
       <Modal
         open={open}
@@ -319,15 +311,12 @@ function ProfileImageBoardList(props) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={mediaQuery ?
-                    style :
-                    mobileStyle  }>
+        <Box sx={mediaQuery ? style : mobileStyle}>
           <ImageBoard paramKey={ParamKey} contentPosition={true}></ImageBoard>
         </Box>
       </Modal>
-
     </div>
-  )
+  );
 }
 
 export default ProfileImageBoardList

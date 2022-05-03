@@ -8,15 +8,15 @@ import './Chat.css';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 
-// const localhost =
-//   process.env.NODE_ENV
-//     ? 'http://3.36.133.116:5555'
-//     : 'http://localhost:5555';
+const localhost =
+  process.env.NODE_ENV
+    ? 'http://3.38.119.177:5555'
+    : 'http://localhost:5555';
 
 //로컬환경
 // const localhost = "http://localhost:5555"
 //배포환경
-const localhost = "http://3.36.133.116:5555"
+// const localhost = "http://3.38.119.177:5555"
 
 let socket
 
@@ -77,6 +77,8 @@ function DMList(props) {
       console.log('socket start')
 
         socket = io.connect(localhost)
+
+        console.log(socket)
         
         console.log('RoomId : '+ChatRoomId)
         socket.emit('joinRoom', ChatRoomId)
@@ -127,17 +129,19 @@ function DMList(props) {
       console.log('Submit')
       // event.preventDefault()
 
-      let body = {
-        _id:ChatData._id,
-        chatSendId:userData._id,
-        chatContent:Message,
-      }
+      if (Message.trim().length !== 0) {
+        let body = {
+          _id: ChatData._id,
+          chatSendId: userData._id,
+          chatContent: Message,
+        };
 
-      console.log(body)
-      socket.emit('send message',body)
-      
-      setMessage("", "")
-      // setMessage("")
+        console.log(body);
+        socket.emit("send message", body);
+
+        setMessage("", "");
+        // setMessage("")
+      }
 
     }
 
@@ -188,49 +192,26 @@ function DMList(props) {
 
 
   return (
-    <div
-      
-      className={mediaQuery ?
-        `dm_component` :
-        `dm_component_small`
-      }
-    >
+    <div className={mediaQuery ? `dm_component` : `dm_component_small`}>
       <div className="chat_wrap">
-        <div className={
-          mediaQuery ? 
-          `chat_header`:
-          `chat_header_small` 
-        }>
-              <Avatar
-                alt={OtherUser?.name}
-                src={OtherUser?.image}
-                className="chat_avarta"
-              />
+        <div className={mediaQuery ? `chat_header` : `chat_header_small`}>
+          <Avatar
+            alt={OtherUser?.name}
+            src={OtherUser?.image}
+            className="chat_avarta"
+          />
           <div className="chat_header_name">{OtherUser?.name}</div>
         </div>
         <Divider />
-        <div 
-          className={
-            mediaQuery ?
-            `chat_form` :
-            `chat_form_small`
-          }
-        >
-            { ChatList.map((list,index) => {
-              return (
-              <div key={index}>
-                  {userRender(list)}
-                </div>
-              )
-
-            }) }
-            <div ref={ScrollRef}></div>
+        <div className={mediaQuery ? `chat_form` : `chat_form_small`}>
+          {ChatList.map((list, index) => {
+            return <div key={index}>{userRender(list)}</div>;
+          })}
+          <div ref={ScrollRef}></div>
         </div>
 
         <div className="input-div">
-          <form 
-            className="input-form"
-            >
+          <form className="input-form">
             <TextField
               variant="outlined"
               placeholder="Press Enter for send message."
@@ -242,16 +223,19 @@ function DMList(props) {
               size="500"
               row="500"
               onChange={onMessageHandler}
-              onKeyPress={ onCheckEnter }
-              value={ Message }
+              onKeyPress={onCheckEnter}
+              value={Message}
             />
-            <Button className="send_button" variant="contained" onClick={ onSubmitHandler }>
+            <Button
+              className="send_button"
+              variant="contained"
+              onClick={onSubmitHandler}
+              disabled={Message ? false : true}
+            >
               send
             </Button>
           </form>
         </div>
-
-      
       </div>
     </div>
   );

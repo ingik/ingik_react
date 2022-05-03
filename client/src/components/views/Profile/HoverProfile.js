@@ -5,8 +5,13 @@ import FollowerLength from '../../../moduls/FollowerLength';
 import FollowingCmp from '../../../moduls/FollowingCmp';
 import FollowLength from '../../../moduls/FollowLength';
 import ImageBoardLength from '../../../moduls/ImageBoardLength';
+import FollowerList from './FollowerList';
+import FollowList from './FollowList';
 
 function HoverProfile(props) {
+
+  const [ModalOpen,setModalOpen] = useState(false)
+  const [FollowerModalOpen,setFollowerModalOpen] = useState(false)
 
   const userData = useSelector(state => state.user.userData)
   console.log(props.getFunc)
@@ -29,22 +34,22 @@ function HoverProfile(props) {
     }
   }
 
-  const onEnterHandler = (event) => { 
-    console.log(event.currentTarget.parentElement)
-    console.log('HoverEnter')
-    props.getFunc(event.target.parentElement.parentElement)
-   }
-
-  const onLeaveHandler = () => { 
-    console.log('HoverLeave') 
-    props.getFunc(null)
+  const FollowHandler = () => {
+    setModalOpen(true)
   }
 
+  const FollowerHandler = () => {
+    setFollowerModalOpen(true)
+  }
+
+  const onModalClose = (data) => {
+    setModalOpen(data)
+    setFollowerModalOpen(data)
+  }
+
+
   return (
-    <div style={{width:'300px' ,pointerEvents:"auto"}}
-      onMouseEnter={ onEnterHandler }
-      onMouseLeave={ onLeaveHandler }
-    >
+    <div style={{width:'300px' ,pointerEvents:"auto",margin:'10px'}}>
         <div style={{borderBottom:'1px solid rgba(153,153,153,0.2)'}}>
         <Avatar
         alt={props.UserData?.name}
@@ -82,21 +87,36 @@ function HoverProfile(props) {
             <ImageBoardLength UserId={props.UserData?._id} />
           </div>
         </div>
-        <div>
+
+        <div onClick={FollowHandler} style={{cursor:'pointer'}}>
           <div style={{ fontSize: "13px", fontWeight: "bold" }}>팔로워</div>
           <div style={{ textAlign: "center" }}>
             <FollowLength followerId={props.UserData?._id} CallData={CallData} />
           </div>
         </div>
-        <div>
+
+        <div onClick={FollowerHandler} style={{cursor:'pointer'}}>
           <div style={{ fontSize: "13px", fontWeight: "bold" }}>팔로우</div>
           <div style={{ textAlign: "center" }}>
             <FollowerLength UserId={props.UserData?._id} />
           </div>
         </div>
+        
       </div>
+
+      <FollowList
+          Open={ModalOpen}
+          onModalClose={onModalClose}
+          userId={userData?._id}
+        />
+
+        <FollowerList
+          Open={FollowerModalOpen}
+          onModalClose={onModalClose}
+          userId={userData?._id}
+        />
     </div>
   );
 }
 
-export default HoverProfile
+export default React.memo(HoverProfile)

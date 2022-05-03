@@ -70,13 +70,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 
-
-
+// const localhost = "http://localhost:5555"
 function SearchAppBar(props) {
 
+  // let socket = io.connect(localhost)
 
   
-  // const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [SearchValue, setSearchValue] = useState(null);
   const [UserList, setUserList] = useState(null);
 
@@ -226,11 +225,6 @@ function SearchAppBar(props) {
             />
 
             <List
-              // className={
-              //   mediaQuery ?
-              //   `searchList` :
-              //   `searchListSmall`
-              // }
               style={
                 mediaQuery ? 
                 searchUserList :

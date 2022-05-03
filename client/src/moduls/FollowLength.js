@@ -13,7 +13,7 @@ function FollowLength(props) {
     if(props.followerId){
     axios.get('/api/users/followLength/'+props.followerId).then(response => {
       console.log(response.data[0]?.following.length)
-      setLength(response.data[0]?.following.length)
+      setLength(Length => Length = response.data[0]?.following.length)
 
       
     })

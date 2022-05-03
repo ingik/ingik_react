@@ -16,11 +16,16 @@ function ImageBoardUser(props) {
 
   const UserSelectData = useSelector((state) => state.user.userData);
 
-  console.log(props.boardId)
-  console.log(UserSelectData._id)
+  // console.log(props.boardId)
+  // console.log(UserSelectData._id)
+
+  
+  const [ChildModal, setChildModal] = useState(false) 
+  const [ParentModal, setParentModal] = useState(false)
 
   const history = useHistory();
   const [UserData, setUserData] = useState({});
+  const [open, setOpen] = useState(false)
 
   const [DialogOpen, setDialogOpen] = React.useState(false);
 
@@ -32,12 +37,22 @@ function ImageBoardUser(props) {
     setDialogOpen(false);
   };
 
+  const porperEnter = () => {
+    console.log('child enter')
+    setChildModal(true)
+  }
+
+  const porperLeave = () => {
+    console.log('child leave')
+    setChildModal(false)
+  }
+
     useEffect(() => {
       let ComponentMounted = true;
       if (props.userId) {
         axios.get("/api/users/findId/" + props.userId).then((response) => {
           if (ComponentMounted) {
-            console.log(response.data);
+            // console.log(response.data);
             setUserData(response.data);
           }
         });
@@ -51,35 +66,27 @@ function ImageBoardUser(props) {
 
   const onClickHandler = () => {
     history.push("/profile/"+UserData?._id)
+    window.location.reload()
+
   }
 
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handlePopoverOpen = (event) => {
-    console.log('open')
-    if(UserData){
-      console.log(event.currentTarget)
-          setAnchorEl(event.currentTarget);
-    }
+    setAnchorEl(event.currentTarget);
+    // setHoverUser(item?.user);
+    setParentModal(true);
   };
 
-  const handlePopoverClose = () => {
-    console.log('close')
-    if(UserData){
-        setAnchorEl(null)
-    }
+  const handlePopoverClose = (event) => {
+    setParentModal(false);
   };
 
-  const open = Boolean(anchorEl);
-
-  const getFunc = (data) => {
-    setAnchorEl(data)
-  }
 
   const onDeleteButton = () => {
 
     axios.delete('/api/boards/imageBoard/delete/'+props.boardId+'/'+UserSelectData._id).then(response => {
-      console.log(response.data)
+      // console.log(response.data)
       setDialogOpen(false)
       window.location.reload()
 
@@ -110,7 +117,7 @@ function ImageBoardUser(props) {
         style={{
           pointerEvents: "none"
         }}
-        open={open}
+        open={!ChildModal && !ParentModal ? false : true}
         anchorEl={anchorEl}
         anchorOrigin={{
           vertical: "bottom",
@@ -120,17 +127,15 @@ function ImageBoardUser(props) {
           vertical: "top",
           horizontal: "left",
         }}
-        onClose={handlePopoverClose}
-        transitionDuration={{appear:5000,enter:2000}}
-        disableRestoreFocus
-        // disableAutoFocus
-        // disableEnforceFocus
+        transitionDuration={{appear:2000,enter:500}}
+        disableAutoFocus
+        disableEnforceFocus
+        onMouseEnter={porperEnter}
+        onMouseLeave={porperLeave}
         
       >
         <HoverProfile
           UserData={UserData}
-          getFunc={getFunc}
-          
         />
       </Popover>
 
