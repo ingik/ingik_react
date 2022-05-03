@@ -160,7 +160,7 @@ function ImageBoard(props) {
     event.preventDefault();
 
     if (Comment.trim().length !== 0) {
-      setCommentStatus((prevState) => ++prevState);
+      
 
       console.log("CommentStatus : " + CommentStatus);
 
@@ -179,6 +179,9 @@ function ImageBoard(props) {
         setComment("");
 
         if (response.data) {
+          setCommentStatus((prevState) => {
+            return prevState = prevState + 1;
+          });
           console.log(response.data);
         } else {
           console.log("Comment Data null");
