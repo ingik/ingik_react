@@ -48,6 +48,10 @@ useEffect(() => {
         })
 
       });
+
+      return () => {
+        setListData(null)
+      }
 },[props.Open])
 
 

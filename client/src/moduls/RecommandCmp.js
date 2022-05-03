@@ -13,6 +13,8 @@ function RecommandCmp(props) {
 
     const memoRecommandUpdate = useCallback((data) => setRecommandUpdate(data),[RecommandUpdate])
     const memoRecommandDisplay = useCallback((data) => setRecommandDisplay(data),[RecommandDisplay])
+
+    const memo_RecommandDisplay = useMemo(()=>RecommandDisplay,[RecommandDisplay])
     
     useEffect(() => {
         
@@ -44,7 +46,8 @@ function RecommandCmp(props) {
     const onRecommandHandler = () => {
       console.log('click')
       async function update(){
-        await setRecommandDisplay(Recommand(props.boardId, props.recommandId)) 
+        // await setRecommandDisplay(Recommand(props.boardId, props.recommandId)) 
+        await memoRecommandDisplay(Recommand(props.boardId, props.recommandId)) 
         // setRecommandUpdate(true)
         memoRecommandUpdate(true)
       } 
@@ -54,24 +57,30 @@ function RecommandCmp(props) {
     const onUnRecommandHanler = () => {
         console.log('Unclick')
         async function update(){
-          await setRecommandDisplay(UnRecommand(props.boardId, props.recommandId)) 
+          // await setRecommandDisplay(UnRecommand(props.boardId, props.recommandId)) 
+          await memoRecommandDisplay(UnRecommand(props.boardId, props.recommandId)) 
           // setRecommandUpdate(false)
           memoRecommandUpdate(false)
         }
         update()
     }
 
-    const RecommandFunc = () => {
-        if (RecommandDisplay === false) {
-          return <FavoriteBorderIcon style={{verticalAlign:'middle'}} onClick={onRecommandHandler}></FavoriteBorderIcon>;
-        } else {
-          return <FavoriteIcon style={{verticalAlign:'middle'}} onClick={onUnRecommandHanler}></FavoriteIcon>;
-        }
-      }
+    // const RecommandFunc = () => {
+    //     if (RecommandDisplay === false) {
+    //       return <FavoriteBorderIcon style={{verticalAlign:'middle'}} onClick={onRecommandHandler}></FavoriteBorderIcon>;
+    //     } else {
+    //       return <FavoriteIcon style={{verticalAlign:'middle'}} onClick={onUnRecommandHanler}></FavoriteIcon>;
+    //     }
+    //   }
 
   return (
     <React.Fragment>
-        { RecommandFunc() }
+        {/* { RecommandFunc() } */}
+        {
+        memo_RecommandDisplay 
+        ? <FavoriteIcon style={{verticalAlign:'middle'}} onClick={onUnRecommandHanler}></FavoriteIcon>
+        : <FavoriteBorderIcon style={{verticalAlign:'middle'}} onClick={onRecommandHandler}></FavoriteBorderIcon>
+}
         <div style={{verticalAlign:'middle',display:'inline-block', margin:'0 3px 0 5px'}}>좋아요</div>
         <RecommandLength boardId={props.boardId} RecDisplay={RecommandUpdate}/>
     </React.Fragment>

@@ -107,13 +107,13 @@ function HoverProfile(props) {
       <FollowList
           Open={ModalOpen}
           onModalClose={onModalClose}
-          userId={userData?._id}
+          userId={props.UserData._id}
         />
 
         <FollowerList
           Open={FollowerModalOpen}
           onModalClose={onModalClose}
-          userId={userData?._id}
+          userId={props.UserData._id}
         />
     </div>
   );
