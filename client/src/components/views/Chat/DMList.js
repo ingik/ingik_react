@@ -8,15 +8,15 @@ import './Chat.css';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 
-const localhost =
-  process.env.NODE_ENV == 'qa'
-    ? 'http://3.38.119.177:5555'
-    : 'http://localhost:5555';
+// const localhost =
+//   process.env.NODE_ENV == 'qa'
+//     ? 'http://3.38.119.177:5555'
+//     : 'http://localhost:5555';
 
 //로컬환경
 // const localhost = "http://localhost:5555"
 //배포환경
-// const localhost = "http://3.38.119.177:5555"
+const localhost = "http://3.38.119.177:5555"
 
 let socket
 
