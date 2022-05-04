@@ -21,6 +21,7 @@ function ImageBoardCmpList() {
 
       console.log(result)
 
+      // eslint-disable-next-line array-callback-return
       result?.data.map((list) => {
 
         console.log(list)

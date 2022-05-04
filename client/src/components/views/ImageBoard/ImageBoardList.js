@@ -11,7 +11,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import useMediaQuery from '@mui/material/useMediaQuery';
 import './ImageBoard.css'
-import { useSelector } from 'react-redux';
 
 
 function ImageBoardList(props) {
@@ -273,6 +272,7 @@ function ImageBoardList(props) {
     };
     
   
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[viewport,target.current])
 
 

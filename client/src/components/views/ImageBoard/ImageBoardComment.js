@@ -1,6 +1,6 @@
 import { Avatar, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ListItem, Popover, Typography } from '@mui/material';
 import axios from 'axios';
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, {  useEffect, useState } from 'react'
 
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useSelector } from 'react-redux';
@@ -21,10 +21,8 @@ function ImageBoardComment(props) {
     userId:"",
     content:""
   })
-  const [loading, setloading] = useState(false)
   const [Value,setValue] = useState(0)
 
-  let number = 0
 
   const [HoverUser,setHoverUser] = useState(null)
 
@@ -56,6 +54,7 @@ function ImageBoardComment(props) {
     axios.get('/api/baords/imageBoard/comment/test/' + props.paramKey).then(response => {
       console.log(response.data)
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
   const onEnter = (event) => {
@@ -103,9 +102,6 @@ function ImageBoardComment(props) {
   const [ChildModal, setChildModal] = useState(false) 
   const [ParentModal, setParentModal] = useState(false)
 
-  const [NoModal, setNoModal] = useState(false)
-
-  
   // console.log('CHILD : '+ChildModal)
   // console.log('PARENT : '+ParentModal)
   // console.log('NoModal : '+NoModal)

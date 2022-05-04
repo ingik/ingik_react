@@ -6,7 +6,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import axios from 'axios'
 import React, { useState,useEffect } from 'react'
-import {  useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import HoverProfile from '../Profile/HoverProfile'
 
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -25,7 +25,7 @@ function ImageBoardUser(props) {
 
   const history = useHistory();
   const [UserData, setUserData] = useState({});
-  const [open, setOpen] = useState(false)
+  const [open] = useState(false)
 
   const [DialogOpen, setDialogOpen] = React.useState(false);
 

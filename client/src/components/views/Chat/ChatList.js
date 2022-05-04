@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, ListItem, ListItemButton, Typography, List } from '@mui/material'
+import { Avatar, Box, Button, ListItem, ListItemButton, Typography } from '@mui/material'
 import axios from 'axios'
 import React, { useMemo } from 'react'
 import { useState } from 'react'
@@ -47,6 +47,7 @@ function ChatList(props) {
         axios.get("/api/DirectMessage/List/" + userData?._id).then((response) => {
 
           setData([])
+            // eslint-disable-next-line array-callback-return
             response.data.map((list) => {
               let ListId;
               if (list.receiveUserId === userData._id) {
@@ -118,7 +119,8 @@ function ChatList(props) {
                         verticalAlign: "top",
                         width: "32px",
                         height: "32px",
-                        verticalAlign:"middle",
+                        // eslint-disable-next-line no-dupe-keys
+                        verticalAlign :"middle",
                         marginRight:"10px"
                       }}
                     />
@@ -144,12 +146,6 @@ function ChatList(props) {
 
     
   console.log(SelectUserIdMemo)
-
-  const toggleIdCheck = () => {
-    if(SelectUserIdMemo){
-      toggleDrawer(true)
-    }
-  }
 
 
   const Test = () => {

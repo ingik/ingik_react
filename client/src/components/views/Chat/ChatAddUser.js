@@ -1,7 +1,7 @@
 // import Search from "@mui/icons-material/Search";
-import { Avatar, Button, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Modal, Radio, Typography } from "@mui/material";
+import { Avatar, Button, List, ListItemAvatar, ListItemButton, ListItemText, Modal, Radio } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import SearchIcon from '@mui/icons-material/Search';
 import axios from "axios";
 import { styled, alpha } from '@mui/material/styles';
@@ -104,7 +104,7 @@ function ChatAddUser(props) {
 
     //search
   const [anchorEl, setAnchorEl] = useState(null);
-  const [OnOff, setOnOff] = useState(false)
+  const [OnOff] = useState(false)
 
 
   const [SearchValue, setSearchValue] = useState("");

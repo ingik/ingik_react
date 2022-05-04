@@ -1,5 +1,5 @@
-import { Avatar, Box, Modal } from '@mui/material'
-import React, { useEffect, useMemo, useState } from 'react'
+import { Avatar } from '@mui/material'
+import React, {  useState } from 'react'
 import { useSelector,shallowEqual, useDispatch } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { auth } from '../../../_actions/user_action'

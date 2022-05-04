@@ -7,7 +7,6 @@ import {
   //Link
 } from "react-router-dom";
 
-import LandingPage from './components/views/LandingPage/LandingPage'
 import LoginPage from './components/views/LoginPage/LoginPage'
 import RegisterPage from './components/views/RegisterPage/RegisterPage'
 import Auth from './hoc/auth';
@@ -15,8 +14,6 @@ import Board from './components/views/Board/Board'
 import CreateBoard from './components/views/Board/CreateBoard'
 import BoardList from './components/views/Board/BoardList'
 import UpdateBoard from './components/views/Board/UpdateBoard'
-import Chat from './components/views/Chat/ChatDetail'
-import CreateChat from './components/views/Chat/CreateChat'
 import ChatList from './components/views/Chat/ChatList';
 import SearchAppBar from './components/views/AppBar/SearchAppBar'
 import Profile from './components/views/Profile/Profile'
@@ -28,8 +25,6 @@ import OtherProfileCmp from './components/views/Profile/OtherProfileCmp';
 import ImageBoardCmpList from './components/views/ImageBoard/ImageBoardCmpList';
 import HoverProfile from './components/views/Profile/HoverProfile';
 import CardList from './components/views/NavBar/CardList';
-// import SideAppBar from './components/views/AppBar/SideAppBar' 라우팅 노필요
-// import AppBarCmp from './components/views/AppBar/AppBarCmp'; 지울거
 
 
 function App() {
@@ -44,7 +39,7 @@ function App() {
         <Route exact path="/register" component={Auth(RegisterPage, false)}/>
         <Route  exact 
                 path={  ['/','/boards/detail/:key', '/createboard','/boards',
-                        '/boards/detail/:key/update','/chat','/chat/create',
+                        '/boards/detail/:key/update',
                         '/chat/list','/profile','/profile/:key','/imageBoardCmp']} 
                 component={Auth(SearchAppBar, true)}/>
         <Switch>
@@ -53,8 +48,6 @@ function App() {
           <Route exact path="/createboard" component={Auth(CreateBoard,true)}/>
           <Route exact path="/boards" component={Auth(BoardList , null)}/>
           <Route exact path="/boards/detail/:key/update" component={Auth(UpdateBoard,true)}/>
-          <Route exact path="/chat" component={Auth(Chat,true)}/>
-          <Route exact path="/chat/create" component={ CreateChat }/>
           <Route exact path="/chat/list" component={ChatList}/>
           <Route exact path="/profile" component={Auth(ProfileCmp,true)}/>
           <Route exact path="/imageBoard/:key" component={ImageBoard} />

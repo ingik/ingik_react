@@ -22,13 +22,11 @@ function ProfileImageBoardList(props) {
   const handleClose = () => setOpen(false);
   const [ParamKey, setParamKey] = useState("")
 
-  const [NullData,setNullData] = useState(false)
 
   const viewport = useRef(null)
   const target = useRef(null)
   const imageListRef = useRef(null)
 
-  const [loading, setloading] = useState(false)
 
   let DataLess = false
 
@@ -101,6 +99,7 @@ function ProfileImageBoardList(props) {
         return console.log('no data')
       }
 
+      // eslint-disable-next-line array-callback-return
       response.data.map((list) => {
         console.log(list);
         list.image[0]._id = list._id;
@@ -163,6 +162,7 @@ function ProfileImageBoardList(props) {
     return () => io && io.disconnect();
   
   
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[viewport,target.current])
 
   const onHoverHandler = (event) => {
@@ -212,6 +212,8 @@ function ProfileImageBoardList(props) {
             className={mediaQuery ? `profileMediaSmall` : `profileMediaLarge`}
             cols={3}
             ref={imageListRef}
+            variant={'masonry'}
+
           >
             {PreviewList &&
               PreviewList.map((item, index) => {

@@ -1,5 +1,4 @@
-import { ImageListItem,ImageList, Box } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
+import React, {  useRef, useState } from 'react';
 import axios from 'axios';
 import { shallowEqual, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -28,11 +27,9 @@ function ImageBoardUpload(props) {
   //preview image
   const [ImageListValue, setImageListValue] = useState([]);
   const [ImageArr, setImageArr] = useState("");
-  const [PreviewArr, setPreviewArr] = useState([]);
   const [Content, setContent] = useState("");
   const [ImageActive, setImageActive] = useState(null)
-  const [ButtonCheck, setButtonCheck] = useState(null)
-  const [HeightCheck, setHeightCheck] = useState(false)
+  const ButtonCheck = null
   const [MoblieKeyboard, setMobileKeyboard] = useState(false)
   
   const ImgRef = useRef()
@@ -51,7 +48,6 @@ function ImageBoardUpload(props) {
     if (event.target.files) {
       console.log("files : " + event.target.files);
       setImageArr(Array.from(event.target.files));
-      setPreviewArr(Array.from(event.target.files));
     }
     
     let ArrayArr = Array.from(event.target.files)
@@ -77,7 +73,6 @@ function ImageBoardUpload(props) {
     ListRef.current.style.width = (ArrayArr.length+1) * MainRef.current.offsetWidth+"px";
     setImageActive(true)
     console.log(ListRef.current.style.width)
-    console.log('check : '+HeightCheck)
   };
   
 
@@ -195,6 +190,7 @@ function ImageBoardUpload(props) {
     
     
     Data.append("userName", userData.name);
+    // eslint-disable-next-line array-callback-return
     ImageArr.map((imageArr) => {
       Data.append("ImageArr", imageArr);
       console.log(Data.get("ImageArr"));
@@ -216,6 +212,7 @@ function ImageBoardUpload(props) {
         let data = [];
         console.log(response.data)
 
+        // eslint-disable-next-line array-callback-return
         response.data.map((list) => {
           let value = {
             key : list.key,
@@ -408,6 +405,7 @@ function ImageBoardUpload(props) {
                 verticalAlign: "top",
                 width: "32px",
                 height: "32px",
+                // eslint-disable-next-line no-dupe-keys
                 verticalAlign: "middle",
               }}
             />

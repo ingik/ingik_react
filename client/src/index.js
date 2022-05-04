@@ -11,11 +11,9 @@ import Reducer from './_reducers';
 
 const createStoreWithMiddleware = applyMiddleware(promiseMiddleware, ReduxThunk)(createStore)
 
-if (process.env.NODE_ENV === 'qa') {
-  console.log = () => {}
-  console.error = () => {}
-  console.debug = () => {}
-}
+console.log = () => {}
+console.error = () => {}
+console.debug = () => {}
 
 
 ReactDOM.render( 

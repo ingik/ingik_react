@@ -1,4 +1,4 @@
-import { Avatar, Popover, Typography } from '@mui/material';
+import { Avatar,Typography } from '@mui/material';
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
 import FollowerLength from '../../../moduls/FollowerLength';

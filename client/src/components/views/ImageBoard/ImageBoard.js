@@ -13,7 +13,6 @@ import './ImageBoard.css'
 
 import { useSelector } from 'react-redux'
 import RecommandCmp from '../../../moduls/RecommandCmp';
-import RecommandLength from '../../../moduls/RecommandLength';
 
 import useMediaQuery from '@mui/material/useMediaQuery';
 
@@ -102,6 +101,7 @@ function ImageBoard(props) {
       console.log("imageBoard CleanUp");
       CleanUpBoolean = false;
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

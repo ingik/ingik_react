@@ -7,13 +7,11 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 function FollowingCmp(props) {
   const [FollowDisplay, setFollowDisplay] = useState(null);
+
   const memoFollowDisplay = useCallback(data => setFollowDisplay(data),[FollowDisplay])
+  
   const [DataCheck, setDataCheck] = useState(false)
   useEffect(() => {
-    console.log("FollowCheck");
-    
-    console.log(props)
-    
 
     let body = {
       followerId: props.followerId,
@@ -33,6 +31,7 @@ function FollowingCmp(props) {
         memoFollowDisplay(true);
       }
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.followerId, props.followingId]);
 
   const onFollowHandler = () => {

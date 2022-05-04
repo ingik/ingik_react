@@ -3,6 +3,7 @@ import axios from 'axios'
 import React,{useState,useEffect} from 'react'
 import { useSelector } from 'react-redux';
 import FollowingCmp from '../../../moduls/FollowingCmp';
+import { useHistory } from 'react-router-dom'
 
 
 function FollowList(props) {
@@ -11,12 +12,13 @@ const [ListData, setListData] = useState(null)
 const [open, setOpen] = useState(false);
 const [loading, setloading] = useState(false)
 const [CallData,setCallData] = useState(0)
+const history = useHistory()
 
 const userData = useSelector(state => state.user.userData )
 
 const getFunc = (data) => {
     setCallData(data)
-  }
+}
 
 
 
@@ -53,6 +55,7 @@ useEffect(() => {
       return () => {
         setListData(null)
       }
+// eslint-disable-next-line react-hooks/exhaustive-deps
 },[props.Open])
 
 
@@ -104,7 +107,10 @@ const style = {
               ListData.map((list) => {
                 return (
                   <ListItem key={list?._id}>
-                    <ListItemButton>
+                    <ListItemButton onClick={()=>{
+                      history.push("/profile/"+list?._id)
+                      props.onModalClose(false)
+                    }}>
                       <ListItemAvatar>
                         <Avatar alt={list?.name} src={list?.image} />
                       </ListItemAvatar>

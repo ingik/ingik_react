@@ -13,10 +13,10 @@ import Profile from '../Profile/Profile';
 import SideAppBar from './SideAppBar';
 import ForumIcon from '@mui/icons-material/Forum';
 import { withRouter } from 'react-router-dom';
-import { useState,useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import {  Avatar, List, ListItem, ListItemAvatar, ListItemText, Modal } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 import UploadIcon from '@mui/icons-material/Upload';
 import HomeIcon from '@mui/icons-material/Home';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
@@ -26,7 +26,7 @@ import './AppBar.css'
 
 
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { io } from 'socket.io-client';
+// import { io } from 'socket.io-client';
 
 
 const Search = styled('div')(({ theme }) => ({
