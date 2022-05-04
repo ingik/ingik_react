@@ -11,9 +11,10 @@
 <img src="https://img.shields.io/badge/NGINX-009639?style=for-the-badge&logo=NGINX&logoColor=white"/>
 <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white"/>
 
-react를 너무 사용해보고 싶어서 토이프로젝트 느낌으로 제작하게 되었다.<br>
+react를 너무 사용해보고 싶어서 토이프로젝트 느낌으로 제작하게 되었다.!!<br>
 클론코딩이냐고 물어보시는 분들이 있으신데 그냥 배워볼 겸 제작한 토이프로젝트입니다.<br>
-직접 부딪히며 배우는걸 좋아해서 머리속에서 구상 후 제작된 프로젝트입니다.
+그냥 인스타처럼 이미지SNS를 만들어보고 싶어! 라는 생각으로 제작한 프로젝트이고 <br>
+직접 부딪히며 해결해나간 코드들이라 많이 미숙합니다.
 # http://3.38.119.177/
 
 비밀번호는 암호화 후 db에 저장됩니다. <br>
