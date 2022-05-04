@@ -13,10 +13,10 @@ import Profile from '../Profile/Profile';
 import SideAppBar from './SideAppBar';
 import ForumIcon from '@mui/icons-material/Forum';
 import { withRouter } from 'react-router-dom';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import axios from 'axios';
 import {  Avatar, List, ListItem, ListItemAvatar, ListItemText, Modal } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import UploadIcon from '@mui/icons-material/Upload';
 import HomeIcon from '@mui/icons-material/Home';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
@@ -26,6 +26,7 @@ import './AppBar.css'
 
 
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { io } from 'socket.io-client';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -70,11 +71,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 
-// const localhost = "http://localhost:5555"
 function SearchAppBar(props) {
 
-  // let socket = io.connect(localhost)
-
+  
   
   const [SearchValue, setSearchValue] = useState(null);
   const [UserList, setUserList] = useState(null);
@@ -90,6 +89,16 @@ function SearchAppBar(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [OnOff, setOnOff] = useState(false)
   // const open = Boolean(anchorEl);
+
+  // const dispatch = useDispatch()
+  // const localhost = process.env.NODE_ENV === 'qa' ? 'http://3.38.119.177:5555' : 'http://localhost:5555';
+
+  // let socket
+
+  // useEffect(() => {
+  //   socket = io.connect(localhost)
+  //   console.log(socket)
+  // },[])
 
   const handleClose = () => {
 

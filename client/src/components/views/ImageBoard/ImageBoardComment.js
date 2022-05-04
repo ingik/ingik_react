@@ -106,9 +106,9 @@ function ImageBoardComment(props) {
   const [NoModal, setNoModal] = useState(false)
 
   
-  console.log('CHILD : '+ChildModal)
-  console.log('PARENT : '+ParentModal)
-  console.log('NoModal : '+NoModal)
+  // console.log('CHILD : '+ChildModal)
+  // console.log('PARENT : '+ParentModal)
+  // console.log('NoModal : '+NoModal)
 
   const porperEnter = () => {
     console.log('child enter')

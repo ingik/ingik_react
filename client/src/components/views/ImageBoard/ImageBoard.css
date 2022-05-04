@@ -35,6 +35,10 @@
     display:none;
 }
 
+.boxSmall::-webkit-scrollbar{
+    display:none;
+}
+
 .boardLabelSmall{
     width: 90vw;
     height: 45vh;

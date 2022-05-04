@@ -1,7 +1,7 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 //배포환경
-const URL = process.env.NODE_ENV === 'qa' ? 'http://3.38.119.177:5000' : 'http://localhost:5000';
+const URL = process.env.NODE_ENV == 'qa' ? 'http://3.38.119.177:5000' : 'http://localhost:5000';
 
 // 로컬환경
 // const URL = "http://localhost:5000"

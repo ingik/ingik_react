@@ -43,21 +43,24 @@ function ImageBoard(props) {
 
   const onLeftMove = () => {
 
-    console.log(Number);
+    console.log('Left');
     if (Number <= 0) {
       return console.log("firstpage");
     }
     setNumber(Number - 1);
-
+    
+    
     async function Left() {
-      ImgRef.current[Number - 1].style.display = "table";
+      ImgRef.current[Number - 1].style.display = "table"
       ListRef.current.style.transition = "none";
-      ListRef.current.style.transform = ListRef.current.style.transform + `translateX(-${ImgRef.current[Number].offsetWidth}px)`;
+      ListRef.current.style.transform = `translateX(-${ImgRef.current[Number].offsetWidth - 1}px)`;
     }
     
-    Left().then(async() => {
-      ListRef.current.style.transition = "300ms";
-      ListRef.current.style.transform = ListRef.current.style.transform + `translateX(${ImgRef.current[Number - 1].offsetWidth}px)`;
+    Left().then(() => {
+      setTimeout(()=>{
+        ListRef.current.style.transition = "300ms";
+        ListRef.current.style.transform = ListRef.current.style.transform + `translateX(${ImgRef.current[Number-1].offsetWidth}px)`;
+      },0)
     });
   };
 
@@ -78,11 +81,11 @@ function ImageBoard(props) {
     setTimeout(() => {
       console.log("none");
       ListRef.current.style.transition = "none";
-      
       ListRef.current.style.transform = ListRef.current.style.transform + `translateX(${ImgRef.current[Number].offsetWidth}px)`;
+
       ImgRef.current[Number].style.display = "none";
     }, 300);
-
+    
   };
 
   useEffect(() => {
@@ -103,8 +106,7 @@ function ImageBoard(props) {
 
   useEffect(() => {
     console.log("ImageDataList");
-    // ListRef.current.style.width = ImageDataList.length * 500 + "px";
-    ListRef.current.style.width = (ImageDataList.length + 2) * MainRef.current.clientWidth  + "px";
+    ListRef.current.style.width = (ImageDataList.length + 1) * MainRef.current.offsetWidth  + "px";
   }, [ImageDataList]);
 
   const none = {
@@ -223,7 +225,6 @@ function ImageBoard(props) {
     console.log();
 
     if (props.contentPosition === true) {
-      console.log("right");
       console.log(UserData[0]?._id);
       return (
         <div
@@ -464,11 +465,12 @@ function ImageBoard(props) {
         {/* 리스트사이즈 가변적일 필요가 이씀 */}
 
         <div
+        className='ListDiv'
           style={{
             position: "relative",
             margin: "auto",
             // paddingBottom: "30px",
-            transform: `translateX(0)`,
+            // transform: `translateX(0)`,
           }}
           ref={ListRef}
         >

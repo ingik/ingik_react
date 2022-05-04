@@ -253,39 +253,6 @@ function ImageBoardUpload(props) {
   };
 
 
-  const [height, setheight] = useState(window.innerHeight);
-
-const resizeWindow = () => {
-  setheight(window.innerHeight);
-};
-
-
-
-  useEffect(() => {
-    window.addEventListener('resize', resizeWindow)
-
-    console.log(height)
-    console.log(HeightCheck)
-    if(height < 500){
-      console.log(height)
-      setHeightCheck(true)
-    }else{
-      console.log(height)
-      setHeightCheck(false)
-    }
-    
-    return () => {
-      window.removeEventListener('resize', resizeWindow)
-    }
-  },[height])
-
-
-
-
-
-
-
-
   const ListRef = useRef({ x: 0, y: 0 });
   const [Number,setNumber] = useState(0)
 
@@ -302,10 +269,10 @@ const resizeWindow = () => {
     setNumber(Number - 1)
     
     async function Left(){
-      ImgRef.current[Number-1].style.display = "table"
+      ImgRef.current[Number - 1].style.display = "table"
       ListRef.current.style.transition = "none";
-      ListRef.current.style.transform = ListRef.current.style.transform + `translateX(-${ImgRef.current[Number].offsetWidth}px)`;
-
+      ListRef.current.style.transform = ListRef.current.style.transform + `translateX(-${ImgRef.current[Number].offsetWidth - 1}px)`;
+      
     }
     
     Left().then(() => {
@@ -329,8 +296,6 @@ const resizeWindow = () => {
     }
 
     setNumber(Number + 1)
-    console.log(window.innerWidth)
-    console.log('ListRef.style.width : '+ ListRef.current.style.width)
     
       ListRef.current.style.transition = "300ms";
       ListRef.current.style.transform = ListRef.current.style.transform + `translateX(-${ImgRef.current[Number].clientWidth}px)`;
@@ -340,21 +305,9 @@ const resizeWindow = () => {
         console.log('none')
         ListRef.current.style.transition = "none";
 
-        // ListRef.current.style.width = ((ImageListValue.length-1) - Number) * MainRef.current.offsetWidth + "px";
         ListRef.current.style.transform = ListRef.current.style.transform + `translateX(${ImgRef.current[Number].clientWidth}px)`;
         ImgRef.current[Number].style.display = "none"
       }, 300);
-
-
-    // ListRef.current.style.width = ImageListValue.length * ImgRef.current[Number].clientWidth + "px";
-
-
-    console.log('MainRef.style.width2 : '+ MainRef.current.style.width)
-    console.log('ListRef.style.width2 : '+ ListRef.current.style.width)
-    console.log(ListRef.current.style.transform)
-    console.log(ImgRef.current[Number].style)
-    console.log("right");
-
 
   };
 
@@ -389,26 +342,6 @@ const resizeWindow = () => {
   }
   const uploadContentBoxSmallMobile = {
     height:"42vh"
-  }
-
-  // const onCheckButton = () => {
-  //   if(ImageActive === true && ButtonCheck === true){
-  //   }else{
-  //     return <React.Fragment/>
-  //   }
-  // } 
-
-  const FocusOn = () => {
-    console.log(HeightCheck);
-      // if (HeightCheck === true) {
-        MainRef.current.style.display = `none`;
-      // }
-  };
-  
-
-  const FocusOut = () => {
-    MainRef.current.style.display = `inline-block`
-    // setButtonCheck(false)
   }
 
   const onCommentFocus = () => {
@@ -511,7 +444,7 @@ const resizeWindow = () => {
               ref={TextRef}
               
               onFocus={mediaQuery ? null : onCommentFocus}
-              onFocusOut={mediaQuery ? null : onCommentBlur}
+              onBlur={mediaQuery ? null : onCommentBlur}
             />
           </div>
           <div
