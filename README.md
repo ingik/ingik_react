@@ -12,7 +12,7 @@
 <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white"/>
 
 react를 너무 사용해보고 싶어서 토이프로젝트 느낌으로 제작하게 되었다.!!<br>
-클론코딩이냐고 물어보시는 분들이 있으신데 그냥 배워볼 겸 제작한 토이프로젝트입니다.<br>
+클론코딩이냐고 물어보시는 분들이 있으신데 아닙니다.. SNS에서 돌아다니면서 이 기능 저 기능 따라 구현해 본겁니다.<br>
 그냥 인스타처럼 이미지SNS를 만들어보고 싶어! 라는 생각으로 제작한 프로젝트이고 <br>
 직접 부딪히며 해결해나간 코드들이라 많이 미숙합니다.
 # http://3.38.119.177/
