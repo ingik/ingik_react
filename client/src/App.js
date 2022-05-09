@@ -25,6 +25,7 @@ import OtherProfileCmp from './components/views/Profile/OtherProfileCmp';
 import ImageBoardCmpList from './components/views/ImageBoard/ImageBoardCmpList';
 import HoverProfile from './components/views/Profile/HoverProfile';
 import CardList from './components/views/NavBar/CardList';
+import Notice from './components/views/Notice/Notice';
 
 
 function App() {
@@ -40,7 +41,7 @@ function App() {
         <Route  exact 
                 path={  ['/','/boards/detail/:key', '/createboard','/boards',
                         '/boards/detail/:key/update',
-                        '/chat/list','/profile','/profile/:key','/imageBoardCmp']} 
+                        '/chat/list','/profile','/profile/:key','/imageBoardCmp','/Notice']} 
                 component={Auth(SearchAppBar, true)}/>
         <Switch>
           {/* <Route exact path="/" component={Auth(LandingPage, null)}/> */}
@@ -58,6 +59,7 @@ function App() {
           <Route exact path="/modal" component={ Profile }/>
           <Route exact path="/hover" component={HoverProfile}/>
           <Route exact path="/cardlist" component={CardList}/>
+          <Route exact path="/Notice" component={Notice}/>
         </Switch>
         
       </div>

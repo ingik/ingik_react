@@ -1,69 +1,174 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import ImageBoard from './ImageBoard';
 
 import './ImageBoard.css'
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { CircularProgress } from '@mui/material';
 
 
 function ImageBoardCmpList() {
+
+  let number = 1
+  const target = useRef(null)
+  const viewport = useRef(null)
 
 
   const [DataList, setDataList] = useState([])
   const mediaQuery = useMediaQuery('(min-width:641px)');
 
+  const [DataLess,setDataLess] = useState(null)
+
+console.log(number)
+  useEffect(() => {
+      let CleanUpBoolean = true;
+      axios.get("/api/boards/imageBoardListCmp/").then(response => {
+
+        const value = [];
+  
+        // eslint-disable-next-line array-callback-return
+        response.data.map((list) => {
+  
+          axios.get('/api/boards/recommandLength/'+list._id).then(response => {
+            console.log(response.data)
+            list.recommand = response.data[0]?.recommand
+          })
+          value.push(list);
+
+        });
+        if(CleanUpBoolean) setDataList(value)
+  
+      })
+
+      return () => {
+        CleanUpBoolean = false;
+        setDataList(null)
+      }
+
+
+  },[])
 
   useEffect(() => {
-    async function get() {
-      const result = await axios.get("/api/boards/imageBoardList");
-      const value = [];
-
-      console.log(result)
-
-      // eslint-disable-next-line array-callback-return
-      result?.data.map((list) => {
-
-        console.log(list)
-
-        axios.get('/api/boards/recommandLength/'+list._id).then(response => {
-          console.log(response.data)
-          list.recommand = response.data[0]?.recommand
-        })
-        
-        value.push(list);
     
-      });
+    let io;
+    if (target.current) {
 
-      setDataList(value)
-      console.log(value)
+      console.log('intersection observe')
+      const options = {
+        root: viewport.current,
+        threshold: 0,
+      };
 
+      const handleintersection = (entries, observer) => {
+        console.log(entries);
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) {
+            return;
+          }
+          loadItems();
+
+          observer.unobserve(entry.target);
+          if(!DataLess){
+          setTimeout(() => {
+            ++number
+            if(target.current) observer.observe(target.current);
+          }, 2000);
+        }
+        });
+      };
+
+      io = new IntersectionObserver(handleintersection, options);
+
+      if (target.current) {
+        io.observe(target.current);
+      }
+    }
+    
+    return () => {
+      io && io.disconnect();
+      setDataList(null)
+    };
+
+  }, [target, viewport]);
+
+
+
+const loadItems = () => {
+  
+  console.log('loadItems')
+  const value = [];
+
+
+  axios.get("/api/boards/imageBoardListCmp/" + number).then( response => {
+
+    if(response.data.length === 0) {
+      setDataLess(true)
+      return console.log('last data')
     }
 
-    get()
-  },[])
+    // eslint-disable-next-line array-callback-return
+    response.data.map((list) => {
+      axios.get('/api/boards/recommandLength/'+list._id).then(response => {
+        console.log(response.data)
+        list.recommand = response.data[0]?.recommand
+      })
+      
+      value.push(list);
+  
+    });
+
+    setDataList((prevState) => { return [...prevState,...value] })
+
+  })
+
+  
+
+}
 
 
     
   return (
-  <div
-    className='CmpList'
-    style={{paddingTop:'64px'}}
+    <div
+      className="CmpList"
+      style={{ paddingTop: "64px", height: "100%" }}
+      ref={viewport}
     >
-    {DataList.map((item) => {
-      return (
-        <div key={item._id}
-          className={
-            mediaQuery ?
-            `cmpBox` :
-            `cmpBoxSmall`
-          }
-        >
-        <ImageBoard paramKey={item._id} contentPosition={false} />
-        </div>
-      )
-    })}
-  </div>
+      <div
+        className="viewport"
+        style={{ width: "100%", height: "90vh", overflow: "auto" }}
+      >
+        {DataList &&
+          DataList.map((item, index) => {
+            // let lastEl = index === DataList.length - 1
+            return (
+              <div
+                key={index}
+                className={mediaQuery ? `cmpBox` : `cmpBoxSmall`}
+                // ref={lastEl ? target : null}
+              >
+                <div className={mediaQuery ? `card` : null}>
+                  <ImageBoard paramKey={item._id} contentPosition={false} />
+                </div>
+              </div>
+            );
+          })}
+        {DataList ? (
+          <div style={{ width: "100%", height: "300px" ,position:'relative'}} ref={target} >
+            {DataLess ? null : <CircularProgress
+              sx={{
+                position: "absolute",
+                top: "calc(50% - 20px)",
+                left: "calc(50% - 20px)",
+              }}
+            />}
+          </div>
+        ) : (
+          <div ref={target} />
+        )}
+
+      </div>
+    </div>
   );
 }
 

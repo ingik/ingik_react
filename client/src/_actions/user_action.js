@@ -2,7 +2,8 @@ import axios from 'axios';
 import {
     LOGIN_USER,
     REGISTER_USER,
-    AUTH_USER
+    AUTH_USER,
+    SOCKET_CONNECT
 } from './types';
 
 export function loginUser(dataToSubmit){
@@ -49,6 +50,16 @@ export function authUpdate(dataToSubmit){
 
     return {
         type: AUTH_USER,
+        payload: request
+    }
+}
+
+export function socketReduxConnect(dataToSubmit){
+
+
+    const request = dataToSubmit
+    return {
+        type: SOCKET_CONNECT,
         payload: request
     }
 }

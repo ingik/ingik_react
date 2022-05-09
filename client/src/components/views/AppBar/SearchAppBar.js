@@ -13,10 +13,10 @@ import Profile from '../Profile/Profile';
 import SideAppBar from './SideAppBar';
 import ForumIcon from '@mui/icons-material/Forum';
 import { withRouter } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import {  Avatar, List, ListItem, ListItemAvatar, ListItemText, Modal } from '@mui/material';
-import {  useSelector } from 'react-redux';
+import {  Avatar, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Modal } from '@mui/material';
+import {  useDispatch, useSelector } from 'react-redux';
 import UploadIcon from '@mui/icons-material/Upload';
 import HomeIcon from '@mui/icons-material/Home';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
@@ -26,7 +26,8 @@ import './AppBar.css'
 
 
 import useMediaQuery from '@mui/material/useMediaQuery';
-// import { io } from 'socket.io-client';
+import { io } from 'socket.io-client';
+import { socketReduxConnect } from '../../../_actions/user_action';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -69,6 +70,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+const localhost = process.env.NODE_ENV === 'qa' ? 'http://3.38.119.177:5555' : 'http://localhost:5555';
+// let localhost = 'http://localhost:5555';
+let socket = io.connect(localhost)
+
+
 
 
 function SearchAppBar(props) {
@@ -90,15 +96,24 @@ function SearchAppBar(props) {
   const [OnOff, setOnOff] = useState(false)
   // const open = Boolean(anchorEl);
 
-  // const dispatch = useDispatch()
-  // const localhost = process.env.NODE_ENV === 'qa' ? 'http://3.38.119.177:5555' : 'http://localhost:5555';
 
-  // let socket
+  // socket testing
 
-  // useEffect(() => {
-  //   socket = io.connect(localhost)
-  //   console.log(socket)
-  // },[])
+  const dispatch = useDispatch()
+
+  console.log(socket)
+  
+  useEffect(() => {
+    dispatch(socketReduxConnect(socket))
+
+    return () => {
+      socket.disconnect();
+      socket.on("disconnected", (data) => {
+        console.log("data : " + data);
+      });
+      socket.close()
+    };
+  },[])
 
   const handleClose = () => {
 
@@ -177,7 +192,7 @@ function SearchAppBar(props) {
     zIndex: "99",
     backgroundColor: "white",
     maxHeight: "25em",
-    overflowY: "scroll",
+    overflowY: "auto",
     width: "30vw",
     paddingBottom: 0,
     borderRadius: "5px",
@@ -187,7 +202,7 @@ function SearchAppBar(props) {
     zIndex: "99",
     backgroundColor: "white",
     maxHeight: "25em",
-    overflowY: "scroll",
+    overflowY: "auto",
     width: "100%",
     paddingBottom: 0,
     borderRadius: "5px",
@@ -196,181 +211,182 @@ function SearchAppBar(props) {
 
   return (
     <React.Fragment>
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar
-        position="static"
-        color="inherit"
-        style={{
-          position: "fixed",
-          backgroundColor: "",
-          zIndex: "200",
-          top: 0,
-        }}
-      >
-        <Toolbar>
-          {/* SidsAppBar Component */}
-          <Box sx={{ display: { xs: "flex", md: "none" } }}>
-            <SideAppBar propsData={props} />
-          </Box>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
-            onClick={onHomeButtonHandler}
-          >
-            SNAP STORY
-          </Typography>
-
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-              value={SearchValue}
-              onChange={onSearchHanler}
-            />
-
-            <List
-              style={
-                mediaQuery ? 
-                searchUserList :
-                searchUserListSmall
-              }
-              anchorEl={anchorEl}
-              open={OnOff}
-              onClose={handleClose}
-            >
-              {
-               SearchValue && SearchValue.length !== 0 ?
-              UserList && UserList.map((item) => {
-                return (
-                  <ListItem
-                    key={item.name}
-                    // style={{ width: "100%" }}
-                    onClick={() => {
-                      console.log(props);
-                      console.log(item._id);
-                      if (userData._id === item._id) {
-                        props.history.push("/profile");
-                        setOnOff(false);
-                        setUserList([]);
-                        setSearchValue("");
-                      } else {
-                        props.history.push("/profile/" + item._id);
-                        setOnOff(false);
-                        setUserList([]);
-                        setSearchValue("");
-                      }
-                    }}
-                  >
-                    <ListItemAvatar>
-                      <Avatar alt={item.name} src={item.image} />
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={item.name}
-                      secondary={
-                        <React.Fragment>
-                          <Typography
-                            sx={{
-                              display: "inline-block",
-                              whiteSpace: "nowrap",
-                              overflow: "hidden",
-                              textOverflow: "clip",
-                              width: "20vw",
-                            }}
-                            component="span"
-                            variant="body2"
-                            color="text.primary"
-                          >
-                            {item.intro}
-                          </Typography>
-                        </React.Fragment>
-                      }
-                    />
-                  </ListItem>
-                );
-              })
-              
-              : null
-            }
-
-            </List>
-          </Search>
-
-          <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <IconButton
-              size="large"
-              aria-label="show 4 new mails"
-              color="inherit"
-              onClick={() => {
-                props.history.push("/");
-              }}
-            >
-              <FormatListBulletedIcon />
-            </IconButton>
-            <IconButton
-              size="large"
-              color="inherit"
-              onClick={() => {
-                props.history.push("/imageBoardCmp");
-              }}
-            >
-              <HomeIcon />
-            </IconButton>
-            <IconButton
-              size="large"
-              color="inherit"
-              onClick={()=>{setModalOpen(true)}}
-            >
-              <UploadIcon />
-            </IconButton>
-            <IconButton
-              size="large"
-              color="inherit"
-              onClick={()=>{
-                props.history.push("/chat/list")
-              }}
-            >
-              <Badge  color="error">
-                <ForumIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              size="large"
-              aria-label="show 17 new notifications"
-              color="inherit"
-            >
-              <Badge 
-                // badgeContent={7} 
-                color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-          </Box>
-
-
-          <Profile Data={props} />
-          
-        </Toolbar>
-      </AppBar>
-      {/* {renderMobileMenu} */}
-      <Modal
-            open={ModalOpen}
-            onClose={ModalhandleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box sx={mediaQuery ?
-                    style :
-                    mobileStyle}>
-              <ImageBoardUpload handleClose={handleClose} />
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar
+          position="static"
+          color="inherit"
+          style={{
+            position: "fixed",
+            backgroundColor: "",
+            zIndex: "200",
+            top: 0,
+          }}
+        >
+          <Toolbar>
+            {/* SidsAppBar Component */}
+            <Box sx={{ display: { xs: "flex", md: "none" } }}>
+              <SideAppBar propsData={props} />
             </Box>
-          </Modal>
-    </Box>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ display: { xs: "none", sm: "block" } }}
+              onClick={onHomeButtonHandler}
+            >
+              SNAP STORY
+            </Typography>
+
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ "aria-label": "search" }}
+                value={SearchValue}
+                onChange={onSearchHanler}
+                onBlur={() => {
+                  setAnchorEl(null);
+                  setUserList(null);
+                  setOnOff(false);
+                }}
+                onFocus={onSearchHanler}
+              />
+
+              <List
+                style={mediaQuery ? searchUserList : searchUserListSmall}
+                anchorEl={anchorEl}
+                open={OnOff}
+                onClose={handleClose}
+              >
+                {SearchValue && SearchValue.length !== 0
+                  ? UserList &&
+                    UserList.map((item) => {
+                      return (
+                        <ListItemButton
+                          key={item.name}
+                          // style={{ width: "100%" }}
+                          onClick={() => {
+                            console.log(props);
+                            console.log(item._id);
+                            if (userData._id === item._id) {
+                              props.history.push("/profile");
+                              setOnOff(false);
+                              setUserList([]);
+                              setSearchValue("");
+                            } else {
+                              props.history.push("/profile/" + item._id);
+                              setOnOff(false);
+                              setUserList([]);
+                              setSearchValue("");
+                            }
+                          }}
+                        >
+                          <ListItemAvatar>
+                            <Avatar alt={item.name} src={item.image} />
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={item.name}
+                            secondary={
+                              <React.Fragment>
+                                <Typography
+                                  sx={{
+                                    display: "inline-block",
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "clip",
+                                    width: "20vw",
+                                  }}
+                                  component="span"
+                                  variant="body2"
+                                  color="text.primary"
+                                >
+                                  {item.intro}
+                                </Typography>
+                              </React.Fragment>
+                            }
+                          />
+                        </ListItemButton>
+                      );
+                    })
+                  : null}
+              </List>
+            </Search>
+
+            <Box sx={{ flexGrow: 1 }} />
+            <Box sx={{ display: { xs: "none", md: "flex" } }}>
+              <IconButton
+                size="large"
+                aria-label="show 4 new mails"
+                color="inherit"
+                onClick={() => {
+                  props.history.push("/");
+                }}
+              >
+                <FormatListBulletedIcon />
+              </IconButton>
+              <IconButton
+                size="large"
+                color="inherit"
+                onClick={() => {
+                  props.history.push("/imageBoardCmp");
+                }}
+              >
+                <HomeIcon />
+              </IconButton>
+              <IconButton
+                size="large"
+                color="inherit"
+                onClick={() => {
+                  setModalOpen(true);
+                }}
+              >
+                <UploadIcon />
+              </IconButton>
+              <IconButton
+                size="large"
+                color="inherit"
+                onClick={() => {
+                  props.history.push("/chat/list");
+                }}
+              >
+                <Badge color="error">
+                  <ForumIcon />
+                </Badge>
+              </IconButton>
+              <IconButton
+                size="large"
+                aria-label="show 17 new notifications"
+                color="inherit"
+                onClick={() => {
+                  props.history.push("/Notice");
+                }}
+              >
+                <Badge
+                  // badgeContent={7}
+                  color="error"
+                >
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+            </Box>
+
+            <Profile Data={props} />
+          </Toolbar>
+        </AppBar>
+        {/* {renderMobileMenu} */}
+        <Modal
+          open={ModalOpen}
+          onClose={ModalhandleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={mediaQuery ? style : mobileStyle}>
+            <ImageBoardUpload handleClose={handleClose} />
+          </Box>
+        </Modal>
+      </Box>
     </React.Fragment>
   );
 }

@@ -12,6 +12,7 @@ function FollowingCmp(props) {
   
   const [DataCheck, setDataCheck] = useState(false)
   useEffect(() => {
+    let CleanUpBoolean = true;
 
     let body = {
       followerId: props.followerId,
@@ -22,15 +23,21 @@ function FollowingCmp(props) {
 
     axios.post("/api/users/followCheck", body).then((response) => {
       console.log(response.data);
-      setDataCheck(true)
-      if (!response.data) {
-        // setFollowDisplay(false);
-        memoFollowDisplay(false);
-      } else {
-        // setFollowDisplay(true);
-        memoFollowDisplay(true);
+      if(CleanUpBoolean){
+        setDataCheck(true);
+        if (!response.data) {
+          // setFollowDisplay(false);
+          memoFollowDisplay(false);
+        } else {
+          // setFollowDisplay(true);
+          memoFollowDisplay(true);
+        }
       }
     });
+
+    return () => {
+      CleanUpBoolean = false
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.followerId, props.followingId]);
 

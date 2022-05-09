@@ -2,25 +2,16 @@ import { Avatar, Button, Divider, TextField } from '@mui/material';
 import axios from 'axios'
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { io } from 'socket.io-client';
 import './Chat.css';
 
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 
-// const localhost = process.env.NODE_ENV === 'qa' ? 'http://3.38.119.177:5555' : 'http://localhost:5555';
-
-//로컬환경
-// const localhost = "http://localhost:5555"
-//배포환경
-const localhost = "http://3.38.119.177:5555"
-
-let socket
-
 function DMList(props) {
 
 
     const userData = useSelector(state => state.user.userData)
+    const socket = useSelector(state => state.user.socketData)
 
     
     const [ChatList, setChatList] = useState([])
@@ -35,8 +26,6 @@ function DMList(props) {
 
     const mediaQuery = useMediaQuery('(min-width:600px)');
 
-
-
     useEffect(() => {
       
       axios.get("/api/users/findId/"+props.OtherUserId).then(response => {
@@ -48,6 +37,7 @@ function DMList(props) {
 
 
     useEffect(() => { 
+      
 
       const params = {
         user: userData._id,
@@ -68,47 +58,55 @@ function DMList(props) {
 
       
     useEffect(()=>{
-      if(ChatRoomId){
-      console.log('socket start')
-
-        socket = io.connect(localhost)
-
-        console.log(socket)
+      console.log("DM start");
+      console.log(socket.connected);
+      
+      if (ChatRoomId && socket) {
         
-        console.log('RoomId : '+ChatRoomId)
-        socket.emit('joinRoom', ChatRoomId)
-        socket.on('room Info',(data)=>{ console.log('Room info : '+ data)})
+        console.log(socket);
+        socket.emit("joinRoom", ChatRoomId);
+        // socket.on('room Info',(data)=>{ console.log('Room info : '+ data)})
 
-        socket.on('my socket id', (data) => {
-          console.log('mySocketID : ' , data);
+        socket.on("my socket id", (data) => {
+          console.log("mySocketID : ", data);
         });
 
-        socket.emit('enter chatroom',userData.name);
+        let body = {
+          name: userData.name,
+          room: ChatRoomId,
+        };
 
-        socket.on('client login', (data) => {
-            console.log('client login : ',data)
+        socket.emit("enter chatroom", body);
+
+        socket.on("client login", (data) => {
+          console.log("client login : ", data);
         });
 
-        socket.on('all message',(data) => {
-          console.log('receive message')
-          console.log(data)
+        socket.on("leave alert", (data) => {
+          console.log(data);
+        });
+
+        socket.on("all message", (data) => {
+          console.log("receive message");
+          console.log(data);
 
           setChatList((prevState) => {
-            return [...prevState, data]
-          })
-        })
+            return [...prevState, data];
+          });
+        });
 
-        
-        return ()=>{
-          socket.disconnect()
-          socket.on('disconnected', data => {
-            console.log('leave chatroom ', data);
-          })
-          socket = undefined
-        }
+        return () => {
+          console.log('leeeeeeeeeeeeeeeeeeeve');
+          socket.emit("leave chatroom", ChatRoomId);
+          socket.off("client login")
+          socket.off("all message")
+          socket.off("leave alert")
+        };
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
       },[ChatRoomId])
+
+
 
       useEffect(()=>{
         console.log('scroll')
@@ -130,6 +128,7 @@ function DMList(props) {
           _id: ChatData._id,
           chatSendId: userData._id,
           chatContent: Message,
+          room:ChatRoomId
         };
 
         console.log(body);
@@ -237,4 +236,4 @@ function DMList(props) {
   );
 }
 
-export default DMList;
+export default React.memo(DMList);

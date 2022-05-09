@@ -96,7 +96,6 @@ function ChatList(props) {
     const SelectUserIdMemo = useMemo(()=> SelectUserId,[SelectUserId])
 
     const list = () => {
-      console.log('list')
 
       return <Box
         sx={{ width: '100vw', height:'100vh'  }}
@@ -145,7 +144,6 @@ function ChatList(props) {
     }
 
     
-  console.log(SelectUserIdMemo)
 
 
   const Test = () => {

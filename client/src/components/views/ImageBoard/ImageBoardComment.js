@@ -60,7 +60,6 @@ function ImageBoardComment(props) {
   const onEnter = (event) => {
     if(event.target.children[2]){
       event.target.children[2].style.display = 'block'
-
     }
   }
 
@@ -134,10 +133,11 @@ function ImageBoardComment(props) {
           horizontal: "left",
         }}
         transitionDuration={{ appear: 2000, enter: 500 }}
-        disableAutoFocus
-        disableEnforceFocus
+        // disableAutoFocus
+        // disableEnforceFocus
         onMouseEnter={porperEnter}
         onMouseLeave={porperLeave}
+
       >
         <HoverProfile UserData={HoverUser} />
       </Popover>
@@ -150,7 +150,7 @@ function ImageBoardComment(props) {
               key={index}
               style={{ padding: "10px 0" }}
               onMouseEnter={onEnter}
-              onMouseOut={onLeave}
+              onMouseLeave={onLeave}
             >
               <Avatar
                 alt={item?.user.name}
@@ -167,6 +167,7 @@ function ImageBoardComment(props) {
                   setHoverUser(item?.user);
                   setParentModal(true);
                 }}
+                
                 onMouseLeave={() => {
                   setParentModal(false);
                 }}
@@ -206,6 +207,9 @@ function ImageBoardComment(props) {
                       userId: item.user._id,
                       content: item.content,
                     });
+                  }}
+                  onMouseLeave={(event)=>{
+                    event.target.style.display='none'
                   }}
                 />
               ) : null}

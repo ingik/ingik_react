@@ -612,6 +612,30 @@ app.get('/api/boards/imageBoardList/:key',(req,res) => {
 
 })
 
+
+//imageBoardListCmp
+
+app.get('/api/boards/imageBoardListCmp', auth ,(req,res) => {
+
+  ImageBoard.find((err,imageBoard) => {
+    if(err) return res.status(500).send({error: 'database failure'})
+    return res.status(200).json(imageBoard)
+  }).sort({_id:-1}).limit(5)
+
+})
+
+app.get('/api/boards/imageBoardListCmp/:key',(req,res) => {
+
+  let index = req.params.key * 5
+
+  console.log(index)
+  ImageBoard.find((err,imageBoard) => {
+    if(err) return res.status(500).send({error: 'database failure'})
+    return res.status(200).json(imageBoard)
+  }).sort({_id:-1}).skip(index).limit(5)
+
+})
+
 app.get('/api/boards/imageBoard/:key',(req,res) => {
 
   ImageBoard.find({ '_id': req.params.key },(err,board) => {
@@ -983,53 +1007,72 @@ const io = Server(server,{
 //Chat Server
 const serverPort = 5555
 
+let roomTest
+
 io.on('connection', (socket) => {
-
-
+  
   io.to(socket.id).emit('my socket id',{socketId: socket.id});
   console.log("연결된 socketID : ", socket.id);
 
+  //join room
+  
   socket.on('joinRoom',(roomName) => {
-    console.log('roomName : '+roomName)
+    
     socket.join(roomName)
+    console.log(socket.rooms);
+    console.log('roomName : '+roomName)
+    
+    roomTest = roomName
+  })
+  
+  console.log('roomTest : '+roomTest)
+  
+  socket.on('enter chatroom', (data) => {
+    console.log(socket.rooms);
+    console.log(data.name + " 님 입장");
+    io.to(data.room).emit('client login', {type:data.name+" 님 입장", regDate:Time,socketId:socket.id});
+  })
 
-    io.to(roomName).emit('room Info',roomName)
 
-    socket.on('enter chatroom', (data) => {
-        console.log(data + " 님 입장");
-        io.to(roomName).emit('client login', {type:data+" 님 입장", regDate:Time,socketId:socket.id});
-    })
+  //room send maessage
 
-    socket.on('send message',(data) => {
-        console.log("(back)send message : "+ JSON.stringify(data))
-        DirectM.findOneAndUpdate(
-          { _id : data._id},
-          {
-          $push: {
-            chatList: {
-              chatSendId: data.chatSendId,
-              chatContent: data.chatContent,
-              SendDate: Time
-            },
+  socket.on("send message", (data) => {
+    console.log("(back)send message : " + JSON.stringify(data));
+    DirectM.findOneAndUpdate(
+      { _id: data._id },
+      {
+        $push: {
+          chatList: {
+            chatSendId: data.chatSendId,
+            chatContent: data.chatContent,
+            SendDate: Time,
           },
         },
-        (err, dm) => {
-          if (err) io.to(roomName).emit('all message', err)
-          io.to(roomName).emit('all message', data)
-          // return res.status(200).send(dm);
-        }
-      )
-        
-    })
+      },
+      (err, dm) => {
+        if (err) io.to(data.room).emit("all message", err);
+        io.to(data.room).emit("all message", data);
+        // return res.status(200).send(dm);
+      }
+    );
+  });
 
-    socket.on('disconnect', () => {
-      console.log('누가 나감');
-      io.to(roomName).emit('disconnected', {type:'퇴장'});
-      // socket.emit('disconnected', {type:'퇴장'});
-    })
+  //room leave
 
-    
+  socket.on('leave chatroom',(data) => {
+    socket.leave(data)
+    io.to(data).emit('leave alert',{type:'방을 나가셨습니다.'})
   })
+
+
+  //socket disconnect
+
+  socket.on('disconnect', () => {
+    console.log('disconnect socket');
+    // io.to(roomName).emit('disconnected', {type:'로그아웃'});
+    socket.emit('disconnected', {type:'socket disconnect'})
+  })
+
 })
 
   

@@ -24,6 +24,8 @@ function RecommandCmp(props) {
   useEffect(() => {
     console.log("RecommandCmp");
 
+    let CleanUpBoolean = true;
+
     let body = {
       boardId: props.boardId,
       recommandId: props.recommandId,
@@ -34,14 +36,20 @@ function RecommandCmp(props) {
     axios.post("/api/boards/recommandCheck", body).then((response) => {
       console.log(response.data);
 
-      if (!response.data) {
-        // memoRecommandDisplay(false)
-        setRecommandDisplay(false);
-      } else {
-        // memoRecommandDisplay(true)
-        setRecommandDisplay(true);
+      if (CleanUpBoolean) {
+        if (!response.data) {
+          // memoRecommandDisplay(false)
+          setRecommandDisplay(false);
+        } else {
+          // memoRecommandDisplay(true)
+          setRecommandDisplay(true);
+        }
       }
     });
+
+    return () => {
+      CleanUpBoolean = false
+    }
   }, [props]);
 
   const onRecommandHandler = () => {

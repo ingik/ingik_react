@@ -53,7 +53,7 @@
 .rigthBox{
     position: absolute;
     display: inline-block;
-    width: 48%;
+    width: 40vw;
     height: 96%;
     padding: 10px;
 }

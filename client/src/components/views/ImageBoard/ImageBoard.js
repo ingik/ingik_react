@@ -106,7 +106,7 @@ function ImageBoard(props) {
 
   useEffect(() => {
     console.log("ImageDataList");
-    ListRef.current.style.width = (ImageDataList.length + 1) * MainRef.current.offsetWidth  + "px";
+    ListRef.current.style.width = (ImageDataList.length + 3) * MainRef.current.offsetWidth  + "px";
   }, [ImageDataList]);
 
   const none = {
@@ -297,7 +297,7 @@ function ImageBoard(props) {
             <ListItem >
               <ImageBoardUser userId={UserData[0]?.user} boardId={UserData[0]?._id} />
             </ListItem>
-              <div style={{ display: "block", marginLeft: "5px" }}>
+              <div style={{ display: "block", marginLeft: "5px" , padding: "8px 16px" }}>
                 {" "}
                 {UserData[0]?.content}
               </div>
