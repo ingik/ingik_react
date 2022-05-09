@@ -310,7 +310,7 @@ function ImageBoard(props) {
           <div className="buttonMenu" style={{margin:'5px 0'}}>
             <RecommandCmp
               boardId={UserData[0]?._id}
-              recommandId={UserSelectData._id}
+              recommandId={UserSelectData?._id}
             />
           </div>
           <div className="commentCreate" style={{ width: "100%" }}>

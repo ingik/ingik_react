@@ -20,6 +20,7 @@ function ImageBoardCmpList() {
 
   const [DataLess,setDataLess] = useState(null)
 
+
 console.log(number)
   useEffect(() => {
       let CleanUpBoolean = true;
@@ -53,7 +54,6 @@ console.log(number)
     
     let io;
     if (target.current) {
-
       console.log('intersection observe')
       const options = {
         root: viewport.current,
@@ -73,7 +73,7 @@ console.log(number)
           setTimeout(() => {
             ++number
             if(target.current) observer.observe(target.current);
-          }, 2000);
+          }, 1000);
         }
         });
       };
@@ -139,7 +139,7 @@ const loadItems = () => {
         style={{ width: "100%", height: "90vh", overflow: "auto" }}
       >
         {DataList &&
-          DataList.map((item, index) => {
+          DataList.map((item,index) => {
             // let lastEl = index === DataList.length - 1
             return (
               <div

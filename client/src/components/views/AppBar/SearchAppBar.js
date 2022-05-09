@@ -12,7 +12,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import Profile from '../Profile/Profile';
 import SideAppBar from './SideAppBar';
 import ForumIcon from '@mui/icons-material/Forum';
-import { withRouter } from 'react-router-dom';
+import { useHistory, withRouter } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import {  Avatar, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Modal } from '@mui/material';
@@ -79,13 +79,13 @@ let socket = io.connect(localhost)
 
 function SearchAppBar(props) {
 
+  const history = useHistory()
   
   
-  const [SearchValue, setSearchValue] = useState(null);
+  const [SearchValue, setSearchValue] = useState("");
   const [UserList, setUserList] = useState(null);
 
   const userData = useSelector(state => state.user.userData)
-  console.log(userData)
 
   const mediaQuery = useMediaQuery('(min-width:641px)');
 
@@ -101,19 +101,20 @@ function SearchAppBar(props) {
 
   const dispatch = useDispatch()
 
-  console.log(socket)
-  
   useEffect(() => {
-    dispatch(socketReduxConnect(socket))
+    dispatch(socketReduxConnect(socket));
 
     return () => {
       socket.disconnect();
       socket.on("disconnected", (data) => {
         console.log("data : " + data);
       });
-      socket.close()
+      socket.close();
+      setOnOff(false);
+      setUserList([]);
+      setSearchValue("");
     };
-  },[])
+  }, []);
 
   const handleClose = () => {
 
@@ -139,7 +140,6 @@ function SearchAppBar(props) {
     
     if(event.currentTarget.value){
       axios.post('/api/users/list',body).then(response => {
-        console.log(response.data)
         setUserList(response.data)
       })
       setAnchorEl(event.currentTarget)
@@ -264,12 +264,10 @@ function SearchAppBar(props) {
                   ? UserList &&
                     UserList.map((item) => {
                       return (
-                        <ListItemButton
+                        <ListItem
                           key={item.name}
-                          // style={{ width: "100%" }}
-                          onClick={() => {
-                            console.log(props);
-                            console.log(item._id);
+                          onMouseDown={() => {
+                            console.log('click@@@@@@@@@@@@@@@@')
                             if (userData._id === item._id) {
                               props.history.push("/profile");
                               setOnOff(false);
@@ -307,7 +305,7 @@ function SearchAppBar(props) {
                               </React.Fragment>
                             }
                           />
-                        </ListItemButton>
+                        </ListItem>
                       );
                     })
                   : null}

@@ -31,6 +31,7 @@ function ImageBoardList(props) {
   const viewport = useRef(null)
   const target = useRef()
   const imageListRef = useRef(null)
+  const ListRef = useRef(null)
 
   let number = 1
 
@@ -78,11 +79,13 @@ function ImageBoardList(props) {
       }
 
       AsyncFunc().then(() => {
+
         if (CleanUpBoolean) {
           setPreviewList(value);
           setloading(true);
           target.current.style.display = "block";
         }
+
       });
     });
 
@@ -344,7 +347,8 @@ const mobileStyle = {
             ? `mediaSmall`
             : `mediaLarge`
           }
-          variant={'masonry'}
+          variant='masonry'
+          // rowHeight='auto'
           cols={3}
           ref={imageListRef}
         >
@@ -355,7 +359,7 @@ const mobileStyle = {
                 sx={{
                   margin: "auto",
                   // width:'100%',
-                  // height:'100%'
+                  // height: ListRef ? ListRef.current.style.width : 'auto'
                 }}
                 onMouseEnter={onHoverHandler}
                 onMouseLeave={onLeaveHandler}
@@ -363,6 +367,7 @@ const mobileStyle = {
                   setOpen(true);
                   setParamKey(item._id);
                 }}
+                ref={ListRef}
               >
                 <img
                   src={`${item.img}?w=164&h=164&fit=crop&auto=format`}

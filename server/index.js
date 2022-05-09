@@ -597,18 +597,18 @@ app.get('/api/boards/imageBoardList', auth ,(req,res) => {
   ImageBoard.find((err,imageBoard) => {
     if(err) return res.status(500).send({error: 'database failure'})
     return res.status(200).json(imageBoard)
-  }).sort({_id:-1}).limit(21)
+  }).sort({_id:-1}).limit(18)
 
 })
 
 app.get('/api/boards/imageBoardList/:key',(req,res) => {
 
-  let index = req.params.key * 15
+  let index = req.params.key * 18
   console.log(index)
   ImageBoard.find((err,imageBoard) => {
     if(err) return res.status(500).send({error: 'database failure'})
     return res.status(200).json(imageBoard)
-  }).sort({_id:-1}).skip(index).limit(21)
+  }).sort({_id:-1}).skip(index).limit(18)
 
 })
 
@@ -620,7 +620,7 @@ app.get('/api/boards/imageBoardListCmp', auth ,(req,res) => {
   ImageBoard.find((err,imageBoard) => {
     if(err) return res.status(500).send({error: 'database failure'})
     return res.status(200).json(imageBoard)
-  }).sort({_id:-1}).limit(5)
+  }).sort({createAt:-1}).limit(5)
 
 })
 
@@ -632,7 +632,7 @@ app.get('/api/boards/imageBoardListCmp/:key',(req,res) => {
   ImageBoard.find((err,imageBoard) => {
     if(err) return res.status(500).send({error: 'database failure'})
     return res.status(200).json(imageBoard)
-  }).sort({_id:-1}).skip(index).limit(5)
+  }).sort({createAt:-1}).skip(index).limit(5)
 
 })
 

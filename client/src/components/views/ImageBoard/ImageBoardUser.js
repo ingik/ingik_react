@@ -20,8 +20,9 @@ function ImageBoardUser(props) {
   // console.log(UserSelectData._id)
 
   
-  const [ChildModal, setChildModal] = useState(false) 
   const [ParentModal, setParentModal] = useState(false)
+
+  let childmodal = false
 
   const history = useHistory();
   const [UserData, setUserData] = useState({});
@@ -36,23 +37,13 @@ function ImageBoardUser(props) {
   const handleClose = () => {
     setDialogOpen(false);
   };
-
-  const porperEnter = () => {
-    console.log('child enter')
-    setChildModal(true)
-  }
-
-  const porperLeave = () => {
-    console.log('child leave')
-    setChildModal(false)
-  }
+ 
 
     useEffect(() => {
       let ComponentMounted = true;
       if (props.userId) {
         axios.get("/api/users/findId/" + props.userId).then((response) => {
           if (ComponentMounted) {
-            // console.log(response.data);
             setUserData(response.data);
           }
         });
@@ -73,13 +64,19 @@ function ImageBoardUser(props) {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handlePopoverOpen = (event) => {
+    console.log("hover");
     setAnchorEl(event.currentTarget);
-    // setHoverUser(item?.user);
     setParentModal(true);
   };
 
-  const handlePopoverClose = (event) => {
-    setParentModal(false);
+
+  const handlePopoverClose = () => {
+
+    setTimeout(() => {
+      console.log('close modal parent')
+      console.log('ChildModal : '+childmodal )
+      if(!childmodal) setParentModal(false);
+    }, 500);
   };
 
 
@@ -100,7 +97,11 @@ function ImageBoardUser(props) {
       <Avatar
         aria-owns={open ? "mouse-over-popover" : undefined}
         aria-haspopup="true"
-        onMouseEnter={handlePopoverOpen}
+        onMouseEnter={(event) => {
+          console.log("hover");
+          setAnchorEl(event.currentTarget);
+          setParentModal(true);
+        }}
         onMouseLeave={handlePopoverClose}
         onClick={onClickHandler}
         alt={UserData?.name}
@@ -111,13 +112,13 @@ function ImageBoardUser(props) {
           width: "32px",
           height: "32px",
         }}
-      />
+      ></Avatar>
       <Popover
         id="mouse-over-popover"
         style={{
-          pointerEvents: "none"
+          pointerEvents: "none",
         }}
-        open={!ChildModal && !ParentModal ? false : true}
+        open={ParentModal}
         anchorEl={anchorEl}
         anchorOrigin={{
           vertical: "bottom",
@@ -127,16 +128,19 @@ function ImageBoardUser(props) {
           vertical: "top",
           horizontal: "left",
         }}
-        transitionDuration={{appear:2000,enter:500}}
-        disableAutoFocus
-        disableEnforceFocus
-        onMouseEnter={porperEnter}
-        onMouseLeave={porperLeave}
-        
+        transitionDuration={{ appear: 3000, enter: 500 }}
+        disableRestoreFocus
+        onMouseEnter={() => {
+          console.log("enter child");
+          childmodal = true
+        }}
+        onMouseLeave={() => {
+          console.log("leave child");
+          childmodal = false
+          setParentModal(false);
+        }}
       >
-        <HoverProfile
-          UserData={UserData}
-        />
+        <HoverProfile UserData={UserData} />
       </Popover>
 
       <Typography
@@ -155,17 +159,14 @@ function ImageBoardUser(props) {
       >
         {UserData?.name}
       </Typography>
-      {
-        props.userId === UserSelectData._id ?
-        <Button 
-          sx={{float:'right',marginLeft: "auto"}}
+      {props.userId === UserSelectData._id ? (
+        <Button
+          sx={{ float: "right", marginLeft: "auto" }}
           onClick={handleOpen}
         >
           <DeleteForeverIcon />
         </Button>
-        
-        : null
-      }
+      ) : null}
 
       <Dialog
         open={DialogOpen}
@@ -182,7 +183,9 @@ function ImageBoardUser(props) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onDeleteButton} variant>삭제</Button>
+          <Button onClick={onDeleteButton} variant>
+            삭제
+          </Button>
           <Button onClick={handleClose} autoFocus>
             닫기
           </Button>

@@ -23,6 +23,7 @@ function ImageBoardComment(props) {
   })
   const [Value,setValue] = useState(0)
 
+  let childmodal = false
 
   const [HoverUser,setHoverUser] = useState(null)
 
@@ -98,23 +99,8 @@ function ImageBoardComment(props) {
 
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const [ChildModal, setChildModal] = useState(false) 
   const [ParentModal, setParentModal] = useState(false)
 
-  // console.log('CHILD : '+ChildModal)
-  // console.log('PARENT : '+ParentModal)
-  // console.log('NoModal : '+NoModal)
-
-  const porperEnter = () => {
-    console.log('child enter')
-    setChildModal(true)
-  }
-
-  const porperLeave = () => {
-    console.log('child leave')
-    setChildModal(false)
-  }
-      
   return (
     <div>
       <Popover
@@ -122,7 +108,7 @@ function ImageBoardComment(props) {
         style={{
           pointerEvents: "none",
         }}
-        open={!ChildModal && !ParentModal ? false : true}
+        open={ParentModal}
         anchorEl={anchorEl}
         anchorOrigin={{
           vertical: "bottom",
@@ -133,10 +119,15 @@ function ImageBoardComment(props) {
           horizontal: "left",
         }}
         transitionDuration={{ appear: 2000, enter: 500 }}
-        // disableAutoFocus
-        // disableEnforceFocus
-        onMouseEnter={porperEnter}
-        onMouseLeave={porperLeave}
+        onMouseEnter={()=>{
+          console.log("enter child");
+          childmodal = true
+        }}
+        onMouseLeave={()=>{
+          console.log("leave child");
+          childmodal = false
+          setParentModal(false);
+        }}
 
       >
         <HoverProfile UserData={HoverUser} />
@@ -153,7 +144,7 @@ function ImageBoardComment(props) {
               onMouseLeave={onLeave}
             >
               <Avatar
-                alt={item?.user.name}
+                // alt={item?.user.name}
                 src={item?.user.image}
                 style={{
                   display: "inline-block",
@@ -169,7 +160,11 @@ function ImageBoardComment(props) {
                 }}
                 
                 onMouseLeave={() => {
-                  setParentModal(false);
+                  setTimeout(() => {
+                    console.log('close modal parent')
+                    console.log('ChildModal : '+childmodal )
+                    if(!childmodal) setParentModal(false);
+                  }, 500);
                 }}
               />
               <Typography
@@ -190,7 +185,11 @@ function ImageBoardComment(props) {
                     setParentModal(true);
                   }}
                   onMouseLeave={() => {
-                    setParentModal(false);
+                    setTimeout(() => {
+                      console.log('close modal parent')
+                      console.log('ChildModal : '+childmodal )
+                      if(!childmodal) setParentModal(false);
+                    }, 500);
                   }}
                 >
                   {item?.user.name}
