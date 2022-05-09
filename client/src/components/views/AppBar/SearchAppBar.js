@@ -70,7 +70,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const localhost = process.env.NODE_ENV === 'qa' ? 'http://3.38.119.177:5555' : 'http://localhost:5555';
+const localhost = 'http://3.38.119.177:5555';
 // let localhost = 'http://localhost:5555';
 let socket = io.connect(localhost)
 
