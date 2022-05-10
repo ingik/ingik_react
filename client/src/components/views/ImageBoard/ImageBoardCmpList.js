@@ -20,11 +20,10 @@ function ImageBoardCmpList() {
 
   const [DataLess,setDataLess] = useState(null)
 
-
 console.log(number)
   useEffect(() => {
       let CleanUpBoolean = true;
-      axios.get("/api/boards/imageBoardListCmp/").then(response => {
+      axios.get("/api/boards/imageBoardListCmp").then(response => {
 
         const value = [];
   
@@ -38,13 +37,14 @@ console.log(number)
           value.push(list);
 
         });
-        if(CleanUpBoolean) setDataList(value)
+        if(CleanUpBoolean) {
+          setDataList(value)
+        }
   
       })
 
       return () => {
         CleanUpBoolean = false;
-        setDataList(null)
       }
 
 
@@ -97,7 +97,6 @@ console.log(number)
 const loadItems = () => {
   
   console.log('loadItems')
-  const value = [];
 
 
   axios.get("/api/boards/imageBoardListCmp/" + number).then( response => {
@@ -111,14 +110,17 @@ const loadItems = () => {
     response.data.map((list) => {
       axios.get('/api/boards/recommandLength/'+list._id).then(response => {
         console.log(response.data)
-        list.recommand = response.data[0]?.recommand
+        async function push(){
+          list.recommand = response.data[0]?.recommand
+        }
+        push().then(() => {
+          // value.push(list);
+          setDataList((prevState) => { return [...prevState,list] })
+        })
       })
       
-      value.push(list);
-  
     });
 
-    setDataList((prevState) => { return [...prevState,...value] })
 
   })
 
@@ -164,7 +166,7 @@ const loadItems = () => {
             />}
           </div>
         ) : (
-          <div ref={target} />
+          <div ref={DataList ? target : null}/>
         )}
 
       </div>

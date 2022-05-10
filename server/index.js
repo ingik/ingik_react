@@ -620,19 +620,19 @@ app.get('/api/boards/imageBoardListCmp', auth ,(req,res) => {
   ImageBoard.find((err,imageBoard) => {
     if(err) return res.status(500).send({error: 'database failure'})
     return res.status(200).json(imageBoard)
-  }).sort({createAt:-1}).limit(5)
+  }).sort({_id:-1}).limit(3)
 
 })
 
 app.get('/api/boards/imageBoardListCmp/:key',(req,res) => {
 
-  let index = req.params.key * 5
+  let index = req.params.key * 3
 
   console.log(index)
   ImageBoard.find((err,imageBoard) => {
     if(err) return res.status(500).send({error: 'database failure'})
     return res.status(200).json(imageBoard)
-  }).sort({createAt:-1}).skip(index).limit(5)
+  }).sort({_id:-1}).skip(index).limit(3)
 
 })
 
