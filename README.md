@@ -22,6 +22,8 @@ react를 너무 사용해보고 싶어서 토이프로젝트 느낌으로 제작
 인증 필요없습니다.<br>
 모든 데이터는 30일 후 삭제됩니다.
 
+테스트계정 - <br>ID : testuser@test.com<br>PASSWORD : asdf1234!
+
 # 기술스택
 
 언어 : JS <br>
