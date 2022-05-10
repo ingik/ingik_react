@@ -14,12 +14,6 @@ function RecommandCmp(props) {
     () => RecommandUpdate,
     [RecommandUpdate]
   );
-  // const memoRecommandDisplay = useCallback((data) => setRecommandDisplay(data),[RecommandDisplay])
-
-  const memo_RecommandDisplay = useMemo(
-    () => RecommandDisplay,
-    [RecommandDisplay]
-  );
 
   useEffect(() => {
     console.log("RecommandCmp");
@@ -38,10 +32,8 @@ function RecommandCmp(props) {
 
       if (CleanUpBoolean) {
         if (!response.data) {
-          // memoRecommandDisplay(false)
           setRecommandDisplay(false);
         } else {
-          // memoRecommandDisplay(true)
           setRecommandDisplay(true);
         }
       }
@@ -56,9 +48,7 @@ function RecommandCmp(props) {
     console.log("click");
     async function update() {
       await setRecommandDisplay(Recommand(props.boardId, props.recommandId));
-      // await memoRecommandDisplay(Recommand(props.boardId, props.recommandId))
       setRecommandUpdate(true)
-      // memoRecommandUpdate(true);
     }
     update();
   };
@@ -67,16 +57,14 @@ function RecommandCmp(props) {
     console.log("Unclick");
     async function update() {
       await setRecommandDisplay(UnRecommand(props.boardId, props.recommandId));
-      // await memoRecommandDisplay(UnRecommand(props.boardId, props.recommandId))
       setRecommandUpdate(false)
-      // memoRecommandUpdate(false);
     }
     update();
   };
 
   return (
     <React.Fragment>
-      {memo_RecommandDisplay ? (
+      {RecommandDisplay ? (
         <FavoriteIcon
           style={{ verticalAlign: "middle" }}
           onClick={onUnRecommandHanler}

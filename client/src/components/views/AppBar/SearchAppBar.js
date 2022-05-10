@@ -79,9 +79,6 @@ let socket = io.connect(localhost)
 
 function SearchAppBar(props) {
 
-  const history = useHistory()
-  
-  
   const [SearchValue, setSearchValue] = useState("");
   const [UserList, setUserList] = useState(null);
 
