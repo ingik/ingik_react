@@ -34,6 +34,14 @@ react를 너무 사용해보고 싶어서 토이프로젝트 느낌으로 제작
 클라우드 서비스 : AWS S3, AWS EC2<br>
 자원관리 : PM2<br>
 
+# 시연영상 
+
+comment<br>
+<img src="https://user-images.githubusercontent.com/65318601/167687114-8fdc6b0b-aed4-4708-9958-a45178a74829.gif"/><br>
+<img src="https://user-images.githubusercontent.com/65318601/167687287-61a5f448-db8b-4850-87e9-b3eb4508859f.gif"/>
+<img src="https://user-images.githubusercontent.com/65318601/167687298-e369ac70-cbcf-4be0-a194-fbf467b468f0.gif"/>
+<img src="https://user-images.githubusercontent.com/65318601/167687312-d1e1ff95-6ce4-419e-89a0-07faa9ce1c3c.gif"/>
+
 # 수정이 필요한 부분 메모
 
 테스팅중입니다. QA로 이관
