@@ -36,10 +36,10 @@ react를 너무 사용해보고 싶어서 토이프로젝트 느낌으로 제작
 
 # 시연영상 
 
-댓글<img src="https://user-images.githubusercontent.com/65318601/167687114-8fdc6b0b-aed4-4708-9958-a45178a74829.gif"/>
-채팅<img src="https://user-images.githubusercontent.com/65318601/167687287-61a5f448-db8b-4850-87e9-b3eb4508859f.gif"/>
-이미지업로드<img src="https://user-images.githubusercontent.com/65318601/167687298-e369ac70-cbcf-4be0-a194-fbf467b468f0.gif"/>
-프로필<img src="https://user-images.githubusercontent.com/65318601/167687312-d1e1ff95-6ce4-419e-89a0-07faa9ce1c3c.gif"/>
+댓글<br><img src="https://user-images.githubusercontent.com/65318601/167687114-8fdc6b0b-aed4-4708-9958-a45178a74829.gif"/><br>
+채팅<br><img src="https://user-images.githubusercontent.com/65318601/167687287-61a5f448-db8b-4850-87e9-b3eb4508859f.gif"/><br>
+이미지업로드<br><img src="https://user-images.githubusercontent.com/65318601/167687298-e369ac70-cbcf-4be0-a194-fbf467b468f0.gif"/><br>
+프로필<br><img src="https://user-images.githubusercontent.com/65318601/167687312-d1e1ff95-6ce4-419e-89a0-07faa9ce1c3c.gif"/><br>
 
 # 수정이 필요한 부분 메모
 
