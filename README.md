@@ -40,6 +40,8 @@ react를 너무 사용해보고 싶어서 토이프로젝트 느낌으로 제작
 채팅<br><br><img src="https://user-images.githubusercontent.com/65318601/167687287-61a5f448-db8b-4850-87e9-b3eb4508859f.gif"/><br><br>
 이미지업로드<br><br><img src="https://user-images.githubusercontent.com/65318601/167687298-e369ac70-cbcf-4be0-a194-fbf467b468f0.gif"/><br><br>
 프로필<br><br><img src="https://user-images.githubusercontent.com/65318601/167687312-d1e1ff95-6ce4-419e-89a0-07faa9ce1c3c.gif"/><br><br>
+팔로우<br><br><img src="https://user-images.githubusercontent.com/65318601/167690788-6aca9629-7944-42a0-9e5e-acb93e961ff7.gif"/><br><br>
+모바일 요약 <br><br><img src="https://user-images.githubusercontent.com/65318601/167691373-6775adc5-c208-4edb-83ef-b2c8fd41954d.gif"/><br><br>
 
 # 수정이 필요한 부분 메모
 
