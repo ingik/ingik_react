@@ -28,7 +28,7 @@ react를 너무 사용해보고 싶어서 토이프로젝트 느낌으로 제작
 skskskoe@gmail.com<br>
 skskoe@naver.com<br>
 
-회원가입이 싫으시다면 아래 테스트계정으로 로그인 가능합니다.
+회원가입이 싫으시다면 아래 테스트계정으로 로그인 가능합니다. <br>
 ID : testuser@test.com<br>PASSWORD : asdf1234!<br>
 
 # 기술스택
