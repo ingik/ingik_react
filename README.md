@@ -11,21 +11,24 @@
 <img src="https://img.shields.io/badge/NGINX-009639?style=for-the-badge&logo=NGINX&logoColor=white"/>
 <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white"/>
 
+# 개요
+
 react를 너무 사용해보고 싶어서 토이프로젝트 느낌으로 제작<br>
 클론코딩이냐고 물어보시는 분들이 있으신데 아닙니다.. SNS에서 돌아다니면서 이 기능 저 기능 따라 구현해 본겁니다.<br>
 그냥 인스타처럼 이미지SNS를 만들어보고 싶어! 라는 생각으로 제작한 프로젝트이고 <br>
 직접 부딪히며 해결해나간 코드들이라 많이 미숙합니다.
+
 # http://3.38.119.177/
 
-# 
 무중단 배포 상태로 개발은 따로 dev환경에서 개발됩니다.<br>
 비밀번호는 암호화 후 db에 저장됩니다. <br>
 형식에 맞춰서 회원가입 작성 해주시면 됩니다. <br>
 인증 필요없습니다.<br>
 모든 데이터는 30일 후 삭제됩니다.<br>
-skskskoe@gmail.com <br>
+
+skskskoe@gmail.com<br>
 skskoe@naver.com<br>
-피
+마음에 안드시거나 피드백이 있으시다면 위 메일로 연락주시면 감사하겠습니다.
 
 테스트계정 - <br>ID : testuser@test.com<br>PASSWORD : asdf1234!
 
