@@ -23,14 +23,13 @@ react를 너무 사용해보고 싶어서 토이프로젝트 느낌으로 제작
 무중단 배포 상태로 개발은 따로 dev환경에서 개발됩니다.<br>
 비밀번호는 암호화 후 db에 저장됩니다. <br>
 형식에 맞춰서 회원가입 작성 해주시면 됩니다. <br>
-인증 필요없습니다.<br>
-모든 데이터는 30일 후 삭제됩니다.<br>
 
+마음에 안드시거나 피드백이 있으시다면 아래 메일로 연락주시면 감사하겠습니다.<br>
 skskskoe@gmail.com<br>
 skskoe@naver.com<br>
-마음에 안드시거나 피드백이 있으시다면 위 메일로 연락주시면 감사하겠습니다.
 
-테스트계정 - <br>ID : testuser@test.com<br>PASSWORD : asdf1234!
+회원가입이 싫으시다면 아래 테스트계정으로 로그인 가능합니다.
+ID : testuser@test.com<br>PASSWORD : asdf1234!<br>
 
 # 기술스택
 
@@ -79,7 +78,7 @@ skskoe@naver.com<br>
 22. intersection observer - 지금 imageBoardList(Board) imageboardListCmp(Home) 두 컴포넌트는 인터섹션 옵저버로 무한 스크롤링을 구현중인데 .. 구조를 조금 바꿔야겠다. - DEV 적용 완
 23. AppBar에서 searchInput 에서 Blur시 리스트가 그대로 남아있다 - DEV 적용 완
 24. imageBoardList(Board) 에서 스크롤바가 생성된다.
-25. 스토어에 저장된 소켓을 채팅방(dmList)에 접속했을때 useSelector로 가져오는데 첫렌더링시 소켓에 connected : false 로 연결이 되어있지 않다. 리로드를 하면 연결되지만 수정이 필요하다.
+25. 스토어에 저장된 소켓을 채팅방(dmList)에 접속했을때 useSelector로 가져오는데 첫렌더링시 소켓에 connected : false 로 연결이 되어있지 않다. 리로드를 해야 연결됨. 수정이 필요
  
 # 진행중 아쉬운 점<br>
 
