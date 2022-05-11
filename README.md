@@ -11,18 +11,21 @@
 <img src="https://img.shields.io/badge/NGINX-009639?style=for-the-badge&logo=NGINX&logoColor=white"/>
 <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white"/>
 
-react를 너무 사용해보고 싶어서 토이프로젝트 느낌으로 제작하게 되었다.!!<br>
+react를 너무 사용해보고 싶어서 토이프로젝트 느낌으로 제작<br>
 클론코딩이냐고 물어보시는 분들이 있으신데 아닙니다.. SNS에서 돌아다니면서 이 기능 저 기능 따라 구현해 본겁니다.<br>
 그냥 인스타처럼 이미지SNS를 만들어보고 싶어! 라는 생각으로 제작한 프로젝트이고 <br>
 직접 부딪히며 해결해나간 코드들이라 많이 미숙합니다.
 # http://3.38.119.177/
 
 # 
-
+무중단 배포 상태로 개발은 따로 dev환경에서 개발됩니다.<br>
 비밀번호는 암호화 후 db에 저장됩니다. <br>
 형식에 맞춰서 회원가입 작성 해주시면 됩니다. <br>
 인증 필요없습니다.<br>
-모든 데이터는 30일 후 삭제됩니다.
+모든 데이터는 30일 후 삭제됩니다.<br>
+skskskoe@gmail.com <br>
+skskoe@naver.com<br>
+피
 
 테스트계정 - <br>ID : testuser@test.com<br>PASSWORD : asdf1234!
 
@@ -70,7 +73,7 @@ react를 너무 사용해보고 싶어서 토이프로젝트 느낌으로 제작
 19. 댓글 구조 변경 필요 댓글에는 id값을 안넣어줬는데 delete시 어떤 댓글인지 식별불가 - 진행중
 20. 마우스 호버시 호버프로필이 사라졌다 다시 뜨는 경우가 생김. (onFocus와 onBlur 처리 필요) - 진행중 (버블링과 캡처링 문제 나의 지식부족 공부가 필요) - 완
 21. 좋아요 구조변경 필요. 현재 좋아요는 팔로우구조와 마찬가지로 첫렌더링시 좋아요 여부를 체크한 후 하트이미지와 좋아요 수 렌더링 그 후 클릭시 좋아요 수 컴포넌트 리렌더링 실행 으로 이어지는 구조인데 ... 살짝 로딩이있어서 좋아요 클릭 시 앞단에서만 좋아요 갯수만 하나 증가시키고 백단에서 데이터작업 후 페이지 리로드시 다시 보여줄지 고민이다. - 고민중
-22. intersection observer 지금 imageBoardList imageboardListCmp 두 컴포넌트는 인터섹션 옵저버로 무한 스크롤링을 구현중인데 .. 구조를 조금 바꿔야겠다. - DEV 적용 완
+22. intersection observer - 지금 imageBoardList(Board) imageboardListCmp(Home) 두 컴포넌트는 인터섹션 옵저버로 무한 스크롤링을 구현중인데 .. 구조를 조금 바꿔야겠다. - DEV 적용 완
 23. AppBar에서 searchInput 에서 Blur시 리스트가 그대로 남아있다 - DEV 적용 완
 24. imageBoardList(Board) 에서 스크롤바가 생성된다.
 25. 스토어에 저장된 소켓을 채팅방(dmList)에 접속했을때 useSelector로 가져오는데 첫렌더링시 소켓에 connected : false 로 연결이 되어있지 않다. 리로드를 하면 연결되지만 수정이 필요하다.
@@ -84,8 +87,8 @@ react를 너무 사용해보고 싶어서 토이프로젝트 느낌으로 제작
 첫 react 사용이었는데 배우면서 제작한다는 느낌이라 살을 붙이며 뼈대를 구성했지만 <br>
 다음 프로젝트는 뼈대부터 잡고 살을 붙이며 진행할 수 있을 것 같다. 
 
-컴포넌트 자체를 더 잘게 쪼개면 훨씬 더 간단하게 제작 할 수 있었는데 어느정도 진행 한 후에 느껴버렸다.
-대용량 트래픽이 발생시 어떻게 될지 궁금하기도 하다.
+컴포넌트 자체를 더 잘게 쪼개면 훨씬 더 간단하게 제작 할 수 있었는데 어느정도 진행 한 후에 느껴버렸다.<br>
+대용량 트래픽이 발생시 어떻게 될지 궁금하기도 하다. <br>
 
 mui, hook, socket 등등 모든 건 document안에 있었다.<br>
 만약 내가 새프로젝트를 진행한다면 document를 한번 정독하고 진행하는것이 좋은 것 같다.
