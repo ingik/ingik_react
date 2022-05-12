@@ -11,6 +11,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { lineHeight } from '@mui/system';
 
 function ProfileImageBoardList(props) {
 
@@ -21,6 +22,7 @@ function ProfileImageBoardList(props) {
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const [ParamKey, setParamKey] = useState("")
+  const [Loading, setLoading] = useState(false)
 
 
   const viewport = useRef(null)
@@ -70,6 +72,7 @@ function ProfileImageBoardList(props) {
       AsyncFunc().then(() => {
 
         setPreviewList(value)
+        setLoading(true)
         try {
           target.current.style.display="block"
         } catch (error) {
@@ -80,6 +83,10 @@ function ProfileImageBoardList(props) {
 
     })
 
+    return () => {
+      setLoading(false)
+      setPreviewList(null)
+    }
    
   },[props.ParamsUserId])
 
@@ -205,9 +212,8 @@ function ProfileImageBoardList(props) {
   }
     
   return (
-    <div>
+    <div style={{position:'relative'}}>
       <Box className="boxSmall" ref={viewport}>
-        {PreviewList ? (
           <ImageList
             className={mediaQuery ? `profileMediaSmall` : `profileMediaLarge`}
             cols={3}
@@ -288,24 +294,30 @@ function ProfileImageBoardList(props) {
               ref={target}
             ></div>
           </ImageList>
-        ) : (
-          <CircularProgress
-            sx={{
-              position: "absolute",
-              top: "calc(50% - 20px)",
-              left: "calc(50% -20px)",
-            }}
-          />
-        )}
       </Box>
-      
-      {PreviewList ? (
-        PreviewList.length === 0 ? (
-          <div style={{ textAlign: "center", marginTop: "25vh" }}>
-            데이터가 없습니다.
-          </div>
-        ) : null
-      ) : null}
+     
+
+    {
+      !Loading ? <div style={{position:'relative',width:'100vw',height:'50vh'}}>
+        <div style={{width:'100%',height:'calc(25vh - 20px)'}}/>
+      <CircularProgress
+      sx={{
+        margin:'auto',
+        display:'flex',
+        justifyContent:'centor',
+        alignItems:'centor'
+      }}/>
+      </div> : ( PreviewList.length === 0 ? (
+        <div style={{ textAlign: "center", marginTop: "25vh" }}>
+          데이터가 없습니다.
+        </div>
+      ) : null
+
+      )
+    }
+
+
+   
 
       <Modal
         open={open}

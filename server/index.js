@@ -336,15 +336,17 @@ app.post('/api/users/profileUpdate', auth , (req,res) => {
       return res.status(200).json({success:true})
     })
 
-
   }
+})
 
-  
-
-
-  
-
-
+//User socket Update
+app.post('/api/users/authSocketUpdate',(req,res) => {
+  User.findOneAndUpdate({_id : req.body.userId},
+    {$set: { socketId:req.body.socketId}},
+  (err,user) => {
+    if(err) return res.status(500).send({ error: 'socketUpdate failure'})
+    return res.status(200).json(user)
+  })
 })
 
 //User list

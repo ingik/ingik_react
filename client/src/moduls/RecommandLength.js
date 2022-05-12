@@ -15,7 +15,7 @@ function RecommandLength(props) {
             .then((response) => {
               if (ComponentMounted) {
                 console.log(response.data[0]?.recommand.length);
-                setLength(Length => Length = response.data[0]?.recommand.length);
+                setLength(prevState => prevState = response.data[0]?.recommand.length);
               }
             });
         

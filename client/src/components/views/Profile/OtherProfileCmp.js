@@ -51,7 +51,10 @@ function OtherProfileCmp(props) {
  
 
   return (
-    <div style={{ paddingTop: "64px" }}>
+    <div
+      style={{ paddingTop: "64px", height: "90vh", overflowY: "auto" }}
+      className="bodyScreen"
+    >
       <div>
         <div
           style={{
@@ -85,18 +88,39 @@ function OtherProfileCmp(props) {
                 getFunc={getFunc}
               />
             </div>
-            <div style={{display:'flex',justifyContent:'space-evenly',marginBottom:'15px'}}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-evenly",
+                marginBottom: "15px",
+              }}
+            >
               <div>
-                <div style={{fontSize:'13px',fontWeight:'bold'}}>게시물</div>
-                <div style={{textAlign:'center'}}><ImageBoardLength UserId={UserData?._id} /></div>
+                <div style={{ fontSize: "13px", fontWeight: "bold" }}>
+                  게시물
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <ImageBoardLength UserId={UserData?._id} />
+                </div>
               </div>
-              <div onClick={FollowHandler} style={{cursor:'pointer'}}>
-                <div style={{fontSize:'13px',fontWeight:'bold'}}>팔로워</div>
-                <div style={{textAlign:'center'}}><FollowLength followerId={UserData?._id} CallData={CallData}/></div>
+              <div onClick={FollowHandler} style={{ cursor: "pointer" }}>
+                <div style={{ fontSize: "13px", fontWeight: "bold" }}>
+                  팔로워
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <FollowLength
+                    followerId={UserData?._id}
+                    CallData={CallData}
+                  />
+                </div>
               </div>
-              <div onClick={FollowerHandler} style={{cursor:'pointer'}}>
-                <div style={{fontSize:'13px',fontWeight:'bold'}}>팔로우</div>
-                <div style={{textAlign:'center'}}><FollowerLength UserId={UserData?._id}/></div>
+              <div onClick={FollowerHandler} style={{ cursor: "pointer" }}>
+                <div style={{ fontSize: "13px", fontWeight: "bold" }}>
+                  팔로우
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <FollowerLength UserId={UserData?._id} />
+                </div>
               </div>
             </div>
             <div style={{ fontSize: "15px", marginBottom: "5px" }}>
@@ -114,26 +138,25 @@ function OtherProfileCmp(props) {
             alignItems: "center",
             marginTop: "20px",
           }}
-        >
-        </div>
+        ></div>
       </div>
 
       <div style={{ textAlign: "center" }}>게시물</div>
-      <div>
+      <div style={{ overflow: "hidden" }}>
         <ProfileImageBoardList ParamsUserId={props.match.params.key} />
       </div>
 
       <FollowList
-          Open={ModalOpen}
-          onModalClose={onModalClose}
-          userId={UserData?._id}
-        />
+        Open={ModalOpen}
+        onModalClose={onModalClose}
+        userId={UserData?._id}
+      />
 
-        <FollowerList
-          Open={FollowerModalOpen}
-          onModalClose={onModalClose}
-          userId={UserData?._id}
-        />
+      <FollowerList
+        Open={FollowerModalOpen}
+        onModalClose={onModalClose}
+        userId={UserData?._id}
+      />
     </div>
   );
 }

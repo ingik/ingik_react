@@ -13,7 +13,7 @@ import Profile from '../Profile/Profile';
 import SideAppBar from './SideAppBar';
 import ForumIcon from '@mui/icons-material/Forum';
 import { useHistory, withRouter } from 'react-router-dom';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import {  Avatar, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Modal } from '@mui/material';
 import {  useDispatch, useSelector } from 'react-redux';
@@ -27,7 +27,7 @@ import './AppBar.css'
 
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { io } from 'socket.io-client';
-import { socketReduxConnect } from '../../../_actions/user_action';
+import { authSocketUpdate, socketReduxConnect } from '../../../_actions/user_action';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -70,9 +70,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const localhost = 'http://3.38.119.177:5555';
+// const localhost = 'http://3.38.119.177:5555';
 // let localhost = 'http://localhost:5555';
-let socket = io.connect(localhost)
+// let socket = io.connect(localhost)
 
 
 
@@ -87,6 +87,7 @@ function SearchAppBar(props) {
   const mediaQuery = useMediaQuery('(min-width:641px)');
 
 
+
   // search list 
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -99,19 +100,34 @@ function SearchAppBar(props) {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(socketReduxConnect(socket));
+
+      // async function socketConnect() {
+      //   await dispatch(socketReduxConnect(socket));
+      // }
+      // socketConnect().then(() => {
+      //   let body = {
+      //     userId: userData?._id,
+      //     socketId: socket?.id,
+      //   };
+
+      //   console.log(body);
+      //   dispatch(authSocketUpdate(body));
+      // });
+      
 
     return () => {
-      socket.disconnect();
-      socket.on("disconnected", (data) => {
-        console.log("data : " + data);
-      });
-      socket.close();
+      // socket.disconnect();
+      // socket.on("disconnected", (data) => {
+      //   console.log("data : " + data);
+      // });
+
       setOnOff(false);
       setUserList([]);
       setSearchValue("");
     };
+
   }, []);
+
 
   const handleClose = () => {
 
@@ -131,9 +147,6 @@ function SearchAppBar(props) {
     let body = {
       name : event.currentTarget.value 
     }
-
-    console.log(event.currentTarget.value)
-    console.log(event.currentTarget.value.length)
     
     if(event.currentTarget.value){
       axios.post('/api/users/list',body).then(response => {

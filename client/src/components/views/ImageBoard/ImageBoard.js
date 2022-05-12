@@ -52,7 +52,7 @@ function ImageBoard(props) {
     async function Left() {
       ImgRef.current[Number - 1].style.display = "table"
       ListRef.current.style.transition = "none";
-      ListRef.current.style.transform = `translateX(-${ImgRef.current[Number].offsetWidth - 1}px)`;
+      ListRef.current.style.transform = `translateX(-${ImgRef.current[Number].offsetWidth }px)`;
     }
     
     Left().then(() => {
@@ -275,7 +275,7 @@ function ImageBoard(props) {
                 onBlur={mediaQuery ? null : onCommentBlur}
                 InputProps={{
                   endAdornment: (
-                    <Button onClick={onSubmitHandler} postion="end"
+                    <Button onMouseDown={onSubmitHandler} postion="end"
                       disabled={Comment.trim() ? false : true}
                     >
                       작성

@@ -29,13 +29,9 @@ import Notice from './components/views/Notice/Notice';
 
 
 function App() {
-
-
   return (
     <Router>
       <div>
-        <hr />
-       
         <Route exact path="/login" component={Auth(LoginPage, false)}/>
         <Route exact path="/register" component={Auth(RegisterPage, false)}/>
         <Route  exact 
@@ -57,7 +53,7 @@ function App() {
           <Route exact path="/imageBoardCmp" component={ Auth(ImageBoardCmpList,true) } />
           <Route exact path="/profile/:key" component={ OtherProfileCmp }/>
           <Route exact path="/modal" component={ Profile }/>
-          <Route exact path="/hover" component={HoverProfile}/>
+          <Route exact path="/hover" component={ HoverProfile }/>
           <Route exact path="/cardlist" component={CardList}/>
           <Route exact path="/Notice" component={Notice}/>
         </Switch>

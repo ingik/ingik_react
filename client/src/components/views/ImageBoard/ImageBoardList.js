@@ -326,106 +326,106 @@ const mobileStyle = {
 
 
   return (
-    <div style={mediaQuery ? { paddingTop: "64px", height: "calc(100vh - 66px)" } :{ paddingTop: "64px"} }>
-      <Box
-        className='boxSmall'
-        ref={viewport}
-      >
-        {
-          loading 
-          ? null 
-          : <CircularProgress
-              sx={{
-                position:'absolute',
-                top:'50%',
-                left:'50%'
-              }}
-            />
-        }
+    <div
+      style={
+        mediaQuery
+          ? { paddingTop: "64px", height: "calc(100vh - 66px)",overflow:'auto' }
+          : { paddingTop: "64px" ,overflow:'auto'}
+      }
+      class="bodyScreen"
+    >
+      <Box className="boxSmall" ref={viewport}>
+        {loading ? null : (
+          <CircularProgress
+            sx={{
+              position: "absolute",
+              top: "calc(50% - 20px)",
+              left: "calc(50% - 20px)",
+            }}
+          />
+        )}
         <ImageList
-          className={ mediaQuery 
-            ? `mediaSmall`
-            : `mediaLarge`
-          }
-          variant='masonry'
+          className={mediaQuery ? `mediaSmall` : `mediaLarge`}
+          variant="masonry"
           // rowHeight='auto'
           cols={3}
           ref={imageListRef}
         >
-          {PreviewList && PreviewList.map((item, index) => {
-            return (
-              <ImageListItem
-                key={index}
-                sx={{
-                  margin: "auto",
-                  // width:'100%',
-                  // height: ListRef ? ListRef.current.style.width : 'auto'
-                }}
-                onMouseEnter={onHoverHandler}
-                onMouseLeave={onLeaveHandler}
-                onClick={function () {
-                  setOpen(true);
-                  setParamKey(item._id);
-                }}
-                ref={ListRef}
-              >
-                <img
-                  src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
-                  srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                  alt={item.name}
-                  loading="lazy"
-                  style={{objectFit:'contain'}}
-                />
-              
-                <div
-                  className="LeaveStyle"
-                  style={{ display: "none" }}
-                  
+          {PreviewList &&
+            PreviewList.map((item, index) => {
+              return (
+                <ImageListItem
+                  key={index}
+                  sx={{
+                    margin: "auto",
+                    // width:'100%',
+                    // height: ListRef ? ListRef.current.style.width : 'auto'
+                  }}
+                  onMouseEnter={onHoverHandler}
+                  onMouseLeave={onLeaveHandler}
+                  onClick={function () {
+                    setOpen(true);
+                    setParamKey(item._id);
+                  }}
+                  ref={ListRef}
                 >
-                  <div
-                    style={{
-                      display: "block",
-                      backgroundColor: "black",
-                      opacity:"0.4",
-                      width: "100%",
-                      height: "100%",
-                    }}
-                    
-                  >
-                    
-                  </div>
-                  <div style={{position:'absolute',top:'calc(50% - 12px)',left:'calc(50% - 52.6px)',color:'white',zIndex:99}}>
-                    <FavoriteIcon sx={{ verticalAlign: "middle" }} />
-                    <span
-                      style={{
-                        verticalAlign: "middle",
-                        margin: "0 15px 0 5px",
-                      }}
-                    >
-                      {item.recommand}
-                    </span>
-                    <CommentIcon sx={{ verticalAlign: "middle" }} />
-                    <span
-                      style={{
-                        verticalAlign: "middle",
-                        margin: "0 15px 0 5px",
-                      }}
-                    >
-                      {item.comment}
-                    </span>
-                    </div>
-                </div>
-              </ImageListItem>
-            );
-          })}
+                  <img
+                    src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
+                    srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                    alt={item.name}
+                    loading="lazy"
+                    style={{ objectFit: "contain" }}
+                  />
 
-          {
-            PreviewList &&
+                  <div className="LeaveStyle" style={{ display: "none" }}>
+                    <div
+                      style={{
+                        display: "block",
+                        backgroundColor: "black",
+                        opacity: "0.4",
+                        width: "100%",
+                        height: "100%",
+                      }}
+                    ></div>
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "calc(50% - 12px)",
+                        left: "calc(50% - 52.6px)",
+                        color: "white",
+                        zIndex: 99,
+                      }}
+                    >
+                      <FavoriteIcon sx={{ verticalAlign: "middle" }} />
+                      <span
+                        style={{
+                          verticalAlign: "middle",
+                          margin: "0 15px 0 5px",
+                        }}
+                      >
+                        {item.recommand}
+                      </span>
+                      <CommentIcon sx={{ verticalAlign: "middle" }} />
+                      <span
+                        style={{
+                          verticalAlign: "middle",
+                          margin: "0 15px 0 5px",
+                        }}
+                      >
+                        {item.comment}
+                      </span>
+                    </div>
+                  </div>
+                </ImageListItem>
+              );
+            })}
+
+          {PreviewList && (
             <div
-            style={{ width: "100%", display: "none", height: "30px" }}
-            ref={target}
-          ></div>
-          }
+              style={{ width: "100%", display: "none", height: "30px" }}
+              ref={target}
+            ></div>
+          )}
         </ImageList>
       </Box>
 
@@ -435,13 +435,10 @@ const mobileStyle = {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={mediaQuery ?
-                    style :
-                    mobileStyle  }>
+        <Box sx={mediaQuery ? style : mobileStyle}>
           <ImageBoard paramKey={ParamKey} contentPosition={true}></ImageBoard>
         </Box>
       </Modal>
-      
     </div>
   );
 }

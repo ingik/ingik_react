@@ -16,6 +16,10 @@
     display:none;
 }
 
+.bodyScreen::-webkit-scrollbar {
+    display:none;
+}
+
 .mediaSmall::-webkit-scrollbar{
     display:none;
 }

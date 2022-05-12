@@ -459,7 +459,7 @@ function ImageBoardUpload(props) {
             </Button>
             <Button
               variant="outlined"
-              onClick={onSubmitHandler}
+              onMouseDown={onSubmitHandler}
 
               className={
                 heightQuery ?
