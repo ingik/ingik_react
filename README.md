@@ -44,7 +44,7 @@ ID : testuser@test.com<br>PASSWORD : asdf1234!<br>
 클라우드 서비스 : AWS S3, AWS EC2<br>
 자원관리 : PM2<br>
 
-# 시연영상 
+# 미리보기
 
 댓글<br><br><img src="https://user-images.githubusercontent.com/65318601/167687114-8fdc6b0b-aed4-4708-9958-a45178a74829.gif"/><br><br>
 채팅<br><br><img src="https://user-images.githubusercontent.com/65318601/167687287-61a5f448-db8b-4850-87e9-b3eb4508859f.gif"/><br><br>
