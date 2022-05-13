@@ -82,7 +82,7 @@ ID : testuser@test.com<br>PASSWORD : asdf1234!<br>
 23. AppBar에서 searchInput 에서 Blur시 리스트가 그대로 남아있다 - DEV 적용 완
 24. imageBoardList(Board) 에서 스크롤바가 생성된다.
 25. 스토어에 저장된 소켓을 채팅방(dmList)에 접속했을때 useSelector로 가져오는데 첫렌더링시 소켓에 connected : false 로 연결이 되어있지 않다. 리로드를 해야 연결됨. 수정이 필요
-26. 모바일에서 작성 버튼을 누르면 바로 submit이 되지않고 focus가 풀려서 두번 눌러줘야함
+26. 모바일에서 작성 버튼을 누르면 바로 submit이 되지않고 focus가 풀려서 두번 눌러줘야함 onclick처리가 되어있어서 mousedown으로 해결 - 완
  
 # 진행중 아쉬운 점<br>
 
