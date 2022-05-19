@@ -24,7 +24,6 @@ import ImageBoardUpdate from './components/views/ImageBoard/ImageBoardUpload'
 import OtherProfileCmp from './components/views/Profile/OtherProfileCmp';
 import ImageBoardCmpList from './components/views/ImageBoard/ImageBoardCmpList';
 import HoverProfile from './components/views/Profile/HoverProfile';
-import CardList from './components/views/NavBar/CardList';
 import Notice from './components/views/Notice/Notice';
 
 
@@ -41,20 +40,19 @@ function App() {
                 component={Auth(SearchAppBar, true)}/>
         <Switch>
           {/* <Route exact path="/" component={Auth(LandingPage, null)}/> */}
-          <Route exact path="/boards/detail/:key" component={Auth(Board,true)} />
-          <Route exact path="/createboard" component={Auth(CreateBoard,true)}/>
-          <Route exact path="/boards" component={Auth(BoardList , null)}/>
-          <Route exact path="/boards/detail/:key/update" component={Auth(UpdateBoard,true)}/>
+          <Route exact path="/boards/detail/:key" component={Board} />
+          <Route exact path="/createboard" component={CreateBoard}/>
+          <Route exact path="/boards" component={BoardList}/>
+          <Route exact path="/boards/detail/:key/update" component={UpdateBoard}/>
           <Route exact path="/chat/list" component={ChatList}/>
-          <Route exact path="/profile" component={Auth(ProfileCmp,true)}/>
+          <Route exact path="/profile" component={ProfileCmp}/>
           <Route exact path="/imageBoard/:key" component={ImageBoard} />
-          <Route exact path="/" component={Auth(ImageBoardList,true)} />
-          <Route exact path="/imageBoardUpdate" component={Auth(ImageBoardUpdate,true)} />
-          <Route exact path="/imageBoardCmp" component={ Auth(ImageBoardCmpList,true) } />
+          <Route exact path="/" component={ImageBoardList} />
+          <Route exact path="/imageBoardUpdate" component={ImageBoardUpdate} />
+          <Route exact path="/imageBoardCmp" component={ ImageBoardCmpList} />
           <Route exact path="/profile/:key" component={ OtherProfileCmp }/>
           <Route exact path="/modal" component={ Profile }/>
           <Route exact path="/hover" component={ HoverProfile }/>
-          <Route exact path="/cardlist" component={CardList}/>
           <Route exact path="/Notice" component={Notice}/>
         </Switch>
         

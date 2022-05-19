@@ -1,9 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 function Notice() {
+
+  const [NoticeList,setNoticeList] = useState(null)
+
   return (
     <div style={{paddingTop:'64px'}}>
-        웹소켓 리덕스 연결 완료 컴포넌트 제작중..
+        {/* {NoticeList && NoticeList.map((index) => {
+
+          return (
+
+          )
+        })} */}
     </div>
   )
 }

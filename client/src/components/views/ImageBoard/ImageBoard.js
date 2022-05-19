@@ -1,24 +1,22 @@
-import  Box  from '@mui/material/Box';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import Box from "@mui/material/Box";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
-import axios from 'axios';
-import { Button, TextField, Modal, Divider  } from '@mui/material';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ImageBoardComment from './ImageBoardComment';
-import ImageBoardUser from './ImageBoardUser';
-import './ImageBoard.css'
+import axios from "axios";
+import { Button, TextField, Modal, Divider } from "@mui/material";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ImageBoardComment from "./ImageBoardComment";
+import ImageBoardUser from "./ImageBoardUser";
+import "./ImageBoard.css";
 
-import { useSelector } from 'react-redux'
-import RecommandCmp from '../../../moduls/RecommandCmp';
+import { useSelector } from "react-redux";
+import RecommandCmp from "../../../moduls/RecommandCmp";
 
-import useMediaQuery from '@mui/material/useMediaQuery';
-
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 function ImageBoard(props) {
-
   //media
   const mediaQuery = useMediaQuery("(min-width:641px)");
 
@@ -35,31 +33,30 @@ function ImageBoard(props) {
   const MainRef = useRef();
   const ImgRef = useRef();
   ImgRef.current = [];
-  // const [CommentLength, setCommentLength] = useState(null)
 
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
 
   const onLeftMove = () => {
-
-    console.log('Left');
+    console.log("Left");
     if (Number <= 0) {
       return console.log("firstpage");
     }
     setNumber(Number - 1);
-    
-    
+
     async function Left() {
-      ImgRef.current[Number - 1].style.display = "table"
+      ImgRef.current[Number - 1].style.display = "table";
       ListRef.current.style.transition = "none";
-      ListRef.current.style.transform = `translateX(-${ImgRef.current[Number].offsetWidth }px)`;
+      ListRef.current.style.transform = `translateX(-${ImgRef.current[Number].offsetWidth}px)`;
     }
-    
+
     Left().then(() => {
-      setTimeout(()=>{
+      setTimeout(() => {
         ListRef.current.style.transition = "300ms";
-        ListRef.current.style.transform = ListRef.current.style.transform + `translateX(${ImgRef.current[Number-1].offsetWidth}px)`;
-      },0)
+        ListRef.current.style.transform =
+          ListRef.current.style.transform +
+          `translateX(${ImgRef.current[Number - 1].offsetWidth}px)`;
+      }, 0);
     });
   };
 
@@ -75,16 +72,19 @@ function ImageBoard(props) {
     console.log("ListRef.style.width : " + ListRef.current.style.width);
 
     ListRef.current.style.transition = "300ms";
-    ListRef.current.style.transform = ListRef.current.style.transform + `translateX(-${ImgRef.current[Number].offsetWidth}px)`;
-    
+    ListRef.current.style.transform =
+      ListRef.current.style.transform +
+      `translateX(-${ImgRef.current[Number].offsetWidth}px)`;
+
     setTimeout(() => {
       console.log("none");
       ListRef.current.style.transition = "none";
-      ListRef.current.style.transform = ListRef.current.style.transform + `translateX(${ImgRef.current[Number].offsetWidth}px)`;
+      ListRef.current.style.transform =
+        ListRef.current.style.transform +
+        `translateX(${ImgRef.current[Number].offsetWidth}px)`;
 
       ImgRef.current[Number].style.display = "none";
     }, 300);
-    
   };
 
   useEffect(() => {
@@ -101,12 +101,13 @@ function ImageBoard(props) {
       console.log("imageBoard CleanUp");
       CleanUpBoolean = false;
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     console.log("ImageDataList");
-    ListRef.current.style.width = (ImageDataList.length + 3) * MainRef.current.offsetWidth  + "px";
+    ListRef.current.style.width =
+      (ImageDataList.length + 3) * MainRef.current.offsetWidth + "px";
   }, [ImageDataList]);
 
   const none = {
@@ -145,25 +146,22 @@ function ImageBoard(props) {
   };
 
   const mobileStyle = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    bgcolor: 'background.paper',
-    width:'90vw',
-    height:'82vh',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    bgcolor: "background.paper",
+    width: "90vw",
+    height: "82vh",
     boxShadow: 24,
     p: 4,
-    padding:'0'
-  }
+    padding: "0",
+  };
 
   const onSubmitHandler = (event) => {
-    
     event.preventDefault();
 
     if (Comment.trim().length !== 0) {
-      
-
       console.log("CommentStatus : " + CommentStatus);
 
       let body = {
@@ -182,7 +180,7 @@ function ImageBoard(props) {
 
         if (response.data) {
           setCommentStatus((prevState) => {
-            return prevState = prevState + 1;
+            return (prevState = prevState + 1);
           });
           console.log(response.data);
         } else {
@@ -193,8 +191,6 @@ function ImageBoard(props) {
       console.log("no Value");
       return false;
     }
-
-
   };
 
   const onCommentHandler = (event) => {
@@ -204,22 +200,21 @@ function ImageBoard(props) {
   };
 
   const memoCommentStatus = useMemo(() => CommentStatus, [CommentStatus]);
-  const ScrollRef = useRef(null)
+  const ScrollRef = useRef(null);
 
-
-  const onModalHandler = (event) => {
+  const onModalHandler = () => {
     setOpen(true);
   };
 
   const onCommentFocus = () => {
-    MainRef.current.style.display = 'none'
-    ScrollRef.current.style.height = '46vh'
-  }
-  
+    MainRef.current.style.display = "none";
+    ScrollRef.current.style.height = "46vh";
+  };
+
   const onCommentBlur = () => {
-    MainRef.current.style.display = 'inline-block'
-    ScrollRef.current.style.height = '14vh'
-  }
+    MainRef.current.style.display = "inline-block";
+    ScrollRef.current.style.height = "14vh";
+  };
 
   function ContentBox() {
     console.log();
@@ -227,20 +222,18 @@ function ImageBoard(props) {
     if (props.contentPosition === true) {
       console.log(UserData[0]?._id);
       return (
-        <div
-          className={mediaQuery ? `rigthBox` : `rigthBoxSmall`}
-        >
+        <div className={mediaQuery ? `rigthBox` : `rigthBoxSmall`}>
           <List>
-            <ImageBoardUser userId={UserData[0]?.user} boardId={UserData[0]?._id}/>
+            <ImageBoardUser
+              userId={UserData[0]?.user}
+              boardId={UserData[0]?._id}
+            />
             <Divider />
           </List>
 
-          <div className={
-            mediaQuery ? 
-            `ScrollbarStyle` :
-            `ScrollbarStyleSmall`
-          }
-          ref={ScrollRef}
+          <div
+            className={mediaQuery ? `ScrollbarStyle` : `ScrollbarStyleSmall`}
+            ref={ScrollRef}
           >
             <List style={{ padding: "8px 16px" }}>
               <div> {UserData[0]?.content}</div>
@@ -250,22 +243,18 @@ function ImageBoard(props) {
                 paramKey={props.paramKey}
                 CommentStatus={memoCommentStatus}
               />
-            </List> 
+            </List>
           </div>
-          <Divider sx={{paddingTop:'5px'}}/>
+          <Divider sx={{ paddingTop: "5px" }} />
           <div className="buttonMenu">
             <RecommandCmp
               boardId={UserData[0]?._id}
               recommandId={UserSelectData._id}
             />
-            
           </div>
 
           <div className="commentCreate" style={{ width: "100%" }}>
-            <form
-              onSubmit={onSubmitHandler}
-              style={{ width: "100%" }}
-            >
+            <form onSubmit={onSubmitHandler} style={{ width: "100%" }}>
               <TextField
                 value={Comment}
                 onChange={onCommentHandler}
@@ -275,7 +264,9 @@ function ImageBoard(props) {
                 onBlur={mediaQuery ? null : onCommentBlur}
                 InputProps={{
                   endAdornment: (
-                    <Button onMouseDown={onSubmitHandler} postion="end"
+                    <Button
+                      onMouseDown={onSubmitHandler}
+                      postion="end"
                       disabled={Comment.trim() ? false : true}
                     >
                       작성
@@ -292,44 +283,55 @@ function ImageBoard(props) {
     if (props.contentPosition === false) {
       console.log("bottom");
       return (
-        <div className='bottomBoxSmall' >
-          <List sx={{ display: "inline-block" ,width:'100%'}}>
-            <ListItem >
-              <ImageBoardUser userId={UserData[0]?.user} boardId={UserData[0]?._id} />
+        <div className="bottomBoxSmall">
+          <List sx={{ display: "inline-block", width: "100%" }}>
+            <ListItem>
+              <ImageBoardUser
+                userId={UserData[0]?.user}
+                boardId={UserData[0]?._id}
+              />
             </ListItem>
-              <div style={{ display: "block", marginLeft: "5px" , padding: "8px 16px" }}>
-                {" "}
-                {UserData[0]?.content}
-              </div>
+            <div
+              style={{
+                display: "block",
+                marginLeft: "5px",
+                padding: "8px 16px",
+              }}
+            >
+              {" "}
+              {UserData[0]?.content}
+            </div>
           </List>
 
-
-          <div style={{margin:'8px 16px'}}>
-          <div onClick={onModalHandler} style={{margin:'5px 0'}}>댓글보기..</div>
-          <Divider />
-          <div className="buttonMenu" style={{margin:'5px 0'}}>
-            <RecommandCmp
-              boardId={UserData[0]?._id}
-              recommandId={UserSelectData?._id}
-            />
-          </div>
-          <div className="commentCreate" style={{ width: "100%" }}>
-            <form onSubmit={onSubmitHandler}>
-              <TextField
-                value={Comment}
-                onChange={onCommentHandler}
-                style={{ width: "100%", padding: "0" }}
-                variant="outlined"
-                InputProps={{
-                  endAdornment: (
-                    <Button onClick={onSubmitHandler} postion="end">
-                      작성
-                    </Button>
-                  ),
-                }}
-              ></TextField>
-            </form>
-          </div>
+          <div style={{ margin: "8px 16px" }}>
+            <div onClick={onModalHandler} style={{ margin: "5px 0" }}>
+              댓글보기..
+            </div>
+            <Divider />
+            <div className="buttonMenu" style={{ margin: "5px 0" }}>
+              <RecommandCmp
+                boardUserId={UserData[0]?.user}
+                boardId={UserData[0]?._id}
+                recommandId={UserSelectData?._id}
+              />
+            </div>
+            <div className="commentCreate" style={{ width: "100%" }}>
+              <form onSubmit={onSubmitHandler}>
+                <TextField
+                  value={Comment}
+                  onChange={onCommentHandler}
+                  style={{ width: "100%", padding: "0" }}
+                  variant="outlined"
+                  InputProps={{
+                    endAdornment: (
+                      <Button onClick={onSubmitHandler} postion="end">
+                        작성
+                      </Button>
+                    ),
+                  }}
+                ></TextField>
+              </form>
+            </div>
           </div>
 
           <Modal
@@ -338,9 +340,7 @@ function ImageBoard(props) {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-            <Box sx={mediaQuery ?
-                    style :
-                    mobileStyle  }>
+            <Box sx={mediaQuery ? style : mobileStyle}>
               <ImageBoard
                 paramKey={props.paramKey}
                 contentPosition={true}
@@ -357,58 +357,57 @@ function ImageBoard(props) {
       ImageDataList &&
       ImageDataList.map((image, index) => {
         return (
-          <div key={index}
-          style={
-            props.contentPosition === false ?
-          (mediaQuery ? {
-            width: "42vw",
-            height: "66vh",
-            float: "left",
-            display: "table",
-            objectFit: "scale-down",
-            backgroundImage:`url(${image.img})`,
-            backgroundPosition:'center center',
-            backgroundRepeat:'no-repeat',
-            backgroundSize:'contain'
-          }
-          :
-          {
-            width: "100vw",
-            height: "52vh",
-            float: "left",
-            display: "table",
-            objectFit: "scale-down",
-            backgroundImage:`url(${image.img})`,
-            backgroundPosition:'center center',
-            backgroundRepeat:'no-repeat',
-            backgroundSize:'contain'
-          })
-          :
-          (mediaQuery ? {
-            width: "42vw",
-            height: "66vh",
-            float: "left",
-            display: "table",
-            objectFit: "scale-down",
-            backgroundImage:`url(${image.img})`,
-            backgroundPosition:'center center',
-            backgroundRepeat:'no-repeat',
-            backgroundSize:'contain'
-          }
-          :
-          {
-            width: "90vw",
-            height: "45vh",
-            float: "left",
-            display: "table",
-            objectFit: "scale-down",
-            backgroundImage:`url(${image.img})`,
-            backgroundPosition:'center center',
-            backgroundRepeat:'no-repeat',
-            backgroundSize:'contain'
-          })
-          
-        }
+          <div
+            key={index}
+            style={
+              props.contentPosition === false
+                ? mediaQuery
+                  ? {
+                      width: "42vw",
+                      height: "66vh",
+                      float: "left",
+                      display: "table",
+                      objectFit: "scale-down",
+                      backgroundImage: `url(${image.img})`,
+                      backgroundPosition: "center center",
+                      backgroundRepeat: "no-repeat",
+                      backgroundSize: "contain",
+                    }
+                  : {
+                      width: "100vw",
+                      height: "52vh",
+                      float: "left",
+                      display: "table",
+                      objectFit: "scale-down",
+                      backgroundImage: `url(${image.img})`,
+                      backgroundPosition: "center center",
+                      backgroundRepeat: "no-repeat",
+                      backgroundSize: "contain",
+                    }
+                : mediaQuery
+                ? {
+                    width: "42vw",
+                    height: "66vh",
+                    float: "left",
+                    display: "table",
+                    objectFit: "scale-down",
+                    backgroundImage: `url(${image.img})`,
+                    backgroundPosition: "center center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "contain",
+                  }
+                : {
+                    width: "90vw",
+                    height: "45vh",
+                    float: "left",
+                    display: "table",
+                    objectFit: "scale-down",
+                    backgroundImage: `url(${image.img})`,
+                    backgroundPosition: "center center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "contain",
+                  }
+            }
             alt={image.key}
             // src={image.img}
 
@@ -422,9 +421,15 @@ function ImageBoard(props) {
   return (
     <div>
       <div
-        className={props.contentPosition === false 
-          ? (mediaQuery ? `mainRef` : `mainRefSmallCenter`) 
-          : (mediaQuery ? `mainRef` : `mainRefSmall`)}
+        className={
+          props.contentPosition === false
+            ? mediaQuery
+              ? `mainRef`
+              : `mainRefSmallCenter`
+            : mediaQuery
+            ? `mainRef`
+            : `mainRefSmall`
+        }
         ref={MainRef}
       >
         <div
@@ -465,7 +470,7 @@ function ImageBoard(props) {
         {/* 리스트사이즈 가변적일 필요가 이씀 */}
 
         <div
-        className='ListDiv'
+          className="ListDiv"
           style={{
             position: "relative",
             margin: "auto",

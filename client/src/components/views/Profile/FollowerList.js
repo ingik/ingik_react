@@ -1,84 +1,90 @@
-import { Avatar, Box, CircularProgress, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Modal } from '@mui/material'
-import axios from 'axios'
-import React,{useState,useEffect} from 'react'
-import { useSelector } from 'react-redux';
-import FollowingCmp from '../../../moduls/FollowingCmp';
-import { useHistory } from 'react-router-dom'
-
+import {
+  Avatar,
+  Box,
+  CircularProgress,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemText,
+  Modal,
+} from "@mui/material";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import FollowingCmp from "../../../moduls/FollowingCmp";
+import { useHistory } from "react-router-dom";
 
 function FollowerList(props) {
+  const [ListData, setListData] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [loading, setloading] = useState(false);
+  const [CallData, setCallData] = useState(0);
 
-const [ListData, setListData] = useState(null)
-const [open, setOpen] = useState(false);
-const [loading, setloading] = useState(false)
-const [CallData,setCallData] = useState(0)
+  const history = useHistory();
 
-const history = useHistory()
+  const userData = useSelector((state) => state.user.userData);
 
-const userData = useSelector(state => state.user.userData )
+  const getFunc = (data) => {
+    setCallData(data);
+  };
 
-const getFunc = (data) => {
-    setCallData(data)
-}
-
-
-
-useEffect(() => {
-    setOpen(props.Open)
-    let value = []
+  useEffect(() => {
+    setOpen(props.Open);
+    let value = [];
 
     axios.get("/api/users/followerList/" + props.userId).then((response) => {
-        console.log(response.data)
-        async function AsyncFunc() {
-          try {
-            await response.data.Myfollowing.reduce(
-              async (previousPromise, list) => {
-                await previousPromise;
+      console.log(response.data);
+      async function AsyncFunc() {
+        try {
+          await response.data.Myfollowing.reduce(
+            async (previousPromise, list) => {
+              await previousPromise;
 
-                await axios.get("/api/users/findId/" + list.MyfollowingId).then((response) => {
-                    value.push(response.data);
+              await axios
+                .get("/api/users/findId/" + list.MyfollowingId)
+                .then((response) => {
+                  value.push(response.data);
                 });
-              },Promise.resolve);
-          } catch (error) {
-            setListData(null);
-          }
+            },
+            Promise.resolve
+          );
+        } catch (error) {
+          setListData(null);
         }
-    
-        AsyncFunc().then(()=>{
-            setloading(true)
-            setListData(value)
-            console.log(value)
-        })
-
-      });
-
-      return () => {
-        setListData(null)
       }
-// eslint-disable-next-line react-hooks/exhaustive-deps
-},[props.Open])
 
+      AsyncFunc().then(() => {
+        setloading(true);
+        setListData(value);
+        console.log(value);
+      });
+    });
 
-const handleClose =() => {
-    setOpen(false)
-    props.onModalClose(false)
+    return () => {
+      setListData(null);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.Open]);
 
-}
-  
+  const handleClose = () => {
+    setOpen(false);
+    props.onModalClose(false);
+  };
 
-const style = {
+  const style = {
     position: "absolute",
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     bgcolor: "background.paper",
     width: "50vw",
-    minWidth:"300px",
+    minWidth: "300px",
     height: "70vh",
     boxShadow: 24,
     p: 4,
     padding: "0",
-    overflowY:"scroll"
+    overflowY: "scroll",
   };
 
   return (
@@ -90,26 +96,26 @@ const style = {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          {
-          loading 
-          ? null 
-          : <CircularProgress
+          {loading ? null : (
+            <CircularProgress
               sx={{
-                position:'absolute',
-                top:'calc(50% - 20px)',
-                left:'calc(50% - 20px)'
+                position: "absolute",
+                top: "calc(50% - 20px)",
+                left: "calc(50% - 20px)",
               }}
             />
-        }
-          <List sx={{padding:0}}>
+          )}
+          <List sx={{ padding: 0 }}>
             {ListData &&
               ListData.map((list) => {
                 return (
                   <ListItem key={list?._id}>
-                    <ListItemButton onClick={()=>{
-                      history.push("/profile/"+list?._id)
-                      props.onModalClose(false)
-                    }}>
+                    <ListItemButton
+                      onClick={() => {
+                        history.push("/profile/" + list?._id);
+                        props.onModalClose(false);
+                      }}
+                    >
                       <ListItemAvatar>
                         <Avatar alt={list?.name} src={list?.image} />
                       </ListItemAvatar>
@@ -117,9 +123,9 @@ const style = {
                     </ListItemButton>
 
                     <FollowingCmp
-                        followerId={list?._id}
-                        followingId={userData?._id}
-                        getFunc={getFunc}
+                      followerId={list?._id}
+                      followingId={userData?._id}
+                      getFunc={getFunc}
                     />
                   </ListItem>
                 );
@@ -131,4 +137,4 @@ const style = {
   );
 }
 
-export default FollowerList
+export default FollowerList;

@@ -81,6 +81,7 @@ function SearchAppBar(props) {
 
   const [SearchValue, setSearchValue] = useState("");
   const [UserList, setUserList] = useState(null);
+  const searchList = useRef(null)
 
   const userData = useSelector(state => state.user.userData)
 
@@ -100,6 +101,8 @@ function SearchAppBar(props) {
   const dispatch = useDispatch()
 
   useEffect(() => {
+
+    //thuck socketIO
 
       // async function socketConnect() {
       //   await dispatch(socketReduxConnect(socket));
@@ -136,24 +139,35 @@ function SearchAppBar(props) {
     setSearchValue(null)
     setUserList(null)
     setOnOff(false)
+    
   };
 
 
   const onSearchHanler = (event) => {
     event.preventDefault()
-
+    
     setSearchValue(event.currentTarget.value)
-    console.log(event.target.value)
+    
     let body = {
       name : event.currentTarget.value 
     }
     
     if(event.currentTarget.value){
       axios.post('/api/users/list',body).then(response => {
-        setUserList(response.data)
+        if(response.data){
+
+          async function ListOn(){
+            setUserList(response.data)
+          }
+          
+          ListOn().then(()=>{
+            searchList.current.style.display = "block"
+          })
+
+        }
       })
       setAnchorEl(event.currentTarget)
-    } else if(event.currentTarget.value.length === 0) {
+    } else {
       handleClose()
       setOnOff(false)
     }
@@ -198,6 +212,7 @@ function SearchAppBar(props) {
   }
 
   const searchUserList = {
+    display: "none",
     position: "absolute",
     zIndex: "99",
     backgroundColor: "white",
@@ -206,8 +221,10 @@ function SearchAppBar(props) {
     width: "30vw",
     paddingBottom: 0,
     borderRadius: "5px",
+    boxShadow:"0px 5px 5px -3px rgb(0 0 0 / 20%), 0px 8px 10px 1px rgb(0 0 0 / 14%), 0px 3px 14px 2px rgb(0 0 0 / 12%)"
   }
   const searchUserListSmall = {
+    display: "none",
     position: "absolute",
     zIndex: "99",
     backgroundColor: "white",
@@ -216,6 +233,8 @@ function SearchAppBar(props) {
     width: "100%",
     paddingBottom: 0,
     borderRadius: "5px",
+    boxShadow:"0px 5px 5px -3px rgb(0 0 0 / 20%), 0px 8px 10px 1px rgb(0 0 0 / 14%), 0px 3px 14px 2px rgb(0 0 0 / 12%)"
+
   }
 
 
@@ -260,6 +279,7 @@ function SearchAppBar(props) {
                   setAnchorEl(null);
                   setUserList(null);
                   setOnOff(false);
+                  searchList.current.style.display = "none"
                 }}
                 onFocus={onSearchHanler}
               />
@@ -269,6 +289,7 @@ function SearchAppBar(props) {
                 anchorEl={anchorEl}
                 open={OnOff}
                 onClose={handleClose}
+                ref={searchList}
               >
                 {SearchValue && SearchValue.length !== 0
                   ? UserList &&
@@ -277,7 +298,6 @@ function SearchAppBar(props) {
                         <ListItem
                           key={item.name}
                           onMouseDown={() => {
-                            console.log('click@@@@@@@@@@@@@@@@')
                             if (userData._id === item._id) {
                               props.history.push("/profile");
                               setOnOff(false);
@@ -324,6 +344,7 @@ function SearchAppBar(props) {
 
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
+
               <IconButton
                 size="large"
                 aria-label="show 4 new mails"
@@ -334,6 +355,7 @@ function SearchAppBar(props) {
               >
                 <FormatListBulletedIcon />
               </IconButton>
+
               <IconButton
                 size="large"
                 color="inherit"
@@ -343,6 +365,7 @@ function SearchAppBar(props) {
               >
                 <HomeIcon />
               </IconButton>
+
               <IconButton
                 size="large"
                 color="inherit"
@@ -352,6 +375,7 @@ function SearchAppBar(props) {
               >
                 <UploadIcon />
               </IconButton>
+
               <IconButton
                 size="large"
                 color="inherit"
@@ -363,6 +387,7 @@ function SearchAppBar(props) {
                   <ForumIcon />
                 </Badge>
               </IconButton>
+
               <IconButton
                 size="large"
                 aria-label="show 17 new notifications"
@@ -371,6 +396,7 @@ function SearchAppBar(props) {
                   props.history.push("/Notice");
                 }}
               >
+                
                 <Badge
                   // badgeContent={7}
                   color="error"
@@ -383,7 +409,7 @@ function SearchAppBar(props) {
             <Profile Data={props} />
           </Toolbar>
         </AppBar>
-        {/* {renderMobileMenu} */}
+
         <Modal
           open={ModalOpen}
           onClose={ModalhandleClose}

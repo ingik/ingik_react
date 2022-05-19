@@ -16,6 +16,7 @@ const { Follow } = require('./models/Follow')
 const { Recommand } = require('./models/Recommand')
 const { Follower } = require('./models/Follower')
 const { DirectM } = require('./models/DirectMessage')
+const { Notice } = require('./models/Notice')
 
 
 //middleware
@@ -76,12 +77,20 @@ app.post('/api/users/register', (req, res) => {
               const follower = new Follower()
               follower.UserId = user._id
 
+              const notice = new Notice()
+              notice.userId = user._id
+
               follow.save((err) => {
                 if(err) return res.json({success: false, err})
                 // res.status(200).json({ success: true })
               })
 
               follower.save((err) => {
+                if(err) return res.json({success: false, err})
+                // return res.status(200).json({ success: true })
+              })
+
+              notice.save((err) => {
                 if(err) return res.json({success: false, err})
                 return res.status(200).json({ success: true })
               })
@@ -498,6 +507,24 @@ app.post('/api/boards/recommand',(req,res) => {
     }
   );
 
+  //추가중..
+  // console.log(req.body)
+  // Notice.findOneAndUpdate(
+  //   {userId: req.body.boardUserId},
+  //   {
+  //     $push: {
+  //       noticeList:{
+  //         sendUserId:req.body.recommandId,
+  //         boardId:req.body.boardId,
+  //         type:1
+  //       },
+  //     },
+  //   },(err,notice) => {
+  //     if (err) return res.status(500).send({ error: "notice rec failure" })
+  //     return res.status(200).send(notice)
+  //   }
+  // )
+
 })
 
 //unrecommand
@@ -880,7 +907,6 @@ app.get('/api/boards/detail/:key', auth ,(req,res) => {
   console.log('board ID : ' + JSON.stringify(req.params.key));
   console.log('username : ' + req.user.name)
 
-
   Board.find({ '_id': req.params.key },(err,board) => {
     if(err) return res.status(500).send({error: 'database failure'})
     return res.status(200).json(board)
@@ -974,17 +1000,7 @@ app.get('/api/DirectMessage/chatList/',(req,res) => {
   })
 })
 
-//Chatting Input 
-
-app.post('/api/DirectMessage/input/',(req,res) => {
-  
-  DirectM.findOneAndUpdate()
-  
-})
-
-
 //Chat
-
 
 const Server = require('socket.io');
 const { time } = require('console');

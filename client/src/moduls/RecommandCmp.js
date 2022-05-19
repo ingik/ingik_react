@@ -47,7 +47,7 @@ function RecommandCmp(props) {
   const onRecommandHandler = () => {
     console.log("click");
     async function update() {
-      await setRecommandDisplay(Recommand(props.boardId, props.recommandId));
+      await setRecommandDisplay(Recommand(props.boardUserId,props.boardId, props.recommandId));
       setRecommandUpdate(true)
     }
     update();
@@ -62,9 +62,26 @@ function RecommandCmp(props) {
     update();
   };
 
+
+  // const CheckReccomand = () => {
+  //   RecommandDisplay ? (
+  //     <FavoriteIcon
+  //       style={{ verticalAlign: "middle" }}
+  //       onClick={onUnRecommandHanler}
+  //     ></FavoriteIcon>
+  //   ) : (
+  //     <FavoriteBorderIcon
+  //       style={{ verticalAlign: "middle" }}
+  //       onClick={onRecommandHandler}
+  //     ></FavoriteBorderIcon>
+  //   )
+  // }
+
+
   return (
     <React.Fragment>
-      {RecommandDisplay ? (
+      {
+      RecommandDisplay && RecommandDisplay ? (
         <FavoriteIcon
           style={{ verticalAlign: "middle" }}
           onClick={onUnRecommandHanler}
@@ -74,7 +91,8 @@ function RecommandCmp(props) {
           style={{ verticalAlign: "middle" }}
           onClick={onRecommandHandler}
         ></FavoriteBorderIcon>
-      )}
+      )
+      }
       <div
         style={{
           verticalAlign: "middle",

@@ -56,7 +56,6 @@ const onProfile = () => {
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
             <Avatar
               src={userData?.image}
-              sx={{ marginLeft: "10px" }}
             />
           </IconButton>
         </Tooltip>

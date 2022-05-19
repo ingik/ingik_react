@@ -1,79 +1,77 @@
-import { Avatar,Typography } from '@mui/material';
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux';
-import FollowerLength from '../../../moduls/FollowerLength';
-import FollowingCmp from '../../../moduls/FollowingCmp';
-import FollowLength from '../../../moduls/FollowLength';
-import ImageBoardLength from '../../../moduls/ImageBoardLength';
-import FollowerList from './FollowerList';
-import FollowList from './FollowList';
+import { Avatar, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import FollowerLength from "../../../moduls/FollowerLength";
+import FollowingCmp from "../../../moduls/FollowingCmp";
+import FollowLength from "../../../moduls/FollowLength";
+import ImageBoardLength from "../../../moduls/ImageBoardLength";
+import FollowerList from "./FollowerList";
+import FollowList from "./FollowList";
 
 function HoverProfile(props) {
+  const [ModalOpen, setModalOpen] = useState(false);
+  const [FollowerModalOpen, setFollowerModalOpen] = useState(false);
 
-  const [ModalOpen,setModalOpen] = useState(false)
-  const [FollowerModalOpen,setFollowerModalOpen] = useState(false)
-
-  const userData = useSelector(state => state.user.userData)
-  console.log(props.getFunc)
+  const userData = useSelector((state) => state.user.userData);
+  console.log(props.getFunc);
 
   const [CallData, setCallData] = useState(0);
   const getFunc = (data) => {
     setCallData(data);
   };
 
-
   const onFollowHandler = () => {
-    if(props.UserData?._id !== userData?._id){
-    return (
-      <FollowingCmp 
-        followerId={props.UserData?._id}
-        followingId={userData?._id}
-        getFunc={getFunc}
-      />
-    );
+    if (props.UserData?._id !== userData?._id) {
+      return (
+        <div style={{marginLeft:"auto"}}>
+        <FollowingCmp
+          followerId={props.UserData?._id}
+          followingId={userData?._id}
+          getFunc={getFunc}
+        />
+        </div>
+      );
     }
-  }
+  };
 
   const FollowHandler = () => {
-    setModalOpen(true)
-  }
+    setModalOpen(true);
+  };
 
   const FollowerHandler = () => {
-    setFollowerModalOpen(true)
-  }
+    setFollowerModalOpen(true);
+  };
 
   const onModalClose = (data) => {
-    setModalOpen(data)
-    setFollowerModalOpen(data)
-  }
-
+    setModalOpen(data);
+    setFollowerModalOpen(data);
+  };
 
   return (
-    <div style={{width:'300px' ,pointerEvents:"auto",margin:'10px'}}>
-        <div style={{borderBottom:'1px solid rgba(153,153,153,0.2)'}}>
+    <div style={{ width: "300px", pointerEvents: "auto", margin: "10px" }}>
+      <div style={{ borderBottom: "1px solid rgba(153,153,153,0.2)" ,display:"flex"}}>
         <Avatar
-        alt={props.UserData?.name}
-        src={props.UserData?.image}
-        style={{
-          display: "inline-block",
-          verticalAlign: "top",
-          width:'32px',
-          height:'32px'
-        }}
-      />
+          alt={props.UserData?.name}
+          src={props.UserData?.image}
+          style={{
+            verticalAlign: "top",
+            width: "32px",
+            height: "32px",
+          }}
+        />
         <Typography
-        variant="h6"
-        component="div"
-        style={{
-          display: "inline-block",
-          verticalAlign: "top",
-          margin: "5px 0 0 15px",
-        }}
-      >
-        {props.UserData?.name}
-      </Typography>
-      { onFollowHandler() }
-        </div>
+          variant="h6"
+          component="div"
+          style={{
+            display: "inline-block",
+            verticalAlign: "top",
+            margin: "5px 0 0 15px",
+          }}
+        >
+          {props.UserData?.name}
+        </Typography>
+        {onFollowHandler()}
+      </div>
       <div
         style={{
           display: "flex",
@@ -88,35 +86,37 @@ function HoverProfile(props) {
           </div>
         </div>
 
-        <div onClick={FollowHandler} style={{cursor:'pointer'}}>
+        <div onClick={FollowHandler} style={{ cursor: "pointer" }}>
           <div style={{ fontSize: "13px", fontWeight: "bold" }}>팔로워</div>
           <div style={{ textAlign: "center" }}>
-            <FollowLength followerId={props.UserData?._id} CallData={CallData} />
+            <FollowLength
+              followerId={props.UserData?._id}
+              CallData={CallData}
+            />
           </div>
         </div>
 
-        <div onClick={FollowerHandler} style={{cursor:'pointer'}}>
+        <div onClick={FollowerHandler} style={{ cursor: "pointer" }}>
           <div style={{ fontSize: "13px", fontWeight: "bold" }}>팔로우</div>
           <div style={{ textAlign: "center" }}>
             <FollowerLength UserId={props.UserData?._id} />
           </div>
         </div>
-        
       </div>
 
       <FollowList
-          Open={ModalOpen}
-          onModalClose={onModalClose}
-          userId={props.UserData._id}
-        />
+        Open={ModalOpen}
+        onModalClose={onModalClose}
+        userId={props.UserData._id}
+      />
 
-        <FollowerList
-          Open={FollowerModalOpen}
-          onModalClose={onModalClose}
-          userId={props.UserData._id}
-        />
+      <FollowerList
+        Open={FollowerModalOpen}
+        onModalClose={onModalClose}
+        userId={props.UserData._id}
+      />
     </div>
   );
 }
 
-export default React.memo(HoverProfile)
+export default React.memo(HoverProfile);

@@ -256,8 +256,6 @@ function ImageBoardUpload(props) {
 
 
   const onLeftMove = () => {
-
-      
     
     console.log(Number)
     if (Number <= 0) {

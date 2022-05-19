@@ -1,118 +1,112 @@
-import { Avatar, Button, Popover, Typography } from '@mui/material'
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import axios from 'axios'
-import React, { useState,useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
-import HoverProfile from '../Profile/HoverProfile'
+import { Avatar, Button, Popover, Typography } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import HoverProfile from "../Profile/HoverProfile";
 
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { useSelector } from 'react-redux'
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { useSelector } from "react-redux";
 
 function ImageBoardUser(props) {
-
   const UserSelectData = useSelector((state) => state.user.userData);
 
-  // console.log(props.boardId)
-  // console.log(UserSelectData._id)
+  const [ParentModal, setParentModal] = useState(false);
 
-  
-  const [ParentModal, setParentModal] = useState(false)
-
-  let childmodal = false
+  let childmodal = false;
+  let leaveCheck = false;
 
   const history = useHistory();
   const [UserData, setUserData] = useState({});
-  const [open] = useState(false)
+  const [open] = useState(false);
 
   const [DialogOpen, setDialogOpen] = React.useState(false);
 
   const handleOpen = () => {
     setDialogOpen(true);
-
-  }
+  };
   const handleClose = () => {
     setDialogOpen(false);
   };
- 
 
-    useEffect(() => {
-      let ComponentMounted = true;
-      if (props.userId) {
-        axios.get("/api/users/findId/" + props.userId).then((response) => {
-          if (ComponentMounted) {
-            setUserData(response.data);
-          }
-        });
-      }
+  useEffect(() => {
+    let ComponentMounted = true;
+    if (props.userId) {
+      axios.get("/api/users/findId/" + props.userId).then((response) => {
+        if (ComponentMounted) {
+          setUserData(response.data);
+        }
+      });
+    }
 
-      return () => {
-        console.log("imageBoardUser CleanUp");
-        ComponentMounted = false;
-      };
-    },[props.userId])
+    return () => {
+      console.log("imageBoardUser CleanUp");
+      ComponentMounted = false;
+    };
+  }, [props.userId]);
 
   const onClickHandler = () => {
-    history.push("/profile/"+UserData?._id)
-    window.location.reload()
-
-  }
+    history.push("/profile/" + UserData?._id);
+    window.location.reload();
+  };
 
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handlePopoverOpen = (event) => {
-    console.log("hover");
+    leaveCheck = true;
+    if(!ParentModal){
     setAnchorEl(event.currentTarget);
-    setParentModal(true);
+    setTimeout(() => {
+      if (leaveCheck) {
+        setParentModal(true);
+      }
+    }, 1000);
+  }
   };
-
 
   const handlePopoverClose = () => {
-
+    leaveCheck = false;
     setTimeout(() => {
-      console.log('close modal parent')
-      console.log('ChildModal : '+childmodal )
-      if(!childmodal) setParentModal(false);
-    }, 500);
+      if (!childmodal) setParentModal(false);
+    }, 100);
   };
 
-
   const onDeleteButton = () => {
-
-    axios.delete('/api/boards/imageBoard/delete/'+props.boardId+'/'+UserSelectData._id).then(response => {
-      // console.log(response.data)
-      setDialogOpen(false)
-      window.location.reload()
-
-    })
-
-  }
-
+    axios
+      .delete(
+        "/api/boards/imageBoard/delete/" +
+          props.boardId +
+          "/" +
+          UserSelectData._id
+      )
+      .then((response) => {
+        // console.log(response.data)
+        setDialogOpen(false);
+        window.location.reload();
+      });
+  };
 
   return (
-    <React.Fragment>
+    <div style={{ display: "flex" }}>
       <Avatar
         aria-owns={open ? "mouse-over-popover" : undefined}
         aria-haspopup="true"
-        onMouseEnter={(event) => {
-          console.log("hover");
-          setAnchorEl(event.currentTarget);
-          setParentModal(true);
-        }}
+        onMouseEnter={handlePopoverOpen}
         onMouseLeave={handlePopoverClose}
         onClick={onClickHandler}
         alt={UserData?.name}
         src={UserData?.image}
-        style={{
-          display: "inline-block",
+        sx={{
           verticalAlign: "top",
           width: "32px",
           height: "32px",
+          cursor: "pointer"
         }}
-      ></Avatar>
+      />
       <Popover
         id="mouse-over-popover"
         style={{
@@ -132,11 +126,12 @@ function ImageBoardUser(props) {
         disableRestoreFocus
         onMouseEnter={() => {
           console.log("enter child");
-          childmodal = true
+          childmodal = true;
         }}
         onMouseLeave={() => {
           console.log("leave child");
-          childmodal = false
+          childmodal = false;
+          leaveCheck = false;
           setParentModal(false);
         }}
       >
@@ -155,6 +150,7 @@ function ImageBoardUser(props) {
           display: "inline-block",
           verticalAlign: "top",
           margin: "0px 10px 0 10px",
+          cursor: "pointer"
         }}
       >
         {UserData?.name}
@@ -191,8 +187,8 @@ function ImageBoardUser(props) {
           </Button>
         </DialogActions>
       </Dialog>
-    </React.Fragment>
+    </div>
   );
 }
 
-export default React.memo(ImageBoardUser)
+export default React.memo(ImageBoardUser);

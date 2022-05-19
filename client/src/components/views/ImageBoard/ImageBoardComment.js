@@ -1,37 +1,45 @@
-import { Avatar, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ListItem, Popover, Typography } from '@mui/material';
-import axios from 'axios';
-import React, {  useEffect, useState } from 'react'
+import {
+  Avatar,
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  ListItem,
+  Popover,
+  Typography,
+} from "@mui/material";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import HoverProfile from '../Profile/HoverProfile';
-
-
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import HoverProfile from "../Profile/HoverProfile";
 
 function ImageBoardComment(props) {
-
-  console.log(props)
+  console.log(props);
 
   const history = useHistory();
 
-  const [ListComment, setListComment] = useState(null)
+  const [ListComment, setListComment] = useState(null);
   const [DeleteData, setDeleteData] = useState({
-    boardId:"",
-    userId:"",
-    content:""
-  })
-  const [Value,setValue] = useState(0)
+    boardId: "",
+    userId: "",
+    content: "",
+  });
+  const [Value, setValue] = useState(0);
 
-  let childmodal = false
+  let childmodal = false;
 
-  const [HoverUser,setHoverUser] = useState(null)
+  const [HoverUser, setHoverUser] = useState(null);
 
-  const userData = useSelector(state => state.user.userData )
-  
+  const userData = useSelector((state) => state.user.userData);
+
   useEffect(() => {
-
-    let CleanUpBoolean = true
+    let CleanUpBoolean = true;
 
     // axios.get("/api/baords/imageBoard/comment/" + props.paramKey).then(response => {
     //   if(CleanUpBoolean) {
@@ -39,67 +47,75 @@ function ImageBoardComment(props) {
     //     setListComment(response.data);
     //   }
     // })
-    
-    axios.get("/api/baords/imageBoard/comment/" + props.paramKey).then(response => {
-      if(CleanUpBoolean) {
-        console.log(response.data)
-        setListComment(response.data);
-      }
-    })
 
-    return () => CleanUpBoolean = false
-    
-  },[props,Value])
+    axios
+      .get("/api/baords/imageBoard/comment/" + props.paramKey)
+      .then((response) => {
+        if (CleanUpBoolean) {
+          console.log(response.data);
+          setListComment(response.data);
+        }
+      });
 
-  useEffect(()=>{
-    axios.get('/api/baords/imageBoard/comment/test/' + props.paramKey).then(response => {
-      console.log(response.data)
-    })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+    return () => (CleanUpBoolean = false);
+  }, [props, Value]);
+
+  useEffect(() => {
+    axios
+      .get("/api/baords/imageBoard/comment/test/" + props.paramKey)
+      .then((response) => {
+        console.log(response.data);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onEnter = (event) => {
-    if(event.target.children[2]){
-      event.target.children[2].style.display = 'block'
+    if (event.target.children[2]) {
+      event.target.children[2].style.display = "block";
     }
-  }
+  };
 
   const onLeave = (event) => {
-    if(event.target.children[2]){
-      event.target.children[2].style.display = 'none'
+    if (event.target.children[2]) {
+      event.target.children[2].style.display = "none";
     }
-  }
-
+  };
 
   const [DialogOpen, setDialogOpen] = React.useState(false);
 
   const handleOpen = () => {
     setDialogOpen(true);
-
-  }
+  };
   const handleClose = () => {
     setDialogOpen(false);
   };
 
   const onDeleteButton = () => {
-    console.log(DeleteData)
-    axios.delete('/api/boards/imageBoard/comment/delete/'+DeleteData.boardId+'/'+DeleteData.userId+'/'+DeleteData.content).then((response) => {
-      console.log(response.data)
-      setDialogOpen(false);
-      setValue(Value => ++Value)
-    })
-  }
+    console.log(DeleteData);
+    axios
+      .delete(
+        "/api/boards/imageBoard/comment/delete/" +
+          DeleteData.boardId +
+          "/" +
+          DeleteData.userId +
+          "/" +
+          DeleteData.content
+      )
+      .then((response) => {
+        console.log(response.data);
+        setDialogOpen(false);
+        setValue((Value) => ++Value);
+      });
+  };
 
   const onClickHandler = (userId) => {
-    history.push("/profile/"+userId)
-    window.location.reload()
-
-  }
-
+    history.push("/profile/" + userId);
+    window.location.reload();
+  };
 
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const [ParentModal, setParentModal] = useState(false)
+  const [ParentModal, setParentModal] = useState(false);
 
   return (
     <div>
@@ -119,22 +135,20 @@ function ImageBoardComment(props) {
           horizontal: "left",
         }}
         transitionDuration={{ appear: 2000, enter: 500 }}
-        onMouseEnter={()=>{
+        onMouseEnter={() => {
           console.log("enter child");
-          childmodal = true
+          childmodal = true;
         }}
-        onMouseLeave={()=>{
+        onMouseLeave={() => {
           console.log("leave child");
-          childmodal = false
+          childmodal = false;
           setParentModal(false);
         }}
-
       >
         <HoverProfile UserData={HoverUser} />
       </Popover>
 
-      {
-        ListComment ? 
+      {ListComment ? (
         ListComment.map((item, index) => {
           return (
             <ListItem
@@ -147,7 +161,6 @@ function ImageBoardComment(props) {
                 // alt={item?.user.name}
                 src={item?.user.image}
                 style={{
-                  display: "inline-block",
                   verticalAlign: "top",
                   width: "32px",
                   height: "32px",
@@ -158,12 +171,11 @@ function ImageBoardComment(props) {
                   setHoverUser(item?.user);
                   setParentModal(true);
                 }}
-                
                 onMouseLeave={() => {
                   setTimeout(() => {
-                    console.log('close modal parent')
-                    console.log('ChildModal : '+childmodal )
-                    if(!childmodal) setParentModal(false);
+                    console.log("close modal parent");
+                    console.log("ChildModal : " + childmodal);
+                    if (!childmodal) setParentModal(false);
                   }, 500);
                 }}
               />
@@ -186,9 +198,9 @@ function ImageBoardComment(props) {
                   }}
                   onMouseLeave={() => {
                     setTimeout(() => {
-                      console.log('close modal parent')
-                      console.log('ChildModal : '+childmodal )
-                      if(!childmodal) setParentModal(false);
+                      console.log("close modal parent");
+                      console.log("ChildModal : " + childmodal);
+                      if (!childmodal) setParentModal(false);
                     }, 500);
                   }}
                 >
@@ -207,27 +219,25 @@ function ImageBoardComment(props) {
                       content: item.content,
                     });
                   }}
-                  onMouseLeave={(event)=>{
-                    event.target.style.display='none'
+                  onMouseLeave={(event) => {
+                    event.target.style.display = "none";
                   }}
                 />
               ) : null}
             </ListItem>
           );
         })
-        :
+      ) : (
         <CircularProgress
-            sx={{
-              position:'absolute',
-              top:'calc(50% - 10px)',
-              left:'calc(50% - 10px)',
-              marginTop:'25%'
-            }}
-
-            size={20}
-          />
-      
-      }
+          sx={{
+            position: "absolute",
+            top: "calc(50% - 10px)",
+            left: "calc(50% - 10px)",
+            marginTop: "25%",
+          }}
+          size={20}
+        />
+      )}
 
       <Dialog
         open={DialogOpen}
@@ -256,4 +266,4 @@ function ImageBoardComment(props) {
   );
 }
 
-export default React.memo(ImageBoardComment)
+export default React.memo(ImageBoardComment);

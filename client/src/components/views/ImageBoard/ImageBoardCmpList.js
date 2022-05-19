@@ -1,60 +1,51 @@
-import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react';
-import { withRouter } from 'react-router-dom';
-import ImageBoard from './ImageBoard';
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
+import { withRouter } from "react-router-dom";
+import ImageBoard from "./ImageBoard";
 
-import './ImageBoard.css'
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { CircularProgress } from '@mui/material';
-
+import "./ImageBoard.css";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { CircularProgress } from "@mui/material";
 
 function ImageBoardCmpList() {
+  let number = 1;
+  const target = useRef(null);
+  const viewport = useRef(null);
 
-  let number = 1
-  const target = useRef(null)
-  const viewport = useRef(null)
+  const [DataList, setDataList] = useState([]);
+  const mediaQuery = useMediaQuery("(min-width:641px)");
 
+  const [DataLess, setDataLess] = useState(null);
 
-  const [DataList, setDataList] = useState([])
-  const mediaQuery = useMediaQuery('(min-width:641px)');
-
-  const [DataLess,setDataLess] = useState(null)
-
-console.log(number)
   useEffect(() => {
-      let CleanUpBoolean = true;
-      axios.get("/api/boards/imageBoardListCmp").then(response => {
+    let CleanUpBoolean = true;
+    axios.get("/api/boards/imageBoardListCmp").then((response) => {
+      const value = [];
 
-        const value = [];
-  
-        // eslint-disable-next-line array-callback-return
-        response.data.map((list) => {
-  
-          axios.get('/api/boards/recommandLength/'+list._id).then(response => {
-            console.log(response.data)
-            list.recommand = response.data[0]?.recommand
-          })
-          value.push(list);
-
-        });
-        if(CleanUpBoolean) {
-          setDataList(value)
-        }
-  
-      })
-
-      return () => {
-        CleanUpBoolean = false;
+      // eslint-disable-next-line array-callback-return
+      response.data.map((list) => {
+        axios
+          .get("/api/boards/recommandLength/" + list._id)
+          .then((response) => {
+            console.log(response.data);
+            list.recommand = response.data[0]?.recommand;
+          });
+        value.push(list);
+      });
+      if (CleanUpBoolean) {
+        setDataList(value);
       }
+    });
 
-
-  },[])
+    return () => {
+      CleanUpBoolean = false;
+    };
+  }, []);
 
   useEffect(() => {
-    
     let io;
     if (target.current) {
-      console.log('intersection observe')
+      console.log("intersection observe");
       const options = {
         root: viewport.current,
         threshold: 0,
@@ -69,12 +60,12 @@ console.log(number)
           loadItems();
 
           observer.unobserve(entry.target);
-          if(!DataLess){
-          setTimeout(() => {
-            ++number
-            if(target.current) observer.observe(target.current);
-          }, 1000);
-        }
+          if (!DataLess) {
+            setTimeout(() => {
+              ++number;
+              if (target.current) observer.observe(target.current);
+            }, 1000);
+          }
         });
       };
 
@@ -84,52 +75,42 @@ console.log(number)
         io.observe(target.current);
       }
     }
-    
+
     return () => {
       io && io.disconnect();
-      setDataList(null)
+      setDataList(null);
     };
-
   }, [target, viewport]);
 
+  const loadItems = () => {
+    console.log("loadItems");
 
+    axios.get("/api/boards/imageBoardListCmp/" + number).then((response) => {
+      if (response.data.length === 0) {
+        setDataLess(true);
+        return console.log("last data");
+      }
 
-const loadItems = () => {
-  
-  console.log('loadItems')
-
-
-  axios.get("/api/boards/imageBoardListCmp/" + number).then( response => {
-
-    if(response.data.length === 0) {
-      setDataLess(true)
-      return console.log('last data')
-    }
-
-    // eslint-disable-next-line array-callback-return
-    response.data.map((list) => {
-      axios.get('/api/boards/recommandLength/'+list._id).then(response => {
-        console.log(response.data)
-        async function push(){
-          list.recommand = response.data[0]?.recommand
-        }
-        push().then(() => {
-          // value.push(list);
-          setDataList((prevState) => { return [...prevState,list] })
-        })
-      })
-      
+      // eslint-disable-next-line array-callback-return
+      response.data.map((list) => {
+        axios
+          .get("/api/boards/recommandLength/" + list._id)
+          .then((response) => {
+            console.log(response.data);
+            async function push() {
+              list.recommand = response.data[0]?.recommand;
+            }
+            push().then(() => {
+              // value.push(list);
+              setDataList((prevState) => {
+                return [...prevState, list];
+              });
+            });
+          });
+      });
     });
+  };
 
-
-  })
-
-  
-
-}
-
-
-    
   return (
     <div
       className="CmpList"
@@ -141,7 +122,7 @@ const loadItems = () => {
         style={{ width: "100%", height: "90vh", overflow: "auto" }}
       >
         {DataList &&
-          DataList.map((item,index) => {
+          DataList.map((item, index) => {
             // let lastEl = index === DataList.length - 1
             return (
               <div
@@ -156,19 +137,23 @@ const loadItems = () => {
             );
           })}
         {DataList ? (
-          <div style={{ width: "100%", height: "300px" ,position:'relative'}} ref={target} >
-            {DataLess ? null : <CircularProgress
-              sx={{
-                position: "absolute",
-                top: "calc(50% - 20px)",
-                left: "calc(50% - 20px)",
-              }}
-            />}
+          <div
+            style={{ width: "100%", height: "300px", position: "relative" }}
+            ref={target}
+          >
+            {DataLess ? null : (
+              <CircularProgress
+                sx={{
+                  position: "absolute",
+                  top: "calc(50% - 20px)",
+                  left: "calc(50% - 20px)",
+                }}
+              />
+            )}
           </div>
         ) : (
-          <div ref={DataList ? target : null}/>
+          <div ref={DataList ? target : null} />
         )}
-
       </div>
     </div>
   );

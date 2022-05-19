@@ -1,48 +1,42 @@
-import { ImageList, ImageListItem } from '@mui/material';
-import axios from 'axios';
-import React, { useEffect, useRef, useState  } from 'react';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
-import ImageBoard from './ImageBoard'
-import CommentIcon from '@mui/icons-material/Comment';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import {withRouter} from 'react-router-dom'
-import CircularProgress from '@mui/material/CircularProgress';
+import { ImageList, ImageListItem } from "@mui/material";
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import ImageBoard from "./ImageBoard";
+import CommentIcon from "@mui/icons-material/Comment";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import { withRouter } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
 
-import useMediaQuery from '@mui/material/useMediaQuery';
-import './ImageBoard.css'
-
+import useMediaQuery from "@mui/material/useMediaQuery";
+import "./ImageBoard.css";
 
 function ImageBoardList(props) {
+  const mediaQuery = useMediaQuery("(min-width:641px)");
 
-  const mediaQuery = useMediaQuery('(min-width:641px)');
-
-  const [PreviewList,setPreviewList] = useState([])
+  const [PreviewList, setPreviewList] = useState([]);
 
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
-  const [ParamKey, setParamKey] = useState("")
+  const [ParamKey, setParamKey] = useState("");
 
-  const [loading, setloading] = useState(false)
+  const [loading, setloading] = useState(false);
 
-  let DataLess = false
+  let DataLess = false;
 
   //intersection observer
-  const viewport = useRef(null)
-  const target = useRef()
-  const imageListRef = useRef(null)
-  const ListRef = useRef(null)
+  const viewport = useRef(null);
+  const target = useRef();
+  const imageListRef = useRef(null);
+  const ListRef = useRef(null);
 
-  let number = 1
+  let number = 1;
 
-  let LoginUser = props.history
-  console.log(LoginUser)
+  let LoginUser = props.history;
+  console.log(LoginUser);
 
-
-  
   useEffect(() => {
-
-
     //clean Up
     let CleanUpBoolean = true;
 
@@ -79,13 +73,11 @@ function ImageBoardList(props) {
       }
 
       AsyncFunc().then(() => {
-
         if (CleanUpBoolean) {
           setPreviewList(value);
           setloading(true);
           target.current.style.display = "block";
         }
-
       });
     });
 
@@ -106,10 +98,10 @@ function ImageBoardList(props) {
 
     //     await axios.all([axios.get("/api/boards/recommandLength/" + list._id),axios.get("/api/boards/commentLength/" + list._id)])
     //       .then(axios.spread((response1, response2) => {
-  
+
     //             list.image[0].recommand = response1.data[0]?.recommand.length;
     //             list.image[0].comment = response2.data[0]?.commentList.length;
-  
+
     //             value.push(list.image[0]);
     //             setPreviewList([...value])
     //             console.log("3");
@@ -125,72 +117,54 @@ function ImageBoardList(props) {
     //     target.current.style.display = "block"
     //   })
 
-
     // })
 
-  
-    
     return () => {
-      setPreviewList([])
+      setPreviewList([]);
       CleanUpBoolean = false;
-
-    }
-
-    
-  },[])
-
+    };
+  }, []);
 
   const loadItems = () => {
-
-
-    console.log('loadItems')
+    console.log("loadItems");
     //1)
-    axios.get("/api/boards/imageBoardList/"+number).then(response => {
+    axios.get("/api/boards/imageBoardList/" + number).then((response) => {
       const value = [];
 
-      if(response.data.length === 0) {
-        DataLess = true
-        return console.log('last data')
+      if (response.data.length === 0) {
+        DataLess = true;
+        return console.log("last data");
       }
 
-      async function AsyncFunc(){
-
-        await response.data.reduce(async(previousPromise, list)=>{
-        await previousPromise
+      async function AsyncFunc() {
+        await response.data.reduce(async (previousPromise, list) => {
+          await previousPromise;
           list.image[0]._id = list._id;
-  
-        const newElement = await axios
-          .all([
-            axios.get("/api/boards/recommandLength/" + list._id),
-            axios.get("/api/boards/commentLength/" + list._id),
-          ])
-          .then(
-            axios.spread((response1, response2) => {
 
-              list.image[0].recommand = response1.data[0]?.recommand.length;
-              list.image[0].comment = response2.data[0]?.commentList.length;
+          const newElement = await axios
+            .all([
+              axios.get("/api/boards/recommandLength/" + list._id),
+              axios.get("/api/boards/commentLength/" + list._id),
+            ])
+            .then(
+              axios.spread((response1, response2) => {
+                list.image[0].recommand = response1.data[0]?.recommand.length;
+                list.image[0].comment = response2.data[0]?.commentList.length;
 
-              return list.image[0];
-            })
-          );
+                return list.image[0];
+              })
+            );
 
-          value.push(newElement)
-
-        },Promise.resolve)
+          value.push(newElement);
+        }, Promise.resolve);
       }
 
       AsyncFunc().then(() => {
-        setPreviewList((prevState) => {return [...prevState , ...value]})
-        // setloading(true)
-        try {
-          target.current.style.display="block"
-        } catch (error) {
-          return target.current
-        }
-      })
-      
-
-    })
+        setPreviewList((prevState) => {
+          return [...prevState, ...value];
+        });
+      });
+    });
 
     //2)
     // axios.get('/api/boards/imageBoardList/'+ number).then(response => {
@@ -213,7 +187,7 @@ function ImageBoardList(props) {
 
     //       list.image[0].recommand = response1.data[0]?.recommand.length
     //       list.image[0].comment = response2.data[0]?.commentList.length
-          
+
     //       value.push(list.image[0]);
     //       // setPreviewList([...value])
     //       setPreviewList((prevState) => {
@@ -222,119 +196,100 @@ function ImageBoardList(props) {
     //     }))
     //   });
     // })
-
-  }
+  };
 
   useEffect(() => {
-
-
     const options = {
-      root : viewport.current,
+      root: viewport.current,
       threshold: 0,
-    }
-
+    };
 
     const handleintersection = (entries, observer) => {
-      target.current.style.display="none"
+      console.log(entries);
 
-      console.log(entries)
-
-      
       entries.forEach((entry) => {
-        if(!entry.isIntersecting){
-          return ;
+        if (!entry.isIntersecting) {
+          return;
         }
-        observer.unobserve(entry.target)
+        observer.unobserve(entry.target);
 
-        if(DataLess === false){
+        if (!DataLess) {
+          loadItems();
+          number++;
+          setTimeout(() => {
+            observer.observe(target.current);
+          }, 3000);
+        } else {
+          target.current.style.display = "none"
+        }
+      });
+    };
 
-          console.log(DataLess)
-        loadItems();
-        number++
-        // setTimeout(() => {
-        observer.observe(target.current)
+    const io = new IntersectionObserver(handleintersection, options);
 
-        // },1000)
-       }
-
-      })
-
-
+    if (target.current) {
+      io.observe(target.current);
     }
-    
 
-    const io = new IntersectionObserver(handleintersection,options)
-
-    if(target.current){
-      io.observe(target.current)
-    }
-    
     //clean up
     return () => {
-      io && io.disconnect()
+      io && io.disconnect();
     };
-    
-  
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[viewport,target.current])
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewport, target]);
 
-
-  
-
-  
   const onHoverHandler = (event) => {
+    event.stopPropagation();
+    event.currentTarget.children[1].style = "display:blcok";
+  };
 
-    event.stopPropagation()
-    event.currentTarget.children[1].style = 'display:blcok'
-  }
-
-  
   const onLeaveHandler = (event) => {
-    event.stopPropagation()
-    event.currentTarget.children[1].style=`display:none`
-  }
+    event.stopPropagation();
+    event.currentTarget.children[1].style = `display:none`;
+  };
 
-  
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  bgcolor: 'background.paper',
-  width:'84vw',
-  height:'66vh',
-  boxShadow: 24,
-  p: 4,
-  padding:'0',
-  
-};
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    bgcolor: "background.paper",
+    width: "84vw",
+    height: "66vh",
+    boxShadow: 24,
+    p: 4,
+    padding: "0",
+  };
 
-const mobileStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  bgcolor: 'background.paper',
-  width:'90vw',
-  height:'82vh',
-  boxShadow: 24,
-  p: 4,
-  padding:'0'
-}
-
-
+  const mobileStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    bgcolor: "background.paper",
+    width: "90vw",
+    height: "82vh",
+    boxShadow: 24,
+    p: 4,
+    padding: "0",
+  };
 
   return (
     <div
       style={
         mediaQuery
-          ? { paddingTop: "64px", height: "calc(100vh - 66px)",overflow:'auto' }
-          : { paddingTop: "64px" ,overflow:'auto'}
+          ? {
+              paddingTop: "64px",
+              height: "calc(100vh - 66px)",
+              overflow: "auto",
+            }
+          : { paddingTop: "64px", overflow: "auto" }
       }
       class="bodyScreen"
+      ref={viewport}
     >
-      <Box className="boxSmall" ref={viewport}>
+      <Box className="boxSmall" >
         {loading ? null : (
           <CircularProgress
             sx={{
@@ -346,8 +301,7 @@ const mobileStyle = {
         )}
         <ImageList
           className={mediaQuery ? `mediaSmall` : `mediaLarge`}
-          variant="masonry"
-          // rowHeight='auto'
+          rowHeight={mediaQuery ? "23.047vw" : "32.673vw"}
           cols={3}
           ref={imageListRef}
         >
@@ -358,8 +312,9 @@ const mobileStyle = {
                   key={index}
                   sx={{
                     margin: "auto",
-                    // width:'100%',
-                    // height: ListRef ? ListRef.current.style.width : 'auto'
+                    width: mediaQuery ? "23.047vw" : "32.673vw",
+                    height: mediaQuery ? "23.047vw" : "32.673vw",
+                    backgroundColor:"black"
                   }}
                   onMouseEnter={onHoverHandler}
                   onMouseLeave={onLeaveHandler}
@@ -369,12 +324,25 @@ const mobileStyle = {
                   }}
                   ref={ListRef}
                 >
-                  <img
+                  {/* <img
                     src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
                     srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
                     alt={item.name}
-                    loading="lazy"
-                    style={{ objectFit: "contain" }}
+                    // loading="lazy"
+                    style={{ objectFit: "cover" }}
+                  /> */}
+
+                  <img
+                    alt={item.name}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      backgroundImage: `url(${item.img})`,
+                      backgroundRepeat: "no-repeat",
+                      backgroundSize: "contain",
+                      backgroundPositionX: "center",
+                      backgroundPositionY: "center",
+                    }}
                   />
 
                   <div className="LeaveStyle" style={{ display: "none" }}>
@@ -419,15 +387,21 @@ const mobileStyle = {
                 </ImageListItem>
               );
             })}
-
-          {PreviewList && (
-            <div
-              style={{ width: "100%", display: "none", height: "30px" }}
-              ref={target}
-            ></div>
-          )}
         </ImageList>
+        
       </Box>
+      {PreviewList ? (
+          <div style={{ width: "100%", height: "300px" ,position:'relative',display:'none'}} ref={target} >
+            {DataLess ? null : <CircularProgress
+              sx={{
+                position: "absolute",
+                top: "calc(50% - 20px)",
+                left: "calc(50% - 20px)",
+              }}
+            />}
+          </div>
+        ) : null
+        }
 
       <Modal
         open={open}
@@ -443,5 +417,4 @@ const mobileStyle = {
   );
 }
 
-// export default withRouter(ImageBoardList);
 export default withRouter(ImageBoardList);
