@@ -114,7 +114,6 @@ function ImageBoardComment(props) {
   };
 
   const [anchorEl, setAnchorEl] = useState(null);
-
   const [ParentModal, setParentModal] = useState(false);
 
   return (

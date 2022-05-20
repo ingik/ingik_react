@@ -12,6 +12,7 @@ import Reducer from './_reducers';
 
 const createStoreWithMiddleware = applyMiddleware(promiseMiddleware, ReduxThunk)(createStore)
 
+
 console.log = () => {}
 console.error = () => {}
 console.debug = () => {}

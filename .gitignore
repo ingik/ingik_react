@@ -1,2 +1,4 @@
-
+node_modules
 awsconfig.json
+.env
+node_modules
