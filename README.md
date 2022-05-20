@@ -52,6 +52,7 @@ ID : testuser@test.com<br>PASSWORD : asdf1234!<br>
 # 수정이 필요한 부분 메모
 
 테스팅중입니다. QA로 이관
+imageList 구조 변경 완료.
 
  
 # 진행중 아쉬운 점<br>
