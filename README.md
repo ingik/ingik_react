@@ -49,11 +49,16 @@ ID : testuser@test.com<br>PASSWORD : asdf1234!<br>
 팔로우<br><br><img src="https://user-images.githubusercontent.com/65318601/167690788-6aca9629-7944-42a0-9e5e-acb93e961ff7.gif"/><br><br>
 모바일 요약 <br><br><img src="https://user-images.githubusercontent.com/65318601/167691373-6775adc5-c208-4edb-83ef-b2c8fd41954d.gif"/><br><br>
 
-# 수정이 필요한 부분 메모
+# 모
 
 테스팅중입니다. QA로 이관
 imageList 구조 변경 완료.
 
+JWT 웹토큰 방식 인증
+해상도에 따라 이미지 크기 자동조절
+Intersection Observer를 통한 무한스크롤링 구현
+redux 와 socket.io 를 통한 전체적인 통신
+aws s3 클라우드 스토어 분배
  
 # 진행중 아쉬운 점<br>
 
