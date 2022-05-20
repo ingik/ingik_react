@@ -26,6 +26,9 @@ import ImageBoardCmpList from './components/views/ImageBoard/ImageBoardCmpList';
 import HoverProfile from './components/views/Profile/HoverProfile';
 import Notice from './components/views/Notice/Notice';
 
+console.log = () => {}
+console.error = () => {}
+console.debug = () => {}
 
 function App() {
   return (
