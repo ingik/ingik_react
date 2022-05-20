@@ -49,7 +49,7 @@ ID : testuser@test.com<br>PASSWORD : asdf1234!<br>
 팔로우<br><br><img src="https://user-images.githubusercontent.com/65318601/167690788-6aca9629-7944-42a0-9e5e-acb93e961ff7.gif"/><br><br>
 모바일 요약 <br><br><img src="https://user-images.githubusercontent.com/65318601/167691373-6775adc5-c208-4edb-83ef-b2c8fd41954d.gif"/><br><br>
 
-# 메모
+# 
 
 테스팅중입니다. QA로 이관<br>
 imageList 구조 변경 완료.<br><br>
