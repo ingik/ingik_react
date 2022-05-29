@@ -59,7 +59,7 @@ imageList 구조 변경 완료.<br><br>
 JWT 웹토큰 방식 인증<br>
 store 현재 상태 저장(Redux)<br>
 S3 여러개의 이미지 한번에 저장.<br>
-해상도에 따라 이미지 크기 자동조절<br>
+반응형 웹으로 제작<br>
 Intersection Observer를 통한 무한스크롤링 구현<br>
 redux 와 socket.io 를 통한 전체적인 통신<br>
 aws s3 클라우드 스토어 분배
