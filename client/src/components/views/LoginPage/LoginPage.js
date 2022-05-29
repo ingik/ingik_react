@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { loginUser } from '../../../_actions/user_action';
 import { withRouter } from 'react-router-dom';
 import  { TextField , Button , Snackbar , Alert } from '@mui/material';
+import KaKaoOauth from './KaKaoOauth';
 
 function LoginPage(props) {
 
@@ -86,6 +87,9 @@ const handleClose = () => {
                 <Button variant='outlined' type="submit" style={{marginBottom:'10px'}}>Login</Button>
                 <Button variant='contained' onClick={ onRegister }>Register</Button>
             </form>
+
+            <KaKaoOauth/>
+            
             </div>
             <Snackbar
             open={LoginError}

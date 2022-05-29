@@ -20,8 +20,6 @@ import { useHistory } from "react-router-dom";
 import HoverProfile from "../Profile/HoverProfile";
 
 function ImageBoardComment(props) {
-  console.log(props);
-
   const history = useHistory();
 
   const [ListComment, setListComment] = useState(null);
@@ -31,17 +29,19 @@ function ImageBoardComment(props) {
     content: "",
   });
   const [Value, setValue] = useState(0);
+  const [HoverUser, setHoverUser] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [ParentModal, setParentModal] = useState(false);
 
   let childmodal = false;
-
-  const [HoverUser, setHoverUser] = useState(null);
+  let leaveCheck = false;
 
   const userData = useSelector((state) => state.user.userData);
 
   useEffect(() => {
     let CleanUpBoolean = true;
 
-    // axios.get("/api/baords/imageBoard/comment/" + props.paramKey).then(response => {
+    // axios.get("/api/boards/imageBoard/comment/" + props.paramKey).then(response => {
     //   if(CleanUpBoolean) {
     //     console.log(response.data)
     //     setListComment(response.data);
@@ -49,7 +49,7 @@ function ImageBoardComment(props) {
     // })
 
     axios
-      .get("/api/baords/imageBoard/comment/" + props.paramKey)
+      .get("/api/boards/imageBoard/comment/" + props.paramKey)
       .then((response) => {
         if (CleanUpBoolean) {
           console.log(response.data);
@@ -62,7 +62,7 @@ function ImageBoardComment(props) {
 
   useEffect(() => {
     axios
-      .get("/api/baords/imageBoard/comment/test/" + props.paramKey)
+      .get("/api/boards/imageBoard/comment/test/" + props.paramKey)
       .then((response) => {
         console.log(response.data);
       });
@@ -91,7 +91,6 @@ function ImageBoardComment(props) {
   };
 
   const onDeleteButton = () => {
-    console.log(DeleteData);
     axios
       .delete(
         "/api/boards/imageBoard/comment/delete/" +
@@ -113,8 +112,25 @@ function ImageBoardComment(props) {
     window.location.reload();
   };
 
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [ParentModal, setParentModal] = useState(false);
+  const handlePopoverOpen = (item, event) => {
+    leaveCheck = true;
+    if (!ParentModal) {
+      setAnchorEl(event.currentTarget);
+      setHoverUser(item);
+      setTimeout(() => {
+        if (leaveCheck) {
+          setParentModal(true);
+        }
+      }, 1000);
+    }
+  };
+
+  const handlePopoverClose = () => {
+    leaveCheck = false;
+    setTimeout(() => {
+      if (!childmodal) setParentModal(false);
+    }, 100);
+  };
 
   return (
     <div>
@@ -165,18 +181,8 @@ function ImageBoardComment(props) {
                   height: "32px",
                 }}
                 onClick={() => onClickHandler(item?.user._id)}
-                onMouseEnter={(event) => {
-                  setAnchorEl(event.currentTarget);
-                  setHoverUser(item?.user);
-                  setParentModal(true);
-                }}
-                onMouseLeave={() => {
-                  setTimeout(() => {
-                    console.log("close modal parent");
-                    console.log("ChildModal : " + childmodal);
-                    if (!childmodal) setParentModal(false);
-                  }, 500);
-                }}
+                onMouseEnter={(event) => handlePopoverOpen(item?.user, event)}
+                onMouseLeave={handlePopoverClose}
               />
               <Typography
                 variant="body1"
@@ -190,18 +196,8 @@ function ImageBoardComment(props) {
                     display: "inline-block",
                     marginRight: "5px",
                   }}
-                  onMouseEnter={(event) => {
-                    setAnchorEl(event.currentTarget);
-                    setHoverUser(item?.user);
-                    setParentModal(true);
-                  }}
-                  onMouseLeave={() => {
-                    setTimeout(() => {
-                      console.log("close modal parent");
-                      console.log("ChildModal : " + childmodal);
-                      if (!childmodal) setParentModal(false);
-                    }, 500);
-                  }}
+                  onMouseEnter={(event) => handlePopoverOpen(item?.user, event)}
+                  onMouseLeave={handlePopoverClose}
                 >
                   {item?.user.name}
                 </span>

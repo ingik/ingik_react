@@ -26,9 +26,9 @@ import ImageBoardCmpList from './components/views/ImageBoard/ImageBoardCmpList';
 import HoverProfile from './components/views/Profile/HoverProfile';
 import Notice from './components/views/Notice/Notice';
 
-console.log = () => {}
-console.error = () => {}
-console.debug = () => {}
+// console.log = () => {}
+// console.error = () => {}
+// console.debug = () => {}
 
 function App() {
   return (
@@ -43,6 +43,7 @@ function App() {
                 component={Auth(SearchAppBar, true)}/>
         <Switch>
           {/* <Route exact path="/" component={Auth(LandingPage, null)}/> */}
+          <Route exact path="/" component={ImageBoardList} />
           <Route exact path="/boards/detail/:key" component={Board} />
           <Route exact path="/createboard" component={CreateBoard}/>
           <Route exact path="/boards" component={BoardList}/>
@@ -50,7 +51,6 @@ function App() {
           <Route exact path="/chat/list" component={ChatList}/>
           <Route exact path="/profile" component={ProfileCmp}/>
           <Route exact path="/imageBoard/:key" component={ImageBoard} />
-          <Route exact path="/" component={ImageBoardList} />
           <Route exact path="/imageBoardUpdate" component={ImageBoardUpdate} />
           <Route exact path="/imageBoardCmp" component={ ImageBoardCmpList} />
           <Route exact path="/profile/:key" component={ OtherProfileCmp }/>
