@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 function KaKaoOauth() {
-  const REST_API_KEY = "ae36405180e7d2a326bb7aa39f8c3470";
+  const REST_API_KEY = KAKAO_KEY;
   const REDIRECT_URI = "http://localhost:3000/oauth/callback/kakao";
 //   const KAKAO_OAUTH = 
 //   'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id='+REST_API_KEY+'&redirect_uri='+REDIRECT_URI;
